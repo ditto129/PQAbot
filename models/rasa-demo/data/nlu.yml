@@ -86,7 +86,6 @@ nlu:
     - continue search
     - 繼續
     - satisfied
-    - 滿意
     - 好
     - 是
     - 要
@@ -95,6 +94,7 @@ nlu:
     - 對
     - 確定
     - 有
+    - 滿意
 
 - intent: deny
   examples: |
@@ -111,6 +111,7 @@ nlu:
     - 不確定
     - 沒
     - 別
+    - 否
     
 - intent: say_satisfied
   examples: |
