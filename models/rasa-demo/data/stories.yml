@@ -28,7 +28,7 @@ stories:
   - intent: say_message
     entities:
     - message
-  - action: utter_check_message
+  #- action: utter_check_message
   - action: utter_CORS_problem_answer
   - checkpoint: check_continue_search
 
@@ -36,6 +36,7 @@ stories:
 - story: search_affirm
   steps:
   - checkpoint: check_continue_search
+  - action: utter_detect_stroy
   - intent: affirm
   - action: utter_CORS_problem_answer
   - checkpoint: check_continue_search
@@ -43,6 +44,7 @@ stories:
 - story: search_deny
   steps:
   - checkpoint: check_continue_search
+  - action: utter_detect_stroy
   - intent: deny
   - action: utter_ask_satisfied
   - checkpoint: check_satisfied
@@ -51,7 +53,7 @@ stories:
   steps:
   - checkpoint: check_satisfied
   - intent: affirm
-  - action: utter_affirm_satisfied
+  #- action: utter_affirm_satisfied
   - action: utter_finish
   
 
@@ -59,7 +61,7 @@ stories:
   steps:
   - checkpoint: check_satisfied
   - intent: deny
-  - action: utter_affirm_notsatisfied
+  #- action: utter_affirm_notsatisfied
   - action: utter_finish
   
 

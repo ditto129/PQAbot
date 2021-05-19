@@ -62,6 +62,8 @@ actions:
   - ask_question_or_message
 
 responses:
+  utter_detect_stroy:
+  - text: "有進入stroy"
   utter_affirm_satisfied:
   - text: "你現在很滿意"
   
@@ -137,6 +139,6 @@ responses:
   - text: "觸發的是test_satisfied這個intent"
   ### 用來測試若intent裡有相同的句子 END
   
-session_config:
-  session_expiration_time: 60
-  carry_over_slots_to_new_session: true
+#session_config:
+#  session_expiration_time: 60
+#  carry_over_slots_to_new_session: true
