@@ -19,8 +19,19 @@ def welcome():
     headers = {'content-type': 'application/json'}
     r = requests.post('http://localhost:5005/webhooks/rest/webhook', json=payload, headers=headers)
     print(r.json())
-    return r.json()[0]
+    if len(r.json()) == 0:
+        return jsonify({"message":"no triggered intent"})
+    else:
+        return r.json()[0]
 
+@welcome_api.route('session_start')
+def session_start():
+    payload = {'sender': 'user', 'message': '/session_start'}
+    headers = {'content-type': 'application/json'}
+    r = requests.post('http://localhost:5005/webhooks/rest/webhook', json=payload, headers=headers)
+    print(r.json())
+    return jsonify({"message":"session_start success"})
+    
 ask_os_api=Blueprint('ask_os_api', __name__)
 @ask_os_api.route('ask_os')
 def ask_os():

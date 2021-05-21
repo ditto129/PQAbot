@@ -2,6 +2,23 @@ var head_url = "http://127.0.0.1:5000/";
 
 //start
 function start(){
+    console.log("session_start");
+    var myURL = head_url + "session_start";
+    console.log("myURL: "+myURL);
+    $.ajax({
+        url: myURL,
+        type: "GET",
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("response: "+response);
+            console.log(response.messahe);
+        },
+        error: function(){
+            console.log("error");
+        }
+    });
+    
     console.log("start");
     var myURL = head_url + "welcome";
     console.log("myURL: "+myURL);
