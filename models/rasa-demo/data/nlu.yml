@@ -37,29 +37,9 @@ nlu:
   examples: |
    - error.*
 
-- lookup: name
-  examples: |
-   - 慈
-   - 湘
-
-- lookup: country
-  examples: |
-    - Taiwan
-    - Japan
-    - Korea
-    - China
-
-- regex: NT
-  examples: |
-   - [0-9]+
-
 - intent: start
   examples: |
    - start
-  
-- intent: ask_os
-  examples: |
-   - ask_os
 
 - intent: say_function
   examples: |
@@ -70,12 +50,20 @@ nlu:
     - I'm use [mac OS](os)
     - 我是用[mac os](os)
     - [mac os](os)
+    
+- intent: change_os
+  examples: |
+    - 我要修改作業系統
 
 - intent: say_pl
   examples: |
     - I'm use [python](pl)
     - 我是用[python](pl)
     - [python](pl)
+    
+- intent: change_pl
+  examples: |
+    - 我要修改程式語言
     
 - intent: say_message
   examples: |
@@ -139,17 +127,3 @@ nlu:
 - intent: ask_NT
   examples: |
     - NT is [100](NT)
-
-### 用來測試若intent裡有相同的句子 會觸發哪個intent START
-#- intent: test_satisfied
-#  examples: |
-#    - 好
-#    - 是
-#    - 滿意
-#
-#- intent: test_search
-#  examples: |
-#    - 好
-#    - 是
-#    - 繼續搜尋
-### 用來測試若intent裡有相同的句子 會觸發哪個intent END

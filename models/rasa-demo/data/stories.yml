@@ -8,30 +8,80 @@ stories:
   - intent: start
   - action: utter_welcome
   - action: utter_ask_func
-#  - checkpoint: check_user_func
-#
-#- story: after_func
-#  steps:
-#  - checkpoint: check_user_func
   - intent: say_function
     entities:
     - function
-  - action: utter_ask_os
+  - action: fill_slot
+  - checkpoint: reply_fill_slot
+#  - action: utter_ask_os
+#  - intent: say_os
+#    entities:
+#    - os
+#  - action: utter_ask_pl
+#  - intent: say_pl
+#    entities:
+#    - pl
+#  - action: ask_question_or_message
+
+#  - intent: say_message
+#    entities:
+#    - message
+#  - action: utter_CORS_problem_answer
+#  - checkpoint: check_continue_search
+  
+# 作業系統 slot_filling
+- story: fill_slot_os
+  steps:
+  - checkpoint: reply_fill_slot
   - intent: say_os
     entities:
     - os
-  - action: utter_ask_pl
+  - action: fill_slot
+  - checkpoint: reply_fill_slot
+  
+  
+# 程式語言 slot_filling
+- story: fill_slot_pl
+  steps:
+  - checkpoint: reply_fill_slot
   - intent: say_pl
     entities:
     - pl
-  - action: ask_question_or_message
+  - action: fill_slot
+  - checkpoint: reply_fill_slot
+  
+# 使用者問題 slot_filling
+- story: fill_slot_message
+  steps:
+  - checkpoint: reply_fill_slot
   - intent: say_message
     entities:
     - message
-  #- action: utter_check_message
+  - action: utter_check_message
   - action: utter_CORS_problem_answer
   - checkpoint: check_continue_search
 
+# 修改作業系統
+- story: change_slot_os
+  steps:
+  - intent: change_os
+  - action: utter_ask_os #這裡不能用fill_slot，因為本來就有值了
+  - intent: say_os
+    entities:
+    - os
+  - action: fill_slot
+  - checkpoint: reply_fill_slot
+  
+# 修改程式語言
+- story: change_slot_pl
+  steps:
+  - intent: change_pl
+  - action: utter_ask_pl #這裡不能用fill_slot，因為本來就有值了
+  - intent: say_pl
+    entities:
+    - pl
+  - action: fill_slot
+  - checkpoint: reply_fill_slot
 
 - story: search_affirm
   steps:
@@ -63,29 +113,3 @@ stories:
   - intent: deny
   #- action: utter_affirm_notsatisfied
   - action: utter_finish
-  
-
-
-#- story: my_example
-#  steps:
-#  - intent: say_name
-#    entities:
-#    - name
-#  - action: utter_ask_country_val
-#  - intent: say_country
-#    entities:
-#    - country
-#  - action: utter_response
-
-#- story: test_my_action
-#  steps:
-#  - intent: action_test
-#  - action: ActionHelloWorld
-  
-# 美金換算(使用者說要換的台幣，機器人輸出美金)
-#- story: test_exchange
-#  steps:
-#  - intent: ask_NT
-#    entities:
-#    - NT
-#  - action: exchange

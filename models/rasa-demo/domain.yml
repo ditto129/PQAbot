@@ -8,7 +8,9 @@ intents:
   - greet
   - start
   - say_os
+  - change_os
   - say_pl
+  - change_pl
   - say_message
   - affirm
   - deny
@@ -16,7 +18,6 @@ intents:
   - guided_QA
   - error_message
   - discuss_together
-  - ask_os
   - say_not_satisfied
   - say_function
   ### 用來測試若intent裡有相同的句子 START
@@ -29,9 +30,6 @@ entities:
   - function
   - os
   - pl
-  - country
-  - name
-  - NT
   
 slots:
   function:
@@ -48,18 +46,12 @@ slots:
     type: text
   NT:
     type: text
-    
-#forms:
-#  needed_form:
-#    required_slots:
-#        function:
-#          - type: from_entity
-#            entit
 
 actions:
   - ActionHelloWorld
   - exchange
   - ask_question_or_message
+  - fill_slot
 
 responses:
   utter_detect_stroy:
@@ -81,12 +73,12 @@ responses:
   
   utter_ask_os:
   - text: "請問您使用的是什麼作業系統？"
-  
+
   utter_ask_pl:
   - text: "請問您使用的是什麼程式語言？"
-  
-  utter_ask_message:
-  - text: "好的，請貼上您的錯誤訊息"
+#
+#  utter_ask_message:
+#  - text: "好的，請貼上您的錯誤訊息"
   
   utter_check_message:
   - text: "功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{message}"
@@ -139,6 +131,6 @@ responses:
   - text: "觸發的是test_satisfied這個intent"
   ### 用來測試若intent裡有相同的句子 END
   
-#session_config:
-#  session_expiration_time: 60
-#  carry_over_slots_to_new_session: true
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
