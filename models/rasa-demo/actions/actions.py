@@ -50,3 +50,26 @@ class ask_question_or_message(Action):
         
         dispatcher.utter_message(text=reply)
         return []
+
+class fill_slot(Action):
+    def name(self) -> Text:
+        return "fill_slot"
+
+    def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
+        function = tracker.get_slot("function")
+        os = tracker.get_slot("os")
+        pl = tracker.get_slot("pl")
+        if os!=None and pl!=None:
+            if "錯誤訊息" in function:
+                reply = "請貼上您的錯誤訊息"
+            elif "引導式" in function:
+                reply = "請描述您遇到的問題"
+            else:
+                reply = "你的function抓不到"
+        elif os == None:
+            reply = "請問您使用的是什麼作業系統？\n若之後要修改，請輸入「我要更改作業系統」"
+        else:
+            reply = "請問您使用的是什麼程式語言？\n若之後要修改，請輸入「我要更改程式語言」"
+        
+        dispatcher.utter_message(text=reply)
+        return []
