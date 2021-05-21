@@ -12,7 +12,7 @@ function start(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("response: "+response);
-            console.log(response.messahe);
+            console.log(response.message);
         },
         error: function(){
             console.log("error");

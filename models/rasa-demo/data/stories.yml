@@ -7,7 +7,6 @@ stories:
   steps:
   - intent: start
   - action: utter_welcome
-  - action: utter_ask_func
   - intent: say_function
     entities:
     - function
@@ -57,7 +56,7 @@ stories:
   - intent: say_message
     entities:
     - message
-  - action: utter_check_message
+#  - action: utter_check_message
   - action: utter_CORS_problem_answer
   - checkpoint: check_continue_search
 
@@ -86,7 +85,7 @@ stories:
 - story: search_affirm
   steps:
   - checkpoint: check_continue_search
-  - action: utter_detect_stroy
+#  - action: utter_detect_stroy
   - intent: affirm
   - action: utter_CORS_problem_answer
   - checkpoint: check_continue_search
@@ -94,7 +93,7 @@ stories:
 - story: search_deny
   steps:
   - checkpoint: check_continue_search
-  - action: utter_detect_stroy
+#  - action: utter_detect_stroy
   - intent: deny
   - action: utter_ask_satisfied
   - checkpoint: check_satisfied
