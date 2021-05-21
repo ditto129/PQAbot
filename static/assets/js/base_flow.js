@@ -42,7 +42,7 @@ function start(){
 function send_to_bot(){
     document.getElementById("content").innerHTML += '<font color="blue">'+$("#user_input").val()+'</font><br>';
     var myURL = head_url + "base_flow_rasa?message="+$("#user_input").val();
-
+    myURL = encodeURI(myURL);
     console.log("myURL: "+myURL);
     $.ajax({
         url: myURL,
