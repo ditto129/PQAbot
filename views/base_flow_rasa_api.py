@@ -17,10 +17,11 @@ from .Translate import Translate
 base_flow_rasa_api=Blueprint('base_flow_rasa_api', __name__)
 @base_flow_rasa_api.route('base_flow_rasa')
 def base_flow_rasa():
+    sender_id=request.values.get('sender_id')
     message=request.values.get('message')
     #translatedMessage=Translate(message).getTranslate()
     #print(translatedMessage)
-    payload = {'sender': 'user', 'message': message}
+    payload = {'sender': sender_id, 'message': message}
     headers = {'content-type': 'application/json'}
     r = requests.post('http://localhost:5005/webhooks/rest/webhook', json=payload, headers=headers)
     print(r.json())

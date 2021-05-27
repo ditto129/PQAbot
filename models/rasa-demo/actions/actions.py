@@ -73,3 +73,10 @@ class fill_slot(Action):
         
         dispatcher.utter_message(text=reply)
         return []
+
+#class get_sender_id(Action):
+#    def name(self) -> Text:
+#        return "get_sender_id"
+#    def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
+#        sender_id=tracker.current_state()[‘sender_id’]
+        
