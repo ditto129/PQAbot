@@ -140,6 +140,8 @@ responses:
   - text: "觸發的是test_satisfied這個intent"
   ### 用來測試若intent裡有相同的句子 END
   
+        
+            
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true

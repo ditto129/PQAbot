@@ -2,14 +2,15 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Apr 19 20:48:00 2021
+
 @author: linxiangling
 """
 
-import requests
+import requests 
 import json
 import flask
 from flask import request, Blueprint, jsonify
-from .Translate import Translate
+#from .Translate import Translate
 
 
 
@@ -17,6 +18,7 @@ base_flow_rasa_api=Blueprint('base_flow_rasa_api', __name__)
 @base_flow_rasa_api.route('base_flow_rasa')
 def base_flow_rasa():
     sender_id=request.values.get('sender_id')
+    print('sender_id'+sender_id)
     message=request.values.get('message')
     #translatedMessage=Translate(message).getTranslate()
     #print(translatedMessage)
@@ -28,3 +30,12 @@ def base_flow_rasa():
         return jsonify({"message":"no triggered intent"})
     else:
         return r.json()[0]
+        
+@base_flow_rasa_api.route('jivo_test', methods=['post'])
+def jivo_test():
+    param=request.get_json()
+    print('jivo_test')
+    print('event_name: '+ param['event_name'])
+    print('chat_id: '+str(param['chat_id']))
+    return jsonify({"message":"success"})
+
