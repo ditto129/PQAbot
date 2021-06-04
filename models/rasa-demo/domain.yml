@@ -50,8 +50,8 @@ slots:
 actions:
   - ActionHelloWorld
   - exchange
-  - ask_question_or_message
   - fill_slot
+  - outer_search
 
 responses:
   utter_detect_stroy:
@@ -72,16 +72,25 @@ responses:
   - text: "我們能提供的功能有<br>1. 錯誤訊息解答（直接複製錯誤訊息即可）<br>2. 引導式問答（用文字描述您遇到的問題）<br>若未能解決問題也可以使用共同討論功能<br><br>請問你想選擇哪個功能呢？"
   
   utter_ask_os:
-  - text: "請問您使用的是什麼作業系統？"
+  - text: "what's your operation system？"
 
   utter_ask_pl:
-  - text: "請問您使用的是什麼程式語言？"
+  - text: "what's your programing language？"
 #
 #  utter_ask_message:
 #  - text: "好的，請貼上您的錯誤訊息"
   
   utter_check_message:
-  - text: "功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{message}"
+  - text: "operation system：{os}\nprograming language：{pl}"
+  
+  utter_check_message_by_os:
+  - text: "這裡是os-----功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{message}"
+  
+  utter_check_message_by_os_2:
+  - text: "修改os-----功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{message}"
+  
+  utter_check_message_by_pl:
+  - text: "這裡是pl-----功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{message}"
   
   utter_CORS_problem_answer:
   - text: "謝謝您的等待，以下為搜尋結果的資料摘要：<br>1. <a href=\"https://stackoverflow.com/questions/48714769/python-flask-cors-importerror-no-module-named-flask-cors-raspberry-pi\">Flask-CORS not working for POST, but working for GET</a><br>2. <a href=\"https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask\">Solve Cross Origin Resource Sharing with Flask</a><br>3. <a href=\"https://stackoverflow.com/questions/39550920/flask-cors-not-working-for-post-but-working-for-get\">Flask CORS stopped allowing access to resources</a><br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"

@@ -23,7 +23,7 @@ nlu:
    
 - lookup: os
   examples: |
-   - mac OS
+   - mac_OS
    - windows
    - linux
    
@@ -31,7 +31,7 @@ nlu:
   examples: |
    - python
    - java
-   - c
+   - c語言
    
 - regex: message
   examples: |

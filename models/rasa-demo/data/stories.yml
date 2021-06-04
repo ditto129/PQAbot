@@ -11,41 +11,29 @@ stories:
     entities:
     - function
   - action: fill_slot
+  - action: utter_check_message
   - checkpoint: reply_fill_slot
-#  - action: utter_ask_os
-#  - intent: say_os
-#    entities:
-#    - os
-#  - action: utter_ask_pl
-#  - intent: say_pl
-#    entities:
-#    - pl
-#  - action: ask_question_or_message
-
-#  - intent: say_message
-#    entities:
-#    - message
-#  - action: utter_CORS_problem_answer
-#  - checkpoint: check_continue_search
   
-# 作業系統 slot_filling
+# operation system slot_filling
 - story: fill_slot_os
   steps:
   - checkpoint: reply_fill_slot
   - intent: say_os
     entities:
     - os
+  - action: utter_check_message
   - action: fill_slot
   - checkpoint: reply_fill_slot
   
   
-# 程式語言 slot_filling
+# programing language slot_filling
 - story: fill_slot_pl
   steps:
   - checkpoint: reply_fill_slot
   - intent: say_pl
     entities:
     - pl
+  - action: utter_check_message
   - action: fill_slot
   - checkpoint: reply_fill_slot
   
@@ -56,8 +44,10 @@ stories:
   - intent: say_message
     entities:
     - message
-#  - action: utter_check_message
-  - action: utter_CORS_problem_answer
+# 印出slot_filling的值 start
+  - action: utter_check_message
+# 印出slot_filling的值 end
+  - action: outer_search
   - checkpoint: check_continue_search
 
 # 修改作業系統
@@ -68,6 +58,9 @@ stories:
   - intent: say_os
     entities:
     - os
+# 印出slot_filling的值 start
+  - action: utter_check_message_by_os
+# 印出slot_filling的值 end
   - action: fill_slot
   - checkpoint: reply_fill_slot
   
@@ -79,6 +72,9 @@ stories:
   - intent: say_pl
     entities:
     - pl
+# 印出slot_filling的值 start
+  - action: utter_check_message_by_pl
+# 印出slot_filling的值 end
   - action: fill_slot
   - checkpoint: reply_fill_slot
 
@@ -87,7 +83,7 @@ stories:
   - checkpoint: check_continue_search
 #  - action: utter_detect_stroy
   - intent: affirm
-  - action: utter_CORS_problem_answer
+  - action: outer_search
   - checkpoint: check_continue_search
 
 - story: search_deny

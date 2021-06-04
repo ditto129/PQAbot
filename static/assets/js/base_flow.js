@@ -1,14 +1,22 @@
-var head_url = "http://127.0.0.1:5000/";
+var head_url = "http://140.121.197.130:55001/";
+var session_id;
 
 //start
 function start(){
-    console.log("session_start");
-    var myURL = head_url + "session_start";
+    //到時候要用session_id
+    
+    session_id = window.prompt("請輸入mail的前綴(要用來當session_id)");
+    console.log("session_id: "+ session_id);
+    console.log("head_url: "+head_url);
+    
+    //傳session_start
+    var myURL = head_url + "session_start?sender_id="+session_id;
     console.log("myURL: "+myURL);
     $.ajax({
         url: myURL,
         type: "GET",
         dataType: "json",
+        async:false,
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("response: "+response);
@@ -19,13 +27,14 @@ function start(){
         }
     });
     
-    console.log("start");
-    var myURL = head_url + "welcome";
+    //start
+    var myURL = head_url + "welcome?sender_id="+session_id;
     console.log("myURL: "+myURL);
     $.ajax({
         url: myURL,
         type: "GET",
         dataType: "json",
+        async:false,
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("response: "+response);
@@ -41,7 +50,8 @@ function start(){
 //send資料給rasa
 function send_to_bot(){
     document.getElementById("content").innerHTML += '<font color="blue">'+$("#user_input").val()+'</font><br>';
-    var myURL = head_url + "base_flow_rasa?message="+$("#user_input").val();
+    
+    var myURL = head_url + "base_flow_rasa?message="+$("#user_input").val()+"&sender_id="+session_id;
     myURL = encodeURI(myURL);
     console.log("myURL: "+myURL);
     $.ajax({
