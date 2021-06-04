@@ -57,7 +57,7 @@ stories:
     entities:
     - message
 #  - action: utter_check_message
-  - action: utter_CORS_problem_answer
+  - action: outer_search
   - checkpoint: check_continue_search
 
 # 修改作業系統
@@ -87,7 +87,7 @@ stories:
   - checkpoint: check_continue_search
 #  - action: utter_detect_stroy
   - intent: affirm
-  - action: utter_CORS_problem_answer
+  - action: outer_search
   - checkpoint: check_continue_search
 
 - story: search_deny
