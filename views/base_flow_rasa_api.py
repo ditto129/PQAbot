@@ -31,11 +31,38 @@ def base_flow_rasa():
     else:
         return r.json()[0]
         
-@base_flow_rasa_api.route('jivo_test', methods=['post'])
-def jivo_test():
+@base_flow_rasa_api.route('chat_accepted', methods=['post'])
+def chat_accepted():
     param=request.get_json()
-    print('jivo_test')
+    print('chat_accepted')
     print('event_name: '+ param['event_name'])
     print('chat_id: '+str(param['chat_id']))
     return jsonify({"message":"success"})
+    
+#https://wh.jivosite.com/IF6YK0nYgC56npYB/vKIgQjkZ0T
 
+@base_flow_rasa_api.route('process', methods=['post'])
+def process():
+    param=request.get_json()
+    print('process')
+    print('event: '+ param['event'])
+    print('id: '+str(param['id']))
+    return jsonify({
+  "event": "BOT_MESSAGE",
+  "id": "123e4567-e89b-12d3-a456-426655440000",
+  "message": {
+    "type": "BUTTONS",
+      "title": "Are you interested in delivery within the New York area?",
+      "text": "Are you interested in delivery within the New York area? Yes / No",
+      "timestamp": "1583910736",
+      "buttons": [
+        {
+          "text": "Yes",
+          "id": "1"
+        }, {
+          "text": "No",
+          "id": "2"
+        }
+      ]
+  }
+})
