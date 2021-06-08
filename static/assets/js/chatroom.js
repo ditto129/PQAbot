@@ -1,4 +1,4 @@
-var head_url = "https://835ae8d32fb7.ngrok.io/";
+var head_url = "http://0.0.0.0:55001/";
 var session_id;
 var first_start = true;
 
@@ -105,9 +105,11 @@ function send_message(){
     console.log("message: "+message);
     
     user(message);
+    
     //用來清空傳出去的輸入框
     var msg = document.getElementById("message");
-    msg.innerHTML = "";
+//    msg.innerHTML = "";
+    msg.value = ""
     console.log("有清空");
     
     var myURL = head_url + "base_flow_rasa?message="+message+"&sender_id="+session_id;

@@ -51,8 +51,10 @@ function start(){
 function send_to_bot(){
     document.getElementById("content").innerHTML += '<font color="blue">'+$("#user_input").val()+'</font><br>';
     
+    
+    
     var myURL = head_url + "base_flow_rasa?message="+$("#user_input").val()+"&sender_id="+session_id;
-    myURL = encodeURI(myURL);
+    myURL = encodeURI(myURL);//處理中文字
     console.log("myURL: "+myURL);
     $.ajax({
         url: myURL,

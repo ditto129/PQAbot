@@ -15,10 +15,10 @@ from rasa_sdk.executor import CollectingDispatcher
 import random
 
 #加入文字分析模組&外部搜尋模組
-#from TextAnalyze import TextAnalyze
-#from OuterSearch import outerSearch
+#from .TextAnalyze import TextAnalyze
+#from .OuterSearch import outerSearch
 #摘要
-#from StackData import StackData
+#from .StackData import StackData
 
 class fill_slot(Action):
     def name(self) -> Text:
@@ -59,13 +59,15 @@ class outer_search(Action):
 #
 #        for url in resultpage:
 #            print(url)
-            
+#
 #        stack_items = [StackData(url) for url in resultpage]
 #        for items in stack_items:
 #            #showData回傳的資料即是傳送到前端的json格式
 #            display = items.showData()
-    
-#    answer=url
+#
+#        answer=url
+        
+        
         testReply=[("https://stackoverflow.com/questions/48714769/python-flask-cors-importerror-no-module-named-flask-cors-raspberry-pi", "Flask-CORS not working for POST, but working for GET"), ("https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask", "Solve Cross Origin Resource Sharing with Flask"), ("https://stackoverflow.com/questions/39550920/flask-cors-not-working-for-post-but-working-for-get", "Flask CORS stopped allowing access to resources"), ("https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask", "How to enable CORS in flask"), ("https://stackoverflow.com/questions/39029767/flask-cors-and-flask-limiter", "Flask CORS and Flask Limiter")]
         random.shuffle(testReply)
         answer=testReply[0:3]
