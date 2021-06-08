@@ -1,5 +1,6 @@
 var head_url = "https://835ae8d32fb7.ngrok.io/";
 var session_id;
+var first_start = true;
 
 function bot(string){
     console.log("bot送訊息");
@@ -133,32 +134,26 @@ function send_message(){
 }
 
 function open_close(){
-    var chatroom = document.getElementById("chatroom");
-    console.log("原本: "+chatroom.getAttribute('class'));
-    
-    if(chatroom.getAttribute('class') == "card animated backInRight"){
-        
-        chatroom.setAttribute("class", "card animated backOutRight");
+    if ($("#chatroom").is(':visible')) {
+
+        $("#chatroom").addClass("animate__backOutRight");
+
+        $("#chatroom").toggle(function () {
+            window.setTimeout(function(){
+               $("#chatroom").removeClass("animate__backOutRight")
+            }, 1500); 
+        });
+
+    } else {
+        $("#chatroom").addClass("animate__backInRight");
+
+        $("#chatroom").toggle(function () {
+            window.setTimeout(function(){
+                $("#chatroom").removeClass("animate__backInRight")
+            }, 1500);
+        });
     }
-    else{
-        chatroom.setAttribute("class", "card animated backInRight");
-    }
-    console.log("改成: "+chatroom.getAttribute('class'));
-    
-    $("#chatroom").toggle(function () {
-//        if ($("#chatroom").is(':visible')) { //如果是看得到 fadeInUp
-//            /* Do "A" */
-//            console.log("現在看得到");
-//            
-//            alert(chatroom.getAttribute('class'));
-//            
-//        } else {
-//            /* Do "B" */
-//            console.log("現在看「不」到");
-//            
-//            alert(chatroom.getAttribute('class'));
-//        }
-    });
+
 }
 
 window.addEventListener("load", start, false);
