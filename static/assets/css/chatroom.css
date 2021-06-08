@@ -1,13 +1,13 @@
 .lower_left{
     position:absolute;
     bottom: 10px;
-    right: 110px;
+    right: 160px;
 }
 
 .lower_left_room{
     position:absolute;
     bottom: 10px;
-    right: 220px;
+    right: 280px;
     z-index: 100;
 }
 
