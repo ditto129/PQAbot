@@ -70,4 +70,3 @@ function send_to_bot(){
     });
 }
 
-window.addEventListener("load", start, false);
