@@ -14,27 +14,11 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 import random
 
-class ActionHelloWorld(Action):
-    def name(self) -> Text:
-        return "ActionHelloWorld"
-
-    def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
-        dispatcher.utter_message(text="hello test")
-        return []
-
-class exchange(Action):
-    # return 要放 action的名稱 「一定要一模一樣」
-    def name(self) -> Text:
-        return "exchange"
-
-    def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
-        NT = int(tracker.get_slot("NT"))
-        NT = NT*0.035
-        dispatcher.utter_message(
-            text="美金是"+str(NT),
-            json_message = {"res_after": NT, "res_before": tracker.get_slot("NT")}
-        )
-        return []
+#加入文字分析模組&外部搜尋模組
+from TextAnalyze import TextAnalyze
+from OuterSearch import outerSearch
+#摘要
+from StackData import StackData
 
 class fill_slot(Action):
     def name(self) -> Text:
@@ -64,12 +48,31 @@ class outer_search(Action):
     def name(self) -> Text:
         return "outer_search"
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
-        testReply=[("https://stackoverflow.com/questions/48714769/python-flask-cors-importerror-no-module-named-flask-cors-raspberry-pi", "Flask-CORS not working for POST, but working for GET"), ("https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask", "Solve Cross Origin Resource Sharing with Flask"), ("https://stackoverflow.com/questions/39550920/flask-cors-not-working-for-post-but-working-for-get", "Flask CORS stopped allowing access to resources"), ("https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask", "How to enable CORS in flask"), ("https://stackoverflow.com/questions/39029767/flask-cors-and-flask-limiter", "Flask CORS and Flask Limiter")]
-        random.shuffle(testReply)
-        answer=testReply[0:3]
+    
+        question_or_error_message = tracker.get_slot("question_or_error_message")
+        #宣告文字分析器
+        textAnalyzer = TextAnalyze()
+        #擷取使用者問題的關鍵字
+        qkey = textAnalyzer.keywordExtration(question_or_error_message)
+        #外部搜尋結果（URL）
+        resultpage = outerSearch(qkey[0], 10, 1)
+
+        for url in resultpage:
+            print(url)
+            
+#        stack_items = [StackData(url) for url in resultpage]
+#        for items in stack_items:
+#            #showData回傳的資料即是傳送到前端的json格式
+#            display = items.showData()
+    
+    answer=url
+#        testReply=[("https://stackoverflow.com/questions/48714769/python-flask-cors-importerror-no-module-named-flask-cors-raspberry-pi", "Flask-CORS not working for POST, but working for GET"), ("https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask", "Solve Cross Origin Resource Sharing with Flask"), ("https://stackoverflow.com/questions/39550920/flask-cors-not-working-for-post-but-working-for-get", "Flask CORS stopped allowing access to resources"), ("https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask", "How to enable CORS in flask"), ("https://stackoverflow.com/questions/39029767/flask-cors-and-flask-limiter", "Flask CORS and Flask Limiter")]
+#        random.shuffle(testReply)
+#        answer=testReply[0:3]
         reply = "謝謝您的等待，以下為搜尋結果的資料摘要："
-        for i in range(0, 3):
-            reply += ("<br>" + str(i+1) + ".<a href=\"" + answer[i][0] + "\">" + answer[i][1] + "</a>")
+        for i in range(0, len(url)):
+#            reply += ("<br>" + str(i+1) + ".<a href=\"" + answer[i][0] + "\">" + answer[i][1] + "</a>")
+            reply += ("<br>" + str(i+1) + ".<a href=\"" + answer[i] + "\"></a>")
         reply += "<br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"
         dispatcher.utter_message(text=reply)
         return []

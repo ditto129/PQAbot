@@ -1,11 +1,6 @@
 version: "2.0"
 
 intents:
-  - say_country
-  - say_name
-  - action_test
-  - ask_NT
-  - greet
   - start
   - say_os
   - change_os
@@ -15,15 +10,8 @@ intents:
   - affirm
   - deny
   - say_satisfied
-  - guided_QA
-  - error_message
-  - discuss_together
   - say_not_satisfied
   - say_function
-  ### 用來測試若intent裡有相同的句子 START
-  - test_search
-  - test_satisfied
-  ### 用來測試若intent裡有相同的句子 END
   
 entities:
   - message
@@ -40,22 +28,12 @@ slots:
     type: text
   message:
     type: text
-  country:
-    type: text
-  name:
-    type: text
-  NT:
-    type: text
 
 actions:
-  - ActionHelloWorld
-  - exchange
   - fill_slot
   - outer_search
 
 responses:
-  utter_detect_stroy:
-  - text: "有進入stroy"
   utter_affirm_satisfied:
   - text: "你現在很滿意"
   
@@ -83,15 +61,6 @@ responses:
   utter_check_message:
   - text: "operation system：{os}\nprograming language：{pl}"
   
-  utter_check_message_by_os:
-  - text: "這裡是os-----功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{message}"
-  
-  utter_check_message_by_os_2:
-  - text: "修改os-----功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{message}"
-  
-  utter_check_message_by_pl:
-  - text: "這裡是pl-----功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{message}"
-  
   utter_CORS_problem_answer:
   - text: "謝謝您的等待，以下為搜尋結果的資料摘要：<br>1. <a href=\"https://stackoverflow.com/questions/48714769/python-flask-cors-importerror-no-module-named-flask-cors-raspberry-pi\">Flask-CORS not working for POST, but working for GET</a><br>2. <a href=\"https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask\">Solve Cross Origin Resource Sharing with Flask</a><br>3. <a href=\"https://stackoverflow.com/questions/39550920/flask-cors-not-working-for-post-but-working-for-get\">Flask CORS stopped allowing access to resources</a><br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"
   
@@ -104,42 +73,20 @@ responses:
   utter_finish:
   - text: "感謝回饋，歡迎下次光臨！"
   
-  utter_ask_name_val:
-  - text: "What's your name?"
-  
-  utter_ask_country_val:
-  - text: "Where are you from?"
-  
-  utter_response:
-  - text: "{name} is from {country}."
-  
-  utter_goodbye:
-  - text: "Bye"
-  
   utter_greet:
-  - text: "Hey! How are you?"
-
-  utter_cheer_up:
-  - text: "Here is something to cheer you up:"
-    image: "https://i.imgur.com/nGF1K8f.jpg"
-
-  utter_did_that_help:
-  - text: "Did that help you?"
-
-  utter_happy:
-  - text: "Great, carry on!"
-
+    - text: "Hey there!"
+  utter_goodbye:
+    - text: "Goodbye :("
+  utter_default:
+    - text: "Sorry, I didn't get that, can you rephrase?"
+  utter_youarewelcome:
+    - text: "You're very welcome."
   utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
-  
-  ### 用來測試若intent裡有相同的句子 START
-  utter_test_search:
-  - text: "觸發的是test_search這個intent"
-  
-  utter_test_satisfied:
-  - text: "觸發的是test_satisfied這個intent"
-  ### 用來測試若intent裡有相同的句子 END
-  
+    - text: "I am a bot, powered by Rasa."
+  utter_get_started:
+    - text: "I can help you find concerts and venues. Do you like music?"
+  utter_awesome:
+    - text: "Awesome! You can ask me things like \"Find me some concerts\" or \"What's a good venue\""
         
             
 session_config:

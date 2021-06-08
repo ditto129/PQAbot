@@ -3,6 +3,25 @@
     bottom: 10px;
     right: 10px;
 }
+
+.right{
+    position:absolute;
+    left: 0px;
+    height: 100%; 
+}
+
+.left{
+    position:absolute;
+    right: 0px;
+    height: 100%;
+}
+
+.normal_word{
+    font-size: 25px;
+    font-weight: 500;
+    color: white;
+}
+
 .type_message{
     width: 100px;
     height: 30px;

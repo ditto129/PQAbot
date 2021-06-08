@@ -2,15 +2,6 @@ version: "2.0"
 
 nlu:
 
-# 用slot filling 來記住使用者選擇的功能
-#- lookup: function
-#  examples: |
-#   - 引導式問答
-#   - guided_QA
-#   - 錯誤訊息解答
-#   - error_message
-#   - 共同討論
-
 - regex: function
   examples: |
    - \b引導式\b
@@ -19,7 +10,6 @@ nlu:
    - .*錯誤訊息.*
    - \b共同討論\b
    - .*共同討論.*
-
    
 - lookup: os
   examples: |
@@ -32,10 +22,6 @@ nlu:
    - python
    - java
    - c語言
-   
-- regex: message
-  examples: |
-   - error.*
 
 - intent: start
   examples: |
@@ -64,10 +50,6 @@ nlu:
 - intent: change_pl
   examples: |
     - 我要修改程式語言
-    
-- intent: say_message
-  examples: |
-    - [my error message is: ...](message)
     
 - intent: affirm
   examples: |
@@ -110,20 +92,11 @@ nlu:
   examples: |
     - not satisfied
     - 不滿意
-
-- intent: action_test
-  examples: |
-    - Hello
-   
-- intent: say_country
-  examples: |
-    - I'm from [Taiwan](country)
     
-- intent: say_name
+- regex: message
   examples: |
-    - My name is [慈](name)
-    - [慈](name)
+   - .*
 
-- intent: ask_NT
+- intent: say_message
   examples: |
-    - NT is [100](NT)
+    - [my error message is: ...](message)

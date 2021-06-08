@@ -1,4 +1,4 @@
-var head_url = "http://140.121.197.130:55001/";
+var head_url = "http://0.0.0.0.0:50001/";
 var session_id;
 
 //start
@@ -70,3 +70,4 @@ function send_to_bot(){
     });
 }
 
+window.addEventListener("load", start, false);
