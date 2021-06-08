@@ -7,7 +7,7 @@ Created on Tue Apr 27 00:31:47 2021
 """
 
 #輸入參數關鍵字string array、一次需回傳筆數、第幾頁
-def ouserSearch(keyWords, resultNum, pageNum):
+def outerSearch(keyWords, resultNum, pageNum):
     try:
         from googlesearch import search
     except ImportError:
