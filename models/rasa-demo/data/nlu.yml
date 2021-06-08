@@ -35,7 +35,7 @@ nlu:
    
 - regex: message
   examples: |
-   - error.*
+   - question_or_error_message .*
 
 - intent: start
   examples: |
@@ -65,9 +65,9 @@ nlu:
   examples: |
     - 我要修改程式語言
     
-- intent: say_message
+- intent: say_question_or_error_message
   examples: |
-    - [my error message is: ...](message)
+    - [my error message is: ...](question_or_error_message)
     
 - intent: affirm
   examples: |
@@ -111,19 +111,3 @@ nlu:
     - not satisfied
     - 不滿意
 
-- intent: action_test
-  examples: |
-    - Hello
-   
-- intent: say_country
-  examples: |
-    - I'm from [Taiwan](country)
-    
-- intent: say_name
-  examples: |
-    - My name is [慈](name)
-    - [慈](name)
-
-- intent: ask_NT
-  examples: |
-    - NT is [100](NT)

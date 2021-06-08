@@ -1,17 +1,12 @@
 version: "2.0"
 
 intents:
-  - say_country
-  - say_name
-  - action_test
-  - ask_NT
-  - greet
   - start
   - say_os
   - change_os
   - say_pl
   - change_pl
-  - say_message
+  - say_question_or_error_message
   - affirm
   - deny
   - say_satisfied
@@ -26,7 +21,7 @@ intents:
   ### 用來測試若intent裡有相同的句子 END
   
 entities:
-  - message
+  - question_or_error_message
   - function
   - os
   - pl
@@ -38,18 +33,10 @@ slots:
     type: text
   pl:
     type: text
-  message:
-    type: text
-  country:
-    type: text
-  name:
-    type: text
-  NT:
+  question_or_error_message:
     type: text
 
 actions:
-  - ActionHelloWorld
-  - exchange
   - fill_slot
   - outer_search
 
@@ -84,13 +71,13 @@ responses:
   - text: "operation system：{os}\nprograming language：{pl}"
   
   utter_check_message_by_os:
-  - text: "這裡是os-----功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{message}"
+  - text: "這裡是os-----功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{question_or_error_message}"
   
   utter_check_message_by_os_2:
-  - text: "修改os-----功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{message}"
+  - text: "修改os-----功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{question_or_error_message}"
   
   utter_check_message_by_pl:
-  - text: "這裡是pl-----功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{message}"
+  - text: "這裡是pl-----功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{question_or_error_message}"
   
   utter_CORS_problem_answer:
   - text: "謝謝您的等待，以下為搜尋結果的資料摘要：<br>1. <a href=\"https://stackoverflow.com/questions/48714769/python-flask-cors-importerror-no-module-named-flask-cors-raspberry-pi\">Flask-CORS not working for POST, but working for GET</a><br>2. <a href=\"https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask\">Solve Cross Origin Resource Sharing with Flask</a><br>3. <a href=\"https://stackoverflow.com/questions/39550920/flask-cors-not-working-for-post-but-working-for-get\">Flask CORS stopped allowing access to resources</a><br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"
@@ -104,14 +91,6 @@ responses:
   utter_finish:
   - text: "感謝回饋，歡迎下次光臨！"
   
-  utter_ask_name_val:
-  - text: "What's your name?"
-  
-  utter_ask_country_val:
-  - text: "Where are you from?"
-  
-  utter_response:
-  - text: "{name} is from {country}."
   
   utter_goodbye:
   - text: "Bye"

@@ -12,21 +12,7 @@ stories:
     - function
   - action: fill_slot
   - checkpoint: reply_fill_slot
-#  - action: utter_ask_os
-#  - intent: say_os
-#    entities:
-#    - os
-#  - action: utter_ask_pl
-#  - intent: say_pl
-#    entities:
-#    - pl
-#  - action: ask_question_or_message
 
-#  - intent: say_message
-#    entities:
-#    - message
-#  - action: utter_CORS_problem_answer
-#  - checkpoint: check_continue_search
   
 # 作業系統 slot_filling
 - story: fill_slot_os
@@ -53,9 +39,9 @@ stories:
 - story: fill_slot_message
   steps:
   - checkpoint: reply_fill_slot
-  - intent: say_message
+  - intent: say_question_or_error_message
     entities:
-    - message
+    - question_or_error_message
 #  - action: utter_check_message
   - action: outer_search
   - checkpoint: check_continue_search
