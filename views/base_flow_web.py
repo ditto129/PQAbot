@@ -13,3 +13,8 @@ base_flow_web=Blueprint('base_flow_web', __name__)
 @base_flow_web.route("/base_flow")
 def base_flow():
     return render_template("base_flow.html")
+
+
+@base_flow_web.route("/PSAbot")
+def PSAbot():
+    return render_template("elegant_bootstrap_4_message_chat_box_template.html")
