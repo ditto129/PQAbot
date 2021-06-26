@@ -12,4 +12,4 @@ from pymongo import MongoClient
 DB = MongoClient('mongodb+srv://pqamanager:pass123word@pqacluster0.umi6y.mongodb.net/test')['PQAbot']
 
 TAG_COLLECTION = DB['Tag']
-
+USER_COLLECTION = DB['User']
