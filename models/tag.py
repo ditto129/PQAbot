@@ -14,13 +14,14 @@ def insert_tag(tag_name):
         tag_id=str(int(data.sort('_id', -1)[0]['_id'])+1).zfill(5)
     else:
         tag_id='00000'
-    tag_dict = {'_id':tag_id, 'tag':tag_name, 'child':[], 'associated':[], 'usage_counter':0, 'recent_use':''}
+    tag_dict = {'_id':tag_id, 'tag':tag_name, 'child':[], 'parent':'', 'associated':[], 'usage_counter':0, 'recent_use':''}
     _db.TAG_COLLECTION.insert_one(tag_dict)
     return tag_id
     
 #新增 child tag
 def add_child_tag(parent_id, child_id):
     _db.TAG_COLLECTION.update({'_id':parent_id}, {'$push':{'child':child_id}})
+    _db.TAG_COLLECTION.update({'_id':child_id}, {'$set':{'parent':parent_id}})
     
 #新增 associated tag
 def add_child_associated(parent_id, associated_id):
