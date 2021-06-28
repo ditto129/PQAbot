@@ -63,12 +63,22 @@ def query_user_tag():
         tag_data=tag.query_tag(i['tag_id'])
         tag_info.append({'tag_name':tag_data['tag'], 'score':i['score'], 'parent':tag_data['parent']})
     return jsonify({'tag_info':tag_info})
+    
 #回傳該 tag 的 name
 @tag_api.route('query_tag_name', methods=['get'])
 def query_tag_name():
     tag_id=request.values.get('tag_id')
     tag_name=tag.query_tag(tag_id)['tag']
     return jsonify({'tag_name':tag_name})
+    
+#回傳該 tag 的 child
+@tag_api.route('query_tag_child', methods=['get'])
+def query_tag_child():
+    tag_id=request.values.get('tag_id')
+    tag_child=tag.query_tag(tag_id)['child']
+    return jsonify({'tag_child':tag_child})
+    
+    
    
     
    
