@@ -16,6 +16,9 @@
 
     <script>
     jQuery(document).ready(function() {
+        getRootTag();
+        getUserTag();
+//        buildTree();
         $("#org").jOrgChart({
             chartElement : '#chart',
             dragAndDrop  : true
@@ -26,81 +29,11 @@
 
   <body onload="prettyPrint();">
     
-      <ul id="org" style="display:none">
-          <li>
-              python
-        
-              <ul>
-                  <!-- 1 -->
-                  <li>Web&nbsp;Crawling<br>Data&nbsp;Mining
-                   <ul>
-                       <li>Requests</li>
-                       <li>BeautifulSoup</li>
-                       <li>PySpider</li>
-                   </ul>
-                  </li>
-           
-           <!-- 2 -->
-           <li>NLP
-               <ul>
-                   <li>NLTK</li>
-                   <li>spaCy</li>
-                   <li>jibea</li>
-                   <li>monpa</li>
-               </ul>
-           </li>
-           
-           <!-- 3 -->
-           <li>standrad&nbsp;libraries</li>
-           
-           <!-- 4 -->
-           <li>GUI
-               <ul>
-                   <li>Tkinter</li>
-                   <li>PySide</li>
-               </ul>
-           </li>
-           
-           <!-- 5 -->
-           <li>Web&nbsp;frameworks
-               <ul>
-                   <li>Django</li>
-                   <li>Pyramid</li>
-                   <li>web2py</li>
-               </ul>
-           </li>
-           
-           <!-- 6 -->
-           <li>game&nbsp;development
-               <ul>
-                   <li>pygame</li>
-                   <li>
-                       <div>
-                           panda3D
-                       <br>
-                       <div style="font-size: 17px; color: white; padding: 5px;">50</div>
-                        </div>
-                   </li>
-               </ul>
-           </li>
-           
-           <!-- 7 -->
-           <li>Data&nbsp;Processing
-               <ul>
-                   <li>numPy</li>
-               </ul>
-           </li>
-       </ul>
-     </li>
-   </ul> 
+      <ul id="org" style="display:none"></ul> 
           
     
     <div id="chart" class="orgChart"></div>
       
-      <button onclick="getRootTag()">get tag</button>
-      <button onclick="getUserTag()">拿使用者的tag</button>
-    
-<!--
     <script>
         jQuery(document).ready(function() {
             
@@ -130,8 +63,7 @@
             });
         });
     </script>
--->
-      <script src="js/tree.js"></script>
+    <script src="js/tree.js"></script>
 
 </body>
 </html>

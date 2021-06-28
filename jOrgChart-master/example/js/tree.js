@@ -14,6 +14,7 @@ function getRootTag(){
     $.ajax({
         url: myURL,
         type: "GET",
+        async : false,
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
         success: function(response){
@@ -65,14 +66,12 @@ function secondLevel(data){
 
 // 建立第三層(創節點＋加到rootTreeNode.child[i].child裡面)
 function buildThirdLevel(data){
-    var temp = new TreeNode(data.tag_name);
+    var temp = new TreeNode(data.tag_name, data.score);
     var parentName = getTagName(data.parent);
     //parentName.child.push(temp);
     if(secondLevelName.includes(parentName)){
-        console.log("存在唷～");
         var index = secondLevelName.indexOf(parentName);
         rootTreeNode.child[index].child.push(temp);
-        console.log("push進去啦！");
     }
 }
 
@@ -99,11 +98,11 @@ function getUserTag(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             for(var i=0; i<response.tag_info.length; i++){
-                console.log("現在是第"+i+"個");
                 buildThirdLevel(response.tag_info[i]);
             }
             deleteEpmtyNode();
             printTree();
+            buildTree();
         },
         error: function(){
             console.log("error");
@@ -120,3 +119,22 @@ function printTree(){
         }
     }
 }
+
+var treeTag;
+function buildTree(){
+    treeTag="<li>Python<ul>";
+    
+    //建出樹的tag
+    for(var i=0;i<rootTreeNode.child.length;i++){
+        treeTag+="<li>"+rootTreeNode.child[i].name+"<ul>";
+        for(var j=0;j<rootTreeNode.child[i].child.length;j++){
+            treeTag+="<li>"+rootTreeNode.child[i].child[j].name+"<p><br>"+rootTreeNode.child[i].child[j].score+"</p></li>";
+        }
+        treeTag+="</ul></li>"
+    }
+    treeTag+="</ul></li>";
+    console.log(treeTag);
+    document.getElementById("org").innerHTML = treeTag;
+    console.log(document.getElementById("org"));
+}
+
