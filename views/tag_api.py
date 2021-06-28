@@ -7,7 +7,7 @@ Created on Thu Jun 24 15:24:03 2021
 """
 
 from flask import Blueprint, jsonify, request
-from models import tag
+from models import tag, user
 
 tag_api=Blueprint('tag_api', __name__)
 
@@ -53,9 +53,22 @@ def build_initial_tag():
     return jsonify({'message':'success'})
         
    
-    
-   
-    
+#回傳該user的skill name, score, parent id
+@tag_api.route('query_user_tag', methods=['get'])
+def query_user_tag():
+    user_id=request.values.get('user_id')
+    user_skill=user.query_user(user_id)['skill']
+    tag_info=[]
+    for i in user_skill:
+        tag_data=tag.query_tag(i['tag_id'])
+        tag_info.append({'tag_name':tag_data['tag'], 'score':i['score'], 'parent':tag_data['parent']})
+    return jsonify({'tag_info':tag_info})
+#回傳該 tag 的 name
+@tag_api.route('query_tag_name', methods=['get'])
+def query_tag_name():
+    tag_id=request.values.get('tag_id')
+    tag_name=tag.query_tag(tag_id)['tag']
+    return jsonify({'tag_name':tag_name})
    
     
    
