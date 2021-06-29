@@ -106,3 +106,9 @@ a:hover{
     line-height: 50px;
     text-align:center;
 }
+
+.score{
+    font-size: 20px;
+    color: white;
+    padding: 5px;
+}

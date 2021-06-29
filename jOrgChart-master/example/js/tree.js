@@ -122,19 +122,28 @@ function printTree(){
 
 var treeTag;
 function buildTree(){
-    treeTag="<li>Python<ul>";
+    treeTag = "<li>Python<ul>";
     
     //建出樹的tag
     for(var i=0;i<rootTreeNode.child.length;i++){
-        treeTag+="<li>"+rootTreeNode.child[i].name+"<ul>";
+        treeTag += "<li>"+rootTreeNode.child[i].name+"<ul>";
+        
         for(var j=0;j<rootTreeNode.child[i].child.length;j++){
-            treeTag+="<li>"+rootTreeNode.child[i].child[j].name+"<p><br>"+rootTreeNode.child[i].child[j].score+"</p></li>";
+            treeTag += "<li><div>";
+                treeTag += rootTreeNode.child[i].child[j].name;
+                treeTag += '<br>';
+                treeTag += '<div class="score">';
+                    treeTag += rootTreeNode.child[i].child[j].score;
+                treeTag += "</div>";
+            treeTag += "</div></li>";
         }
-        treeTag+="</ul></li>"
+        
+        treeTag += "</ul></li>";
     }
-    treeTag+="</ul></li>";
-    console.log(treeTag);
+    
+    treeTag += "</ul></li>";
+    //console.log(treeTag);
     document.getElementById("org").innerHTML = treeTag;
-    console.log(document.getElementById("org"));
+    //console.log(document.getElementById("org"));
 }
 
