@@ -10,7 +10,7 @@ from google.auth.transport import requests
 from models import user
 
 login_api = Blueprint("login_api", __name__)
-GOOGLE_OAUTH2_CLIENT_ID = '417777300686-0vp7be6826583nc16qjiqkfusp39hjrh.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_ID = '417777300686-b6isl0oe0orcju7p5u0cpdeo07hja9qs.apps.googleusercontent.com'
 
 @login_api.route('/google_sign_in', methods=['POST'])
 def google_sign_in():
