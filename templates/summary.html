@@ -31,6 +31,7 @@
     <!-- Style.css -->
     <link rel="stylesheet" type="text/css" href="../static/assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="../static/assets/css/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet" type="text/css" href="../static/assets/css/pages/menuBarCSS/menuBar.css">
 </head>
 
 <body>
@@ -148,57 +149,16 @@
                                 </ul>
                             </li>
                             <li class="user-profile header-notification">
-                                <a href="#!">
-                                    <img src="../static/images/jackson.png" class="img-radius" alt="User-Profile-Image">
-                                    <span>易烊千璽</span>
-                                    <i class="ti-angle-down"></i>
-                                </a>
                                 
-                                <!-- 易烊千璽右邊箭頭點開 -->
-                                <ul class="show-notification profile-notification">
-                                    <li>
-                                        <a href="#!">
-                                            <i class="ti-settings"></i> Settings
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="ti-user"></i> Profile
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="ti-email"></i> My Messages
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="ti-lock"></i> Lock Screen
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="auth-normal-sign-in.html">
-                                            <i class="ti-layout-sidebar-left"></i> Logout
-                                        </a>
-                                    </li>
-                                </ul>
+                                <img src="../static/images/jackson.png" class="img-radius" alt="User-Profile-Image">
+                                <span>易烊千璽</span>
+                                 
+                                
                             </li>
                         </ul>
 
                     </div>
                     <!-- 中間白色的 END -->
-                    
-                    <!-- 聊天室 START -->
-                    <div class="navbar-container navbar-logo" style="background-color: #5D478B;">
-                        
-                        <div style="color: white">
-                            <img class="img-fluid" style="height: 50px;" src="../static/images/baymax.png" alt="PSAbotLogo">
-                            <span>聊天室列表</span>
-                        </div>
-                        
-                    </div>
-                    <!-- 聊天室 END -->
-                    
                     
                 </div>
             </nav>
@@ -279,9 +239,12 @@
                         <div class="pcoded-inner-content">
                             <div class="main-body">
                                 <div class="page-wrapper">
+                                    <div class="row">
+                                    <div class="col-9">
                                     <!-- Page-header start -->
                                     <div class="page-header card">
                                         <div class="row align-items-end">
+                                            
                                             <div class="col-lg-8">
                                                 <div class="page-header-title">
                                                     <i class="icofont icofont-layout bg-c-blue"></i>
@@ -291,6 +254,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            
                                             <div class="col-lg-4">
                                                 <div class="page-header-breadcrumb">
                                                     <ul class="breadcrumb-title">
@@ -610,11 +574,70 @@
                     <!-- Row end -->
                 </div>
                 <!-- Page-body end -->
+                
+                </div>
+                    <div class="col-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-header-text">聊天室列表</h5>
+                            </div>
+                            <div class="card-block accordion-block">
+                                <div id="accordion" role="tablist" aria-multiselectable="true">
+                                    <div class="accordion-panel">
+                                        <div class="accordion-heading" role="tab" id="headingOne">
+                                            <h3 class="card-title accordion-title">
+                                                
+                                                <a class="accordion-msg" href="#">
+                                                <img src="../static/images/baymax.png" class="chatImg">
+                                                PSABot
+                                                </a>
+                                            </h3>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-block accordion-block">
+                                <div id="accordion" role="tablist" aria-multiselectable="true">
+                                    <div class="accordion-panel">
+                                        <div class="accordion-heading" role="tab" id="headingOne">
+                                            <h3 class="card-title accordion-title">
+                                                <a class="accordion-msg" href="#">
+                                                <img src="../static/images/person_3.jpg" class="chatImg">
+                                                宋亞軒
+                                                </a>
+                                            </h3>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-block accordion-block">
+                                <div id="accordion" role="tablist" aria-multiselectable="true">
+                                    <div class="accordion-panel">
+                                        <div class="accordion-heading" role="tab" id="headingOne">
+                                            <h3 class="card-title accordion-title">
+                                                <a class="accordion-msg" href="#">
+                                                <img src="../static/images/person_1.jpeg" class="chatImg">
+                                                劉耀文
+                                                </a>
+                                            </h3>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                    </div>
+                                </div>
             </div>
         </div>
 
     </div>
-</div>
+                    </div>
+                    
+                
                     
                 </div>
             </div>
