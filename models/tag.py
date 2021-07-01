@@ -19,13 +19,13 @@ def insert_tag(tag_name):
     return tag_id
     
 #新增 child tag
-def add_child_tag(parent_id, child_id):
-    _db.TAG_COLLECTION.update({'_id':parent_id}, {'$push':{'child':child_id}})
-    _db.TAG_COLLECTION.update({'_id':child_id}, {'$set':{'parent':parent_id}})
+def add_child_tag(parent_id, parent_name, child_id, child_name):
+    _db.TAG_COLLECTION.update({'_id':parent_id}, {'$push':{'child':{'tag_id':child_id, 'tag_name':child_name}}})
+    _db.TAG_COLLECTION.update({'_id':child_id}, {'$set':{'parent':{'tag_id':parent_id, 'tag_name':parent_name}}})
     
 #新增 associated tag
-def add_child_associated(parent_id, associated_id):
-    _db.TAG_COLLECTION.update({'_id':parent_id}, {'$push':{'associated':associated_id}})
+def add_child_associated(parent_id, associated_id, associated_name):
+    _db.TAG_COLLECTION.update({'_id':parent_id}, {'$push':{'associated':{'tag_id':associated_id, 'tag_name':associated_name}}})
     
 #查詢 tag
 def query_tag(tag_id):

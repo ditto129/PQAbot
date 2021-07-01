@@ -54,8 +54,8 @@ function getTagName(id){
 //創節點 且 加到rootTreeNode.child裡面
 function secondLevel(data){
     for(var i=0; i<data.tag_child.length; i++){
-        var tagName;
-        tagName = getTagName(data.tag_child[i]);
+        var tagName = data.tag_child[i].tag_name;
+        //tagName = getTagName(data.tag_child[i]);
         
         secondLevelName.push(tagName);
         
@@ -67,7 +67,8 @@ function secondLevel(data){
 // 建立第三層(創節點＋加到rootTreeNode.child[i].child裡面)
 function buildThirdLevel(data){
     var temp = new TreeNode(data.tag_name, data.score);
-    var parentName = getTagName(data.parent);
+    //var parentName = getTagName(data.parent);
+    var parentName = data.parent.tag_name;
     //parentName.child.push(temp);
     if(secondLevelName.includes(parentName)){
         var index = secondLevelName.indexOf(parentName);
