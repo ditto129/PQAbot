@@ -38,7 +38,7 @@ def build_initial_tag():
     for i in second_level_dict:
         tag_id = tag.insert_tag(i['name'])
         i['id'] = tag_id
-        tag.add_child_tag(first_level_dict['id'], tag_id)
+        tag.add_child_tag(first_level_dict['id'], first_level_dict['name'], tag_id, i['name'])
 
     #建立第三層
     index=0
@@ -47,7 +47,7 @@ def build_initial_tag():
             print(second_level_dict[index]['id'])
             tag_id = tag.insert_tag(j['name'])
             j['id'] = tag_id
-            tag.add_child_tag(second_level_dict[index]['id'], tag_id)
+            tag.add_child_tag(second_level_dict[index]['id'], second_level_dict[index]['name'], tag_id, j['name'])
         index+=1
             
     return jsonify({'message':'success'})
@@ -61,7 +61,7 @@ def query_user_tag():
     tag_info=[]
     for i in user_skill:
         tag_data=tag.query_tag(i['tag_id'])
-        tag_info.append({'tag_name':tag_data['tag'], 'score':i['score'], 'parent':tag_data['parent']})
+        tag_info.append({'tag_name':i['skill_name'], 'score':i['score'], 'parent':tag_data['parent']})
     return jsonify({'tag_info':tag_info})
     
 #回傳該 tag 的 name
