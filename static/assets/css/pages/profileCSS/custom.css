@@ -1,4 +1,36 @@
 .purpleLabel{
+    cursor: pointer;
 	background-color: #5D478B;
 	color: white;
+}
+
+.purpleLabel2{
+    cursor: pointer;
+    border: 1px solid #5D478B;
+	color: #5D478B;
+}
+
+.pagination {
+  display: inline-block;
+  float:right;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+}
+
+.pagination a.active {
+  background-color: #5D478B;
+  color: white;
+  border: 1px solid #5D478B;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #5D478B;
+    color:white;
 }
