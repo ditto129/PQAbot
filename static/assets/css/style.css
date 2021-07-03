@@ -52,6 +52,20 @@ File: style.css
     border-color: #5D478B;
 }
 
+.ourHover:hover{
+    color: #5D478B;
+}
+
+.ourDate {
+    padding: 5px;
+    border: 1px solid;
+    border-radius: 10px;
+    border-color: #5D478B;
+    color: #5D478B !important; 
+}
+
+/* 自己新增的 END */
+
 body {
   background-color: #f3f3f3;
   font-size: 0.875em;
@@ -528,7 +542,9 @@ a.mytooltip {
 .accordion-msg:focus,
 .accordion-msg:hover {
   text-decoration: none;
-  outline: none; }
+  outline: none; 
+/*    color: #5D478B;*/
+}
 
 .faq-accordion .accordion-desc {
   padding: 20px; }
