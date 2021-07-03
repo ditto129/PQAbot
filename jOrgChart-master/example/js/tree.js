@@ -124,7 +124,6 @@ function printTree(){
 var treeTag;
 function buildTree(){
     treeTag = "<li>Python<ul>";
-    
     //建出樹的tag
     for(var i=0;i<rootTreeNode.child.length;i++){
         treeTag += "<li>"+rootTreeNode.child[i].name+"<ul>";
