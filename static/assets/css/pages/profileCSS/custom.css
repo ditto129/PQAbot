@@ -50,3 +50,18 @@
     background-color: #5D478B; float: right; 
     border-radius: 5px; 
 }
+
+
+.scoreBtn{
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+    color:#5D478B;
+}
+
+.scoreBtn:hover{
+    color:skyblue;
+}
