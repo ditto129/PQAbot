@@ -2,151 +2,76 @@
 <html>
 
 <head>
-  <title>PSAbot - Programming Searching Assistant Bot</title>
-  <meta charset="utf-8">
+  <title>login</title>
+  <meta charset="UTF-8">
+  <!-- Bootstrap responsive meta tag-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Google Login meta tag-->
   <meta name="google-signin-client_id"
     content="417777300686-b6isl0oe0orcju7p5u0cpdeo07hja9qs.apps.googleusercontent.com">
-  <!------------------------------------------------------------------------------------------------>
-  <!-- Bootstrap template -->
-  <!-- Bootstrap responsive meta tag-->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-  <!-- Favicon icon -->
-  <!--<link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">-->
-  <!-- Google font-->
-  <link rel="stylesheet" type="text/css" href="../static/assets/css/google-font.css">
-  <!-- Required Fremwork -->
-  <link rel="stylesheet" type="text/css" href="../static/assets/css/bootstrap.min.css">
-  <!-- themify-icons line icon -->
-  <link rel="stylesheet" type="text/css" href="../static/assets/css/themify-icons.css">
-  <!-- ico font -->
-  <link rel="stylesheet" type="text/css" href="../static/assets/css/icofont.css">
-  <!-- Style.css -->
-  <link rel="stylesheet" type="text/css" href="../static/assets/css/style.css">
-  <!------------------------------------------------------------------------------------------------>
-  <!-- font-awesome.css -->
-  <link rel="stylesheet" type="text/css" href="../static/assets/css/font-awesome.css">
+  <!-- Bootstrap CSS-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <!-- Custom styles for Google login -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
   <!-- Custom styles for this template -->
-  <link rel="stylesheet" type="text/css" href="../static/assets/css/pages/loginCSS/login.css">
+  <link rel="stylesheet" type="text/css" href="../static/assets/css/login.css">
+
 
 </head>
 
-<body class="fix-menu">
-  <!-- Pre-loader start -->
-  <div class="theme-loader">
-    <div class="ball-scale">
-      <div class='contain'>
-        <div class="ring">
-          <div class="frame"></div>
-        </div>
-        <div class="ring">
-          <div class="frame"></div>
-        </div>
-        <div class="ring">
-          <div class="frame"></div>
-        </div>
-        <div class="ring">
-          <div class="frame"></div>
-        </div>
-        <div class="ring">
-          <div class="frame"></div>
-        </div>
-        <div class="ring">
-          <div class="frame"></div>
-        </div>
-        <div class="ring">
-          <div class="frame"></div>
-        </div>
-        <div class="ring">
-          <div class="frame"></div>
-        </div>
-        <div class="ring">
-          <div class="frame"></div>
-        </div>
-        <div class="ring">
-          <div class="frame"></div>
+<body>
+  <!-- fluid: set width auto,h-100 set height 100%-->
+  <div class="container fluid h-100 ">
+    <div class="row justify-content-center">
+      <div class="col-md-6 py-5 text-center">
+        <h2 class="heading-section">PSAbot</h2>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-6 py-3">
+        <div class="card mx-auto text-center">
+          <div class="card-header">
+            <h5>Please login</h5>
+          </div>
+          <div class="card-body">
+            <div id="gSignInWrapper">
+              <div id="customBtn" class="customGPlusSignIn">
+                <span class="icon"></span>
+                <span class="buttonText">Sign in with Google</span>
+              </div>
+            </div>
+            <div class="facebook-login-btn">
+              <fb:login-button data-size="medium" data-button-type="continue_with" data-layout="default"
+                data-auto-logout-link="false" data-use-continue-as="false" scope="public_profile,email"
+                onlogin="checkLoginState();">
+              </fb:login-button>
+            </div>
+            <a href="#" onclick="signOut();">Sign out Google account</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- Pre-loader end -->
-
-  <section class="login p-fixed d-flex text-center bg-primary common-img-bg">
-    <!-- Container-fluid starts -->
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <!-- Authentication card start -->
-          <div class="login-card card-block auth-body mr-auto ml-auto">
-            <form class="md-float-material">
-              <div class="text-center">
-                <!-- login-card h1-->
-                <h1>PSAbot</h1>
-                <!--<img src="assets/images/auth/logo-dark.png" alt="logo.png">-->
-              </div>
-              <div class="auth-box text-center">
-                <div class="row m-b-20">
-                  <div class="col-md-12">
-                    <!-- login-card h3-->
-                    <h3 class="text-left txt-primary">Sign In</h3>
-                  </div>
-                </div>
-                <hr />
-                <!--Google Sign in button-->
-                <div id="gSignInWrapper">
-                  <div id="google-login-btn" class="customGPlusSignIn">
-                    <i class="fa fa-google" aria-hidden="true"></i>
-                    <span class="buttonText">Sign in with Google</span>
-                  </div>
-                </div>
-                <!--Facebook Sign in button-->
-                <div class="facebook-login">
-                  <button type="button" id="facebook-login-btn" onclick="checkLoginState()">
-                    <i class="fa fa-facebook" aria-hidden="true"></i>
-                    <span class="buttonText">Sign in with Facebook</span>
-                  </button>
-                </div>
-                <hr />
-                <div class="row">
-                  <div class="col-md-10">
-                    <p class="text-inverse text-left m-b-0">Thank you and enjoy our website.</p>
-                  </div>
-                </div>
-
-              </div>
-            </form>
-            <!-- end of form -->
-          </div>
-          <!-- Authentication card end -->
-        </div>
-        <!-- end of col-sm-12 -->
-      </div>
-      <!-- end of row -->
-    </div>
-    <!-- end of container-fluid -->
-  </section>
 
 
 
 
-
-
-  <!-- Required Jquery -->
-  <script type="text/javascript" src="../static/assets/js/jquery.min.js"></script>
-  <script type="text/javascript" src="../static/assets/js/jquery-ui/jquery-ui.min.js"></script>
-  <script type="text/javascript" src="../static/assets/js/popper.min.js"></script>
-  <script type="text/javascript" src="../static/assets/js/bootstrap.min.js"></script>
-  <!-- jquery slimscroll js -->
-  <script type="text/javascript" src="../static/assets/js/jquery-slimscroll/jquery.slimscroll.js"></script>
-  <!-- modernizr js -->
-  <script type="text/javascript" src="../static/assets/js/modernizr/modernizr.js"></script>
-  <script type="text/javascript" src="../static/assets/js/modernizr/css-scrollbars.js"></script>
-  <script type="text/javascript" src="../static/assets/js/common-pages.js"></script>
-  <!-- Facebook/Google login js-->
+  <!-- jQuery CDN -->
+  <script src="../static/assets/js/jquery-3.5.1.js"></script>
+  <!--Bootstrap JS-->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
+  </script>
+  <!-- Google Cloud Platform JS 
+  <script src="https://apis.google.com/js/platform.js" async defer></script>-->
   <!-- Google Cloud Platform JS -->
   <script src="https://apis.google.com/js/platform.js?onload=onLoadGoogleCallback" async defer></script>
   <!-- My script -->
-  <script src="../static/assets/js/pages/loginJS/login.js"></script>
+  <script src="../static/assets/js/login.js"></script>
 
 </body>
 
