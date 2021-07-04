@@ -165,4 +165,8 @@ function open_close(){
 
 }
 
+//function resize(){
+//    var iframeHeight = document.getElementById("iframeTag").contentWindow.document.documentElement.scrollHeight;
+//}
+
 window.addEventListener("load", start, false);
