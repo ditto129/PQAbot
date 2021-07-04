@@ -35,6 +35,7 @@ def google_sign_in():
         user_dict = {
             "userID" : id_info['sub'],
             "name" : id_info['name'],
+            "email" : id_info['email'],
             "exp" : 0,
             "skill" : [],
             "record" : {
@@ -57,6 +58,7 @@ def facebook_sign_in():
         user_dict = {
             "userID" : data['id'],
             "name" : data['name'],
+            "email" : data['email'],
             "exp" : 0,
             "skill" : [],
             "record" : {

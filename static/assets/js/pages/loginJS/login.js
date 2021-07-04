@@ -33,7 +33,7 @@ function checkLoginState() {
         FB.api(
             '/me',
             'GET', {
-            "fields": "name,id"
+            "fields": "id,name,email"
             },
             function (response) {
             console.log(response)
