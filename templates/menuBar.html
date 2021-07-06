@@ -188,7 +188,7 @@
                             <div class="pcoded-navigatio-lavel" data-i18n="nav.category.navigation">頁面</div>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="">
-                                    <a href="index.html">
+                                    <a href="#">
                                         <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
                                         <span class="pcoded-mtext" data-i18n="nav.dash.main">首頁</span>
                                         <span class="pcoded-mcaret"></span>
@@ -196,7 +196,7 @@
                                 </li>
                                 
                                 <li class="">
-                                    <a href="index.html">
+                                    <a href="#" onclick="changePage('profileFrame')">
                                         <span class="pcoded-micon"><i class="fa fa-user-o" aria-hidden="true"></i><b>D</b></span>
                                         <span class="pcoded-mtext" data-i18n="nav.dash.main">個人頁面</span>
                                         <span class="pcoded-mcaret"></span>
@@ -204,7 +204,7 @@
                                 </li>
                                 
                                 <li class="">
-                                    <a href="index.html">
+                                    <a href="#" onclick="changePage('postQuestionFrame')">
                                         <span class="pcoded-micon"><i class="fa fa-file-text-o" aria-hidden="true"></i><b>D</b></span>
                                         <span class="pcoded-mtext" data-i18n="nav.dash.main">發布貼文</span>
                                         <span class="pcoded-mcaret"></span>
@@ -212,7 +212,7 @@
                                 </li>
                                 
                                 <li class="">
-                                    <a href="index.html">
+                                    <a href="#" onclick="changePage('postRowFrame')">
                                         <span class="pcoded-micon"><i class="fa fa-eye" aria-hidden="true"></i></span>
                                         <span class="pcoded-mtext" data-i18n="nav.dash.main">瀏覽貼文</span>
                                         <span class="pcoded-mcaret"></span>
@@ -221,7 +221,7 @@
                                 
                                 
                                 <li class="" style="position: fixed; bottom: 10px; display: block;">
-                                    <a href="index.html">
+                                    <a href="#" onclick="changePage('login')">
                                         <button class="btn btn-outline" style="width: 230px; background-color: #5D478B;">
                                             <i class="fa fa-sign-out" aria-hidden="true" style="color: white;"></i>
                                             <span data-i18n="nav.dash.main" style="color: white;">登出</span>
@@ -241,14 +241,13 @@
                                 <div class="page-wrapper">
                                     
                                     <div class="row" style="height: 700px;">
-                                        <div class="col-9">
+                                        <div class="col-9" id="main_page">
                                             
                                             <!--
-
                                             把你的CODE放這～
                                             -->
                                             
-                                            <iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="postQuestion.html"  height="100%" width="100%" onload="resize()"></iframe>
+<!--                                            <iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="summary_new.html"  height="100%" width="100%"></iframe>-->
                                             
                                         </div>
                                         
