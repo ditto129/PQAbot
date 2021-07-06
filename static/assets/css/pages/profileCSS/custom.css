@@ -1,14 +1,23 @@
 .purpleLabel{
-    cursor: pointer;
+/*    cursor: pointer;*/
 	background-color: #5D478B;
 	color: white;
 }
 
 .purpleLabel2{
-    cursor: pointer;
+/*    cursor: pointer;*/
     border: 1px solid #5D478B;
 	color: #5D478B;
 }
+
+a .purpleLabel {
+    cursor: pointer;
+}
+
+a .purpleLabel2 {
+    cursor: pointer;
+}
+
 
 .pagination {
   display: inline-block;
