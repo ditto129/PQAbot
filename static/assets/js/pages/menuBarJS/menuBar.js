@@ -3,6 +3,16 @@ var head_url = "http://0.0.0.0:55001/";
 var session_id;
 var first_start = true;
 
+function changePage(page){
+    
+    console.log("page: "+page);
+    var content = "";
+    content += '<iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="';
+    content += page;
+    content += '.html"  height="100%" width="100%"></iframe>';
+    document.getElementById("main_page").innerHTML = content;
+}
+
 function bot(string){
     console.log("bot送訊息");
     
@@ -62,7 +72,9 @@ function start(){
     
     //到時候要用session_id
     
-    session_id = window.prompt("請輸入mail的前綴(要用來當session_id)");
+    //session_id = window.prompt("請輸入mail的前綴(要用來當session_id)");
+    localStorage.setItem("sessionID", 123);
+    var session_id = localStorage.getItem("sessionID");
     console.log("session_id: "+ session_id);
     console.log("head_url: "+head_url);
     

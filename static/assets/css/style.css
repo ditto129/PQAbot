@@ -52,6 +52,30 @@ File: style.css
   border-color: #5D478B;
 }
 
+.ourHover:hover{
+    color: #5D478B;
+}
+
+.ourDate {
+    padding: 5px;
+    border: 1px solid;
+    border-radius: 10px;
+    border-color: #5D478B;
+    color: #5D478B !important; 
+}
+
+.purpleBorderButton{
+    padding: 5px;
+    border: 1px solid;
+    border-radius: 2rem;
+    border-color: #5D478B;
+    color: #5D478B !important;
+    background-color: white;
+    margin: 2px;
+}
+
+/* 自己新增的 END */
+
 body {
   background-color: #f3f3f3;
   font-size: 0.875em;
@@ -16139,7 +16163,7 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
  ========================================= */
 .common-img-bg {
   background-size: cover;
-  background-image: linear-gradient(135deg, #FFA6B7 10%, #1E2AD2 100%);
+/*  background-image: linear-gradient(135deg, #FFA6B7 10%, #1E2AD2 100%);*/
   /*background: url(../images/bg.jpg) no-repeat center center fixed;*/
   height: 100%;
 }
@@ -16301,7 +16325,7 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 .error-403,
 .login {
   align-items: center;
-  background-color: #2196F3;
+/*  background-color: #2196F3;*/
   display: flex;
   height: 100%;
   position: fixed;
