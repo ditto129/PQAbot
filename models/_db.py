@@ -13,3 +13,6 @@ DB = MongoClient('mongodb+srv://pqamanager:pass123word@pqacluster0.umi6y.mongodb
 
 TAG_COLLECTION = DB['Tag']
 USER_COLLECTION = DB['User']
+INNER_POST_COLLECTION = DB['InnerPost']
+OUTER_DATA_COLLECTION = DB['OuterData']
+OUTER_DATA_CACHE_COLLECTION = ['OuterDataCache']
