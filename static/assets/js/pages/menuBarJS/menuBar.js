@@ -4,13 +4,14 @@ var session_id;
 var first_start = true;
 
 function changePage(page){
-    
+
     console.log("page: "+page);
     var content = "";
     content += '<iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="';
     content += page;
     content += '.html"  height="100%" width="100%"></iframe>';
     document.getElementById("main_page").innerHTML = content;
+
 }
 
 function bot(string){
@@ -63,6 +64,9 @@ function user(string){
 //start
 function start(){
     
+    changePage('home');
+    localStorage.setItem("page", "home");
+    
 	$(document).ready(function(){
         $('#action_menu_btn').click(function(){
             $('.action_menu').toggle();
@@ -77,9 +81,9 @@ function start(){
     var session_id = localStorage.getItem("sessionID");
     console.log("session_id: "+ session_id);
     console.log("head_url: "+head_url);
-    
     //傳session_start
     var myURL = head_url + "session_start?sender_id="+session_id;
+//    var myURL = head_url + "session_start?sender_id=123";
     console.log("myURL: "+myURL);
     $.ajax({
         url: myURL,
