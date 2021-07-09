@@ -17,4 +17,4 @@ def base_flow():
 
 @base_flow_web.route("/PSAbot")
 def PSAbot():
-    return render_template("elegant_bootstrap_4_message_chat_box_template.html")
+    return render_template("menuBar.html")
