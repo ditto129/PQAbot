@@ -33,7 +33,7 @@ def google_sign_in():
     user_dict = user.query_user(id_info['sub'])
     if user_dict == None:
         user_dict = {
-            "userID" : id_info['sub'],
+            "_id" : id_info['sub'],
             "name" : id_info['name'],
             "email" : id_info['email'],
             "exp" : 0,
@@ -45,8 +45,6 @@ def google_sign_in():
         }
         user.insert_user(user_dict)
         user_dict = user.query_user(id_info['sub'])
-    user_dict['_id'] = str(user_dict['_id']) 
-    print(user_dict)
     return jsonify(user_dict),200
 
 @login_api.route('/facebook_sign_in', methods=['POST'])
@@ -56,7 +54,7 @@ def facebook_sign_in():
     # 取得使用者資料，若使用者不存在就建立一份
     if user_dict == None:
         user_dict = {
-            "userID" : data['id'],
+            "_id" : data['id'],
             "name" : data['name'],
             "email" : data['email'],
             "exp" : 0,
@@ -68,7 +66,4 @@ def facebook_sign_in():
         }
         user.insert_user(user_dict)
         user_dict = user.query_user(data['id'])
-    user_dict['_id'] = str(user_dict['_id']) 
-    print(user_dict)
     return jsonify(user_dict),200
-
