@@ -80,6 +80,21 @@ def query_tag_child():
     
     
    
-    
-   
-    
+#回傳所有語言
+@tag_api.route('query_all_languages', methods=['get'])
+def query_all_languages():
+    return jsonify({'tags':tag.query_all_languages()})
+
+#回傳各語言小孩
+@tag_api.route('query_all_offspring_tag', methods=['get'])
+def query_all_offspring_tag():
+    tag_id=request.values.get('tag_id')
+    offspring=[]
+    second_level = tag.query_childs(tag_id)
+    third_level=[]
+    print(second_level)
+    for i in range(len(second_level)):
+        third_level.extend(tag.query_childs(second_level[i]['tag_id']))
+    offspring.extend(second_level)
+    offspring.extend(third_level)
+    return jsonify({'tags':offspring})

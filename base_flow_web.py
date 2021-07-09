@@ -15,6 +15,5 @@ def base_flow():
     return render_template("base_flow.html")
 
 
-@base_flow_web.route("/PSAbot")
 def PSAbot():
     return render_template("menuBar.html")
