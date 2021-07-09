@@ -3,9 +3,16 @@ var head_url = "http://0.0.0.0:55001/";
 var session_id;
 var first_start = true;
 
-function changePage(page){
+function setPage(page){
+    localStorage.setItem("page", page);
+    console.log("呼叫");
+    changePage();
+}
 
-    console.log("page: "+page);
+function changePage(){
+    console.log("執行");
+    var page = localStorage.getItem("page");
+    console.log("執行page: "+page);
     var content = "";
     content += '<iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="';
     content += page;
@@ -61,11 +68,12 @@ function user(string){
     console.log("height: "+history.scrollHeight);
 }
 
+
+
 //start
 function start(){
-    
-    changePage('home');
     localStorage.setItem("page", "home");
+    changePage();
     
 	$(document).ready(function(){
         $('#action_menu_btn').click(function(){
@@ -185,4 +193,19 @@ function open_close(){
 //    var iframeHeight = document.getElementById("iframeTag").contentWindow.document.documentElement.scrollHeight;
 //}
 
+function logOut(){
+    localStorage.clear();
+    window.location.href = "login.html";
+}
+
 window.addEventListener("load", start, false);
+
+window.addEventListener('storage',function(e){
+    if(e.key == "page"){//判斷page是否改變
+        console.log("page有改變");
+        changePage();
+    }
+    else{
+        console.log("是其他的有變～"+e.key);
+    }
+})
