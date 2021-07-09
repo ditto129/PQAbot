@@ -18,9 +18,9 @@ def query_user(user_id):
 
 
 # 查詢user發過的貼文摘要(部分資訊)
-def query_user_post_list(user_id,page_size,page_number):
+def query_user_post_list(user_id):
     return _db.USER_COLLECTION.find_one({'_id':user_id})['record']['posts']
 
 # 查詢user回應過的貼文摘要(部分資訊)
-def query_user_response_list(user_id,page_size,page_number):
+def query_user_response_list(user_id):
     return _db.USER_COLLECTION.find_one({'_id':user_id})['record']['responses']
