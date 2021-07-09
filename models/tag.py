@@ -32,4 +32,17 @@ def query_tag(tag_id):
     return _db.TAG_COLLECTION.find_one({'_id':tag_id})
 
 
+#所有語言 tag
+def query_all_languages():
+    tags = [{'_id':i['_id'], 'tag':i['tag']} for i in _db.TAG_COLLECTION.find({'parent':''})]
+    return tags
+    
+#回傳 child, child 含 tag_name, tad_id
+def query_childs(tag_id):
+    tags = _db.TAG_COLLECTION.find_one({'_id':tag_id})['child']
+    return tags
 
+#回傳 tag name, id
+def query_tag_name_id_child(tag_id):
+    tag = _db.TAG_COLLECTION.find_one({'_id':tag_id})
+    return {'tag_name':tag['tag'], 'tag_id':tag['_id'], 'child':tag['child']}
