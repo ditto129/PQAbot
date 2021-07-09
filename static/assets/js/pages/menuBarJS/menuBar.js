@@ -1,4 +1,3 @@
-var head_url = "http://0.0.0.0:55001/";
 //var head_url = "http://127.0.0.1/";
 var session_id;
 var first_start = true;
