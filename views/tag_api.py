@@ -98,3 +98,6 @@ def query_all_offspring_tag():
     offspring.extend(second_level)
     offspring.extend(third_level)
     return jsonify({'tags':offspring})
+    
+#更新使用次數與時間
+
