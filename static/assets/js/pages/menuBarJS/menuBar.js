@@ -26,21 +26,17 @@ function bot(string){
     var history = document.getElementById("history_message");
     var content = history.innerHTML;
     content += '<div class="d-flex justify-content-start mb-4">';
-        content += '<div class="img_cont_msg">';
-                content += '<img src="../static/images/baymaxChat.png" class="chatImg">';
-        content += '</div>';
-
-        content += '<div class="msg_cotainer">';
-            content += string;
-            content += '<span class="msg_time">8:40 AM</span>';
-        content += '</div>';
+    content += '<div class="img_cont_msg">';
+    content += '<img src="../static/images/baymaxChat.png" class="chatImg">';
+    content += '</div>';
+    content += '<div class="msg_cotainer">';
+    content += string;
+    content += '<span class="msg_time">8:40 AM</span>';
+    content += '</div>';
     content += '</div>';
     
     history.innerHTML = content;
-    history.offsetTop = history.scrollHeight;
-    
-    console.log("scrollTop: "+history.scrollTop);
-    console.log("height: "+history.scrollHeight);
+    history.scrollTop = history.scrollHeight;
 }
 
 function user(string){
@@ -48,23 +44,17 @@ function user(string){
     var history = document.getElementById("history_message");
     var content = history.innerHTML;
     content += '<div class="d-flex justify-content-end mb-4">';
-        content += '<div class="msg_cotainer_send">';
-                content += string;
-                content += '<span class="msg_time">8:40 AM</span>';
-        content += '</div>';
-
-        content += '<div class="img_cont_msg">';
-
-            content += '<img src="../static/images/jackson.png" class="chatImg">';
-
-        content += '</div>';
+    content += '<div class="msg_cotainer_send">';
+    content += string;
+    content += '<span class="msg_time">8:40 AM</span>';
+    content += '</div>';
+    content += '<div class="img_cont_msg">';
+    content += '<img src="../static/images/jackson.png" class="chatImg">';
+    content += '</div>';
     content += '</div>';
     
     history.innerHTML = content;
     history.scrollTop = history.scrollHeight;
-    
-    console.log("scrollTop: "+history.scrollTop);
-    console.log("height: "+history.scrollHeight);
 }
 
 

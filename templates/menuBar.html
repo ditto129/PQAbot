@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>PSABot</title>
     <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
@@ -304,9 +303,11 @@
                                             <!-- 聊天室的header END -->
                                             
                                             <!-- 聊天室的body START -->
-                                            <div class="card-block accordion-block" style="height: 300px; overflow-y: auto;">
-                                                <div class="card-body msg_card_body" id="history_message">
+                                            <div id="history_message" class="card-block accordion-block card-body msg_card_body" style="height: 300px;overflow-y: auto;overflow-x: hidden;">
+<!--
+                                                <div class="card-body msg_card_body overflow: auto;" id="history_message">
                                                 </div>
+-->
                                             </div>
                                             <!-- 聊天室的body END -->
 
@@ -463,6 +464,5 @@
     <script src="../static/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="../static/assets/js/pages/menuBarJS/menuBar.js"></script>
     <script src="../static/assets/js/common.js"></script>
-<!--   <script src="{% static 'assets/js/pages/menuBarJS/menuBar.js' %}"></script>-->
 </body>
 </html>
