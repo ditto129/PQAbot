@@ -1,5 +1,6 @@
 // 用來記使用者選擇的所有標籤
 var language = [];
+var children = [];
 var chosenTags = [];
 var allTags = {};
 
@@ -50,12 +51,14 @@ function showChosenTags(){
 }
 
 // 顯示可選擇的語言「子」標籤
-function click_tag(tag, id, page){
+function click_tag(tag, page){
     // tag -> 是選擇了哪個tag
     // id -> 那個tag的id是什麼
     // page -> 是選語言(0) 還是選孩子(1)
     
     console.log("tag: "+tag);
+    var id = allTags[tag];
+    console.log("clickTag的id: "+id);
     
     // 標題 START
     // 需加上上一頁的按鈕
@@ -81,25 +84,62 @@ function click_tag(tag, id, page){
     
     // 可以選擇的標籤 START
     if(page==0){
-        var content = "";
-        for(var i=0; i<10; i++){
-            content += '<label id="';
-            content += i; //這裡要放id
-            content += '" class="badge purpleLabel2" style="margin-right: 5px;" onclick="click_tag(';
-            content += "'";
-            content += tag;
-            content += i;
-            content += "', '";
-            content += "123";//這裡放ID
-            content += "', '1'";
-            content += ')">';
-                content += tag;
-                content += i;
-            content += "</label>";
-        }
-        document.getElementById("chose_tag").innerHTML = content;
+        
+        var myURL = head_url+"query_all_offspring_tag?tag_id="+allTags[tag];
+        children = [];
+            $.ajax({
+                url: myURL,
+                type: "GET",
+                async: false, 
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function(response){
+                    console.log("success");
+                    //先記下allTags 包含名字&ID
+                    for(var i=0; i<response.tags.length; i++){
+                        console.log("i: "+i);
+                        
+                        var temp = response.tags[i].tag_name;
+                        temp = temp.replace("'", "&apos;");
+                        
+                        console.log("temp: "+temp);
+                        children.push(temp);
+                        console.log("children[" + i + "]: "+children[i]);
+                        allTags[response.tags[i].tag_name] = response.tags[i].tag_id;
+                    }
+                },
+                error: function(){
+                    console.log("error");
+                }
+            });
+        showChildrenAndSetColor()
     }
+    
+    
     // 可以選擇的標籤 END
+}
+
+function showChildrenAndSetColor(){
+    var content = "";
+    console.log("len: "+children.length);
+    for(var i=0; i<children.length; i++){
+        content += '<label id="';
+        content += allTags[children[i]]; //這裡要放id
+        console.log("id是: "+allTags[children[i]]);
+        content += '" class="badge purpleLabel2" style="margin-right: 5px;';
+        if(chosenTags.indexOf(children[i])!=-1){
+            content += 'background-color: #E6E6FA;';
+        }
+        content += '" onclick="click_tag(';
+        content += "'";
+        content += children[i];
+        content += "', '1'";
+        content += ')">';
+            content += children[i];
+        content += "</label>";
+    }
+    console.log("innerHTML");
+    document.getElementById("chose_tag").innerHTML = content;
 }
 
 // 顯示可選擇的語言標籤
@@ -107,26 +147,26 @@ function getLanguageTag(){
     
     // 中間內容 START
     // 先去跟後端拿 只有顯示語言的標籤有哪些
-//    var myURL = head_url+"query_all_languages";
-//    $.ajax({
-//        url: myURL,
-//        type: "GET",
-//        dataType: "json",
-//        contentType: 'application/json; charset=utf-8',
-//        success: function(response){
-//            console.log("success");
-//            //先記下allTags 包含名字&ID
-//            language = ['python', 'Java', 'C'];
-//            showLanguageTag();
-//        },
-//        error: function(){
-//            console.log("error");
-//        }
-//    });
+    var myURL = head_url+"query_all_languages";
+    $.ajax({
+        url: myURL,
+        type: "GET",
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("success");
+            //先記下allTags 包含名字&ID
+            for(var i=0; i<response.tags.length; i++){
+                language.push(response.tags[0].tag);
+                allTags[response.tags[0].tag] = response.tags[0]._id;
+                showLanguageTag();
+            }
+        },
+        error: function(){
+            console.log("error");
+        }
+    });
     // 中間內容 END
-    
-    language = ['python', 'Java', 'C'];
-    showLanguageTag();
 }
 
 // 顯示「語言」tag的content
@@ -141,6 +181,7 @@ function showLanguageTag(){
     
     var content = "";
     for(var i=0; i<language.length; i++){
+        console.log("language.length: "+language.length);
         console.log("language[i]: "+language[i]);
         content += '<label id="';
         content += allTags[language[i]];
@@ -152,8 +193,6 @@ function showLanguageTag(){
         content += '" onclick="click_tag(';
         content += "'";
         content += language[i];
-        content += "', '";
-        content += "123"; //id
         content += "', '0'"
         content += ')">';
             content += language[i];
