@@ -80,3 +80,12 @@
     color: white !important;
     cursor: pointer;
 }
+
+/*聊天室自動換行*/
+.autoNewLine {
+-moz-hyphens:auto;
+-ms-hyphens:auto;
+-webkit-hyphens:auto;
+hyphens:auto;
+word-wrap:break-word;
+}
