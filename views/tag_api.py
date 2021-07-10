@@ -14,7 +14,7 @@ tag_api=Blueprint('tag_api', __name__)
 @tag_api.route('build_initial_tag', methods=['get'])
 def build_initial_tag():
     first_level_tag_name = 'Python'
-    second_level_tag_name = ['Web Crawing Data/Mining', 'Web frameworks', 'NLP', 'game development', 'standard libraries', 'GUI', 'Data processing']
+    second_level_tag_name = ['Web Crawling / Data Mining', 'Web frameworks', 'NLP', 'game development', 'standard libraries', 'GUI', 'Data processing']
     #third_level_tag_name
     Web_Crawing_Data_Mining = ['Requests', 'LXML', 'BeautifulSoup', 'Selenium', 'Scrapy', 'urlib2', 'PySpider', 'MechanicalSoup']
     NLP = ['NLTK', 'TextBlob', 'CoreNLP', 'Gensim', 'spaCy', 'polyglot', 'Pattern', 'PyNLPI', 'SciKit-Learn', 'jieba', 'monpa', 'Vocabulary', 'Quepy']
