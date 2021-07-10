@@ -23,7 +23,7 @@ function show_choose_tag(){
 // 目前不需要
 function hide_choose_tag(){
     $("#tag_content").hide();
-    console.log("toggle");
+    //console.log("toggle");
     var content = "";
     content += '<i class="fa fa-angle-down" aria-hidden="true" style="float: right; color: gray;" onclick="show_choose_tag()"></i>';
     document.getElementById("arrow").innerHTML = content;
@@ -35,7 +35,7 @@ function showChosenTags(){
     
     for(var i=0; i<chosenTags.length; i++){
         chosen_tag_content += '<label class="badge purpleLabel" style="margin-right: 5px;">';
-            chosen_tag_content += chosenTags[i];
+        chosen_tag_content += chosenTags[i];
         chosen_tag_content += '<button type="button" class="labelXBtn" onclick="cancle(';
         chosen_tag_content += "'";
         chosen_tag_content += chosenTags[i]
@@ -56,9 +56,9 @@ function click_tag(tag, page){
     // id -> 那個tag的id是什麼
     // page -> 是選語言(0) 還是選孩子(1)
     
-    console.log("tag: "+tag);
+    //console.log("tag: "+tag);
     var id = allTags[tag];
-    console.log("clickTag的id: "+id);
+    //console.log("clickTag的id: "+id);
     
     // 標題 START
     // 需加上上一頁的按鈕
@@ -97,14 +97,14 @@ function click_tag(tag, page){
                     console.log("success");
                     //先記下allTags 包含名字&ID
                     for(var i=0; i<response.tags.length; i++){
-                        console.log("i: "+i);
+                        //console.log("i: "+i);
                         
                         var temp = response.tags[i].tag_name;
                         temp = temp.replace("'", "&apos;");
                         
-                        console.log("temp: "+temp);
+                        //console.log("temp: "+temp);
                         children.push(temp);
-                        console.log("children[" + i + "]: "+children[i]);
+                        //console.log("children[" + i + "]: "+children[i]);
                         allTags[children[i]] = response.tags[i].tag_id;
                     }
                 },
@@ -121,11 +121,11 @@ function click_tag(tag, page){
 
 function showChildrenAndSetColor(){
     var content = "";
-    console.log("len: "+children.length);
+    //console.log("len: "+children.length);
     for(var i=0; i<children.length; i++){
         content += '<label id="';
         content += allTags[children[i]]; //這裡要放id
-        console.log("id是: "+allTags[children[i]]);
+        //console.log("id是: "+allTags[children[i]]);
         content += '" class="badge purpleLabel2" style="margin-right: 5px;';
         if(chosenTags.indexOf(children[i])!=-1){
             content += 'background-color: #E6E6FA;';
@@ -138,7 +138,7 @@ function showChildrenAndSetColor(){
             content += children[i];
         content += "</label>";
     }
-    console.log("innerHTML");
+    //console.log("innerHTML");
     document.getElementById("chose_tag").innerHTML = content;
 }
 
@@ -181,8 +181,8 @@ function showLanguageTag(){
     
     var content = "";
     for(var i=0; i<language.length; i++){
-        console.log("language.length: "+language.length);
-        console.log("language[i]: "+language[i]);
+        //console.log("language.length: "+language.length);
+        //console.log("language[i]: "+language[i]);
         content += '<label id="';
         content += allTags[language[i]];
         content += '" class="badge purpleLabel2" style="margin-right: 5px;';
@@ -195,7 +195,7 @@ function showLanguageTag(){
         content += language[i];
         content += "', '0'"
         content += ')">';
-            content += language[i];
+        content += language[i];
         content += '</label>';
     }
 
@@ -204,7 +204,7 @@ function showLanguageTag(){
 
 // 取消選擇tag後的處理
 function cancle(tag){
-    console.log("要取消的tag: "+tag);
+    //console.log("要取消的tag: "+tag);
     var id = allTags[tag];
     document.getElementById(id).setAttribute("style", "margin-right: 5px; background-color: white;");
     

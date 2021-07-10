@@ -131,7 +131,8 @@ function send_message(){
 //    msg.innerHTML = "";
     msg.value = ""
     console.log("有清空");
-    
+    //直接用session_id會undifine!!
+    session_id = localStorage.getItem("sessionID");
     var myURL = head_url + "base_flow_rasa?message="+message+"&sender_id="+session_id;
     console.log("myURL_BERFORE: "+myURL);
     myURL = encodeURI(myURL);

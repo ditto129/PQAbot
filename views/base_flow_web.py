@@ -47,7 +47,7 @@ def otherSingleFrame():
 def postRowFrame():
     return render_template("postRowFrame.html")
 
-@base_flow_web.route("/homeFrame")
+@base_flow_web.route("/home")
 def homeFrame():
     return render_template("home.html")
     
