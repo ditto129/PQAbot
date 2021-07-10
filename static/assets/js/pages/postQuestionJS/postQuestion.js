@@ -105,7 +105,7 @@ function click_tag(tag, page){
                         console.log("temp: "+temp);
                         children.push(temp);
                         console.log("children[" + i + "]: "+children[i]);
-                        allTags[response.tags[i].tag_name] = response.tags[i].tag_id;
+                        allTags[children[i]] = response.tags[i].tag_id;
                     }
                 },
                 error: function(){

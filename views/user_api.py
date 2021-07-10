@@ -6,7 +6,7 @@ from flask import Blueprint, request, jsonify
 
 # --- our models ---- #
 from models import user
-from models.psa_excption_handler import err_msg
+#from models.psa_excption_handler import err_msg
 
 user_api = Blueprint("user_api", __name__)
 

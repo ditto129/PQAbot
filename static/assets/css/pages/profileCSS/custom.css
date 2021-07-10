@@ -18,6 +18,13 @@ a .purpleLabel2 {
     cursor: pointer;
 }
 
+button .purpleLabel {
+    cursor: pointer;
+}
+
+button .purpleLabel2 {
+    cursor: pointer;
+}
 
 .pagination {
   display: inline-block;

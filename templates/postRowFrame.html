@@ -46,10 +46,15 @@
                                         <div class="card-header">
                                             <div class="card-header-left">
                                                 <h5>貼文列表</h5>
+                                                <!--篩選貼文start-->
+                                                <div data-toggle="tooltip" data-placement="top" data-original-title="點我篩選標籤">
+                                                <i type="button" class="fa fa-filter scoreBtn" aria-hidden="true" data-toggle="modal" data-target="#exampleModal"></i>
+                                                </div> 
+                                                <!--篩選貼文end-->
                                              </div>
-                                              <div class="card-header-right">
-                                                  <i class="icofont icofont-spinner-alt-5"></i>
-                                              </div>
+                                            <div class="card-header-right">
+                                                <i class="icofont icofont-spinner-alt-5"></i>
+                                            </div>
                                             <!-- 翻頁 start-->
                                             <div class="pagination">
                                                 <a href="#">❮</a>
@@ -458,16 +463,36 @@
                                             </div>
                                         </div>
                                     <!-- 貼文列表 end -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div id="styleSelector"></div>
                     </div>
-                    <div id="styleSelector"></div>
                 </div>
             </div>
         </div>
+      </div>
+<!-- 選標籤視窗 START-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content"> 
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">選擇相關標籤</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>    
+      <div class="modal-body">     
+          <div id="chose_tag" style="margin-top: 5px;">
+          </div>    
+          <div id="chosen_tag_in_modal" style="margin-top: 15px;">
+          </div>
+      </div>
     </div>
-
+  </div>
+</div>
+<!-- 選標籤視窗 END-->
         <!-- Warning Section Starts -->
         <!-- Older IE warning message -->
     <!--[if lt IE 9]>
@@ -534,7 +559,8 @@
 <script src="../static/assets/js/demo-12.js"></script>
 <script src="../static/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="../static/assets/js/pages/postRowFrameJS/postRowFrame.js"></script>
-
+<!--選標籤-->
+<script src="../static/assets/js/pages/postQuestionJS/postQuestion.js"></script>
 </body>
 
 </html>
