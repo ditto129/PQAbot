@@ -74,6 +74,17 @@ File: style.css
     margin: 2px;
 }
 
+
+.editBtn{
+    background-color: white;
+    color: gray;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-top: 22px;
+    cursor: pointer;
+}
+
 /* 自己新增的 END */
 
 body {

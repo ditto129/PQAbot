@@ -133,8 +133,8 @@
                             </li>
                             <li class="user-profile header-notification">
                                 
-                                <img src="../static/images/jackson.png" class="img-radius" alt="User-Profile-Image">
-                                <span>易烊千璽</span>
+                                <img id="userHeadshotNav" src="../static/images/jackson.png" class="img-radius" alt="User-Profile-Image">
+                                <span id="userNameNav">易烊千璽</span>
                                  
                                 
                             </li>
@@ -160,11 +160,19 @@
                         <div class="pcoded-inner-navbar main-menu" style="display: inline-block">
                             <div class="">
                                 <div class="main-menu-header">
-                                    <img class="img-40 img-radius" src="../static/images/jackson.png" alt="User-Profile-Image">
+                                    <img id="userHeadshotMenubar" class="img-40 img-radius" src="../static/images/jackson.png" alt="User-Profile-Image">
+                                    
                                     <div class="user-details">
-                                        <span>易烊千璽</span>
+                                        <span id="userNameMenubar">易烊千璽</span>
                                         <span id="more-details">一般使用者</span>
                                     </div>
+                                    
+                                    <button class="btn btn-outline" style="width: 90px; background-color: #5D478B; margin-left: 0px;" type="button" data-toggle="modal" data-target="#exampleModal">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true" style="color: white;"></i>
+                                            <span data-i18n="nav.dash.main" style="color: white; font-size: 10px; margin-right: 10px;">編輯</span>
+                                    </button>
+<!--                                    <i class="fa fa-pencil-square-o editBtn" aria-hidden="true" type="button" data-toggle="modal" data-target="#exampleModal"></i>-->
+                                    
                                 </div>
                             </div>
                             
@@ -353,6 +361,48 @@
         </div>
     </div>
 <!-- Main-body end -->
+    
+<!-- 編輯個人資訊 START-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content"> 
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">編輯個人資訊</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>    
+      <div class="modal-body">     
+          <div id="userHeadshot" style="margin-top: 5px;">
+              <!-- 編輯個人基本資料 START -->
+                
+                <div>
+                    <i class="fa fa-certificate" aria-hidden="true" style="color: #5D478B;"></i>
+                    <span style="font-size: 20px;">大頭貼</span>
+                </div>
+                <!-- 或者用class = "chatImg"(這個是圓形＋紫色框) -->
+                <img id="headshot" class="img-100 img-radius" style="margin-left: 10px;" src="../static/images/defaultPic.jpg">
+                <br><br>
+                <input type="file" name="img" id="headshotBtn" accept="image/*">
+            <!-- 編輯個人基本資料 END -->
+          </div>    
+          <hr>
+          <div style="margin-top: 15px;">
+              <i class="fa fa-certificate" aria-hidden="true" style="color: #5D478B;"></i>
+              <span style="font-size: 20px;">姓名</span>
+          </div>
+          <div>
+              <input id="userName" type="text" name="fname" value="易烊千璽">
+          </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="save()" data-dismiss="modal">儲存</button>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- 編輯個人資訊 END-->
+    
 <!-- Warning Section Starts -->
 <!-- Older IE warning message -->
 <!--[if lt IE 9]>
