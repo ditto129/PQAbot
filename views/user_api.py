@@ -82,7 +82,7 @@ def update_user_profile():
         print(e)
     return jsonify(user_profile),200
     
-''' 湘的 '''
+''' 湘的 start '''
 UPLOAD_FOLDER = '/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img'
 ALLOWED_EXTENSIONS = {'png'}
 
@@ -129,3 +129,4 @@ def read_image():
     data_uri = base64.b64encode(contents).decode('utf-8')
     img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
     return img_tag
+''' 湘的 end '''
