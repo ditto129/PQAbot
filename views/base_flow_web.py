@@ -55,7 +55,8 @@ def homeFrame():
 def summaryFrame():
     return render_template("summary_new.html")
     
+#可以用相對路徑嗎？好像不行
 @base_flow_web.route("/skillTreeFrame")
 def skillTreeFrame():
-    return render_template("../jPrgChart-master/example/example.html")
+    return render_template("example.html")
 
