@@ -183,6 +183,45 @@ function open_close(){
 //    var iframeHeight = document.getElementById("iframeTag").contentWindow.document.documentElement.scrollHeight;
 //}
 
+//編輯個人資訊 START
+var userHeadshotURL = "";
+$("#headshotBtn").change(function(){
+    readURL(this);
+});
+
+function readURL(input){
+    var reader;
+    if(input.files && input.files[0]){
+        reader = new FileReader();
+        reader.onload = function (e) {
+            $("#headshot").attr("src", e.target.result);
+            userHeadshotURL = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+}
+
+
+function save(){
+    // 把資料傳給後端
+    
+    // 並將新的資訊顯示在螢幕上
+    var userHeadshotMenubar = document.getElementById("userHeadshotMenubar");
+    var userNameMenubar = document.getElementById("userNameMenubar");
+    
+    var userHeadshotNav = document.getElementById("userHeadshotNav");
+    console.log("userheadshot: "+userHeadshotNav);
+    var userNameNav = document.getElementById("userNameNav");
+    
+    userHeadshotMenubar.setAttribute("src", userHeadshotURL);
+    userHeadshotNav.setAttribute("src", userHeadshotURL);
+    
+    var name = $("#userName").val();
+    userNameMenubar.innerHTML = name;
+    userNameNav.innerHTML = name;
+}
+//編輯個人資訊 END
+
 function logOut(){
     localStorage.clear();
     window.location.href = "login.html";
