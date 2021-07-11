@@ -82,4 +82,50 @@ def update_user_profile():
         print(e)
     return jsonify(user_profile),200
     
+''' 湘的 '''
+UPLOAD_FOLDER = '/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img'
+ALLOWED_EXTENSIONS = {'png'}
 
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+#判斷檔案是否合法
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+          
+@user_api.route('save_user_img', methods=['post'])
+#將書的img存入目錄
+def save_user_img():
+    # check if the post request has the file part
+    if 'img' not in request.files:
+         flash('No file part')
+         return redirect(request.url)
+    file = request.files['img']
+    # if user does not select file, browser also
+    # submit an empty part without filename
+    if file.filename == '':
+         flash('No selected file')
+         return redirect(request.url)
+    if file and allowed_file(file.filename):
+         filename = secure_filename(file.filename)
+         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+         return jsonify({'message':'success'})
+    else:
+         return jsonify({'message':'falied'})
+
+@user_api.route('read_image', methods=['get'])
+#讀取照片
+def read_image():
+    user_id=request.values.get('user_id')
+    
+    #define an image object with the location.
+    file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
+    #file = "../images/"+book_id+".png"
+    #Open the image in read-only format.
+    with open(file, 'rb') as f:
+        contents = f.read()
+        
+    data_uri = base64.b64encode(contents).decode('utf-8')
+    img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
+    return img_tag
