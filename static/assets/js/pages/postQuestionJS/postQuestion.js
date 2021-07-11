@@ -2,6 +2,7 @@
 var language = [];
 var children = [];
 var chosenTags = [];
+// 以上3個都是放id
 var allTags = {};
 
 function start(){
@@ -30,17 +31,18 @@ function hide_choose_tag(){
 }
 
 //根據chosenTags的內容 顯示已選擇的tags
-function showChosenTags(){
+function showChosenTags(page){
+    console.log("showChosenTags");
     var chosen_tag_content = "<hr>";
     
     for(var i=0; i<chosenTags.length; i++){
         chosen_tag_content += '<label class="badge purpleLabel" style="margin-right: 5px;">';
-            chosen_tag_content += chosenTags[i];
+            chosen_tag_content += allTags[chosenTags[i]];
         chosen_tag_content += '<button type="button" class="labelXBtn" onclick="cancle(';
         chosen_tag_content += "'";
-        chosen_tag_content += chosenTags[i]
-        chosen_tag_content += "', '";
-        chosen_tag_content += allTags[chosenTags[i]];
+        chosen_tag_content += chosenTags[i];
+        chosen_tag_content += "','";
+        chosen_tag_content += page;
         chosen_tag_content += "'";
         chosen_tag_content += ')">x</button></label>';
     }
@@ -51,33 +53,27 @@ function showChosenTags(){
 }
 
 // 顯示可選擇的語言「子」標籤
-function click_tag(tag, page){
+function click_tag(id, page){
     // tag -> 是選擇了哪個tag
-    // id -> 那個tag的id是什麼
     // page -> 是選語言(0) 還是選孩子(1)
-    
-    console.log("tag: "+tag);
-    var id = allTags[tag];
-    console.log("clickTag的id: "+id);
-    
-    // 標題 START
-    // 需加上上一頁的按鈕
-    var titleContent = "";
-    titleContent += '<i class="fa fa-angle-left scoreBtn" aria-hidden="true" onclick="showLanguageTag()" style="color: gray; margin-right: 5px;"></i>';
-    titleContent += "選擇相關標籤";
-    
-    document.getElementById("exampleModalLabel").innerHTML = titleContent;
-    // 標題 END
+    var tag = allTags[id];
     
     
     // 已選擇的tag START
+    
     // card的最下面顯示已選擇的tags
-    if(!chosenTags.includes(tag)){ //如果還沒選過
-        
-        chosenTags.push(tag);
+    if(!chosenTags.includes(id)){ //如果還沒選過
+        console.log("顯示起來～");
+        chosenTags.push(id);
         document.getElementById(id).setAttribute("style", "margin-right: 5px; background-color: #E6E6FA;");
-        showChosenTags();
-        
+        if(language.indexOf(id)==-1){
+            showChosenTags(1);
+            console.log("page1");
+        }
+        else{
+            showChosenTags(0);
+            console.log("page0");
+        }
     }
     // 已選擇的tag END
     
@@ -85,7 +81,7 @@ function click_tag(tag, page){
     // 可以選擇的標籤 START
     if(page==0){
         
-        var myURL = head_url+"query_all_offspring_tag?tag_id="+allTags[tag];
+        var myURL = head_url+"query_all_offspring_tag?tag_id="+id;
         children = [];
             $.ajax({
                 url: myURL,
@@ -102,30 +98,34 @@ function click_tag(tag, page){
                         var temp = response.tags[i].tag_name;
                         temp = temp.replace("'", "&apos;");
                         
-                        console.log("temp: "+temp);
-                        children.push(temp);
-                        console.log("children[" + i + "]: "+children[i]);
-                        allTags[response.tags[i].tag_name] = response.tags[i].tag_id;
+                        allTags[response.tags[i].tag_id] = temp;
+                        children.push(response.tags[i].tag_id);
                     }
                 },
                 error: function(){
                     console.log("error");
                 }
             });
-        showChildrenAndSetColor()
+        showChildrenAndSetColor();
     }
-    
-    
     // 可以選擇的標籤 END
 }
 
 function showChildrenAndSetColor(){
+    
+    // 標題 START
+    // 需加上上一頁的按鈕
+    var titleContent = "";
+    titleContent += '<i class="fa fa-angle-left scoreBtn" aria-hidden="true" onclick="showLanguageTag()" style="color: gray; margin-right: 5px;"></i>';
+    titleContent += "選擇相關標籤";
+    
+    document.getElementById("exampleModalLabel").innerHTML = titleContent;
+    // 標題 END
+    
     var content = "";
-    console.log("len: "+children.length);
     for(var i=0; i<children.length; i++){
         content += '<label id="';
-        content += allTags[children[i]]; //這裡要放id
-        console.log("id是: "+allTags[children[i]]);
+        content += children[i]; //這裡要放id
         content += '" class="badge purpleLabel2" style="margin-right: 5px;';
         if(chosenTags.indexOf(children[i])!=-1){
             content += 'background-color: #E6E6FA;';
@@ -135,10 +135,11 @@ function showChildrenAndSetColor(){
         content += children[i];
         content += "', '1'";
         content += ')">';
-            content += children[i];
+            content += allTags[children[i]];
         content += "</label>";
     }
-    console.log("innerHTML");
+    
+//    console.log("innerHTML: "+content);
     document.getElementById("chose_tag").innerHTML = content;
 }
 
@@ -157,8 +158,8 @@ function getLanguageTag(){
             console.log("success");
             //先記下allTags 包含名字&ID
             for(var i=0; i<response.tags.length; i++){
-                language.push(response.tags[0].tag);
-                allTags[response.tags[0].tag] = response.tags[0]._id;
+                language.push(response.tags[0]._id);
+                allTags[response.tags[0]._id] = response.tags[0].tag;
                 showLanguageTag();
             }
         },
@@ -181,10 +182,10 @@ function showLanguageTag(){
     
     var content = "";
     for(var i=0; i<language.length; i++){
-        console.log("language.length: "+language.length);
-        console.log("language[i]: "+language[i]);
+//        console.log("language.length: "+language.length);
+//        console.log("language[i]: "+language[i]);
         content += '<label id="';
-        content += allTags[language[i]];
+        content += language[i];
         content += '" class="badge purpleLabel2" style="margin-right: 5px;';
         //如果選過要變色
         if(chosenTags.indexOf(language[i])!=-1){
@@ -195,7 +196,7 @@ function showLanguageTag(){
         content += language[i];
         content += "', '0'"
         content += ')">';
-            content += language[i];
+            content += allTags[language[i]];
         content += '</label>';
     }
 
@@ -203,16 +204,28 @@ function showLanguageTag(){
 }
 
 // 取消選擇tag後的處理
-function cancle(tag){
-    console.log("要取消的tag: "+tag);
-    var id = allTags[tag];
-    document.getElementById(id).setAttribute("style", "margin-right: 5px; background-color: white;");
+function cancle(id, page){
     
-    var index = chosenTags.indexOf(tag);
+    var index = chosenTags.indexOf(id);
     if(index != -1){
         chosenTags.splice(index,1);
-        showChosenTags();
+        showChosenTags(page);
     }
+    
+    if(language.indexOf(id)==-1){
+        showChildrenAndSetColor();
+    }
+    else{
+        showLanguageTag();
+    }
+    if(page==0){
+        showLanguageTag();
+    }
+    else{
+        showChildrenAndSetColor();
+    }
+    
+    
 }
 
 window.addEventListener("load", start, false);
