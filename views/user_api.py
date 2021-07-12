@@ -1,9 +1,10 @@
 
 # --- flask --- #
-from flask import Blueprint, request, jsonify, Flask
+from flask import Blueprint, request, jsonify, Flask, flash, redirect
 # from flask_security import logout_user, login_required
 import base64
 from werkzeug.utils import secure_filename
+import os
 
 # --- our models ---- #
 from models import user
