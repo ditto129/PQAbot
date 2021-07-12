@@ -205,6 +205,27 @@ function readURL(input){
 function save(){
     // 把資料傳給後端
     
+    console.log("照片files[0]: "+document.getElementById("headshotBtn").files[0]);
+    var userID = localStorage.setItem("sessionID");
+    console.log("userID: "+userID);
+    let form = new FormData();
+    form.append("img", document.getElementById("headshotBtn").files[0], userID);
+
+        fetch('http://127.0.0.1:5000/save_user_img', {
+          method: 'POST',
+          body: form,
+        }).then(result => {
+//            var myURL = "http://localhost:5000/upload_image?book_id="+book_id;
+//            $.ajax({
+//                url: myURL,
+//                type: "GET",
+//                dataType: "json",
+//                async: false,
+//                ...
+//            });
+        });
+
+    
     // 並將新的資訊顯示在螢幕上
     var userHeadshotMenubar = document.getElementById("userHeadshotMenubar");
     var userNameMenubar = document.getElementById("userNameMenubar");
