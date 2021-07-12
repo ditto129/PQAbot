@@ -83,7 +83,8 @@ def update_user_profile():
     return jsonify(user_profile),200
     
 ''' 湘的 start '''
-UPLOAD_FOLDER = '/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img'
+#UPLOAD_FOLDER = '/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img'
+UPLOAD_FOLDER = '/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img'
 ALLOWED_EXTENSIONS = {'png'}
 
 app = Flask(__name__)
@@ -102,13 +103,16 @@ def save_user_img():
          flash('No file part')
          return redirect(request.url)
     file = request.files['img']
+    print("file: ", file)
     # if user does not select file, browser also
     # submit an empty part without filename
+    print("allowed_file(file.filename): ", allowed_file(file.filename))
     if file.filename == '':
          flash('No selected file')
          return redirect(request.url)
     if file and allowed_file(file.filename):
          filename = secure_filename(file.filename)
+         print("filename: ", filename)
          file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
          return jsonify({'message':'success'})
     else:
@@ -120,7 +124,8 @@ def read_image():
     user_id=request.values.get('user_id')
     
     #define an image object with the location.
-    file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
+    #file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
+    file = "/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img"+user_id+".png"
     #file = "../images/"+book_id+".png"
     #Open the image in read-only format.
     with open(file, 'rb') as f:

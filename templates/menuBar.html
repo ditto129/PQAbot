@@ -29,6 +29,7 @@
     <link rel="stylesheet" type="text/css" href="../static/assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="../static/assets/css/jquery.mCustomScrollbar.css">
     <link rel="stylesheet" type="text/css" href="../static/assets/css/pages/menuBarCSS/menuBar.css">
+    <link rel="stylesheet" type="text/css" href="../static/assets/css/pages/profileCSS/custom.css">
 </head>
 
 <body>
@@ -270,7 +271,7 @@
                                                             <div class="accordion-heading" role="tab" id="headingOne">
                                                                 <h3 class="card-title accordion-title">
                                                                     <a class="accordion-msg" href="#">
-                                                                    <img src="../static/images/person_3.jpg" class="chatImg">
+                                                                    <img src="../static/images/person_3.png" class="chatImg">
                                                                     宋亞軒
                                                                     </a>
                                                                 </h3>
@@ -383,7 +384,7 @@
                 <!-- 或者用class = "chatImg"(這個是圓形＋紫色框) -->
                 <img id="headshot" class="img-100 img-radius" style="margin-left: 10px;" src="../static/images/defaultPic.jpg">
                 <br><br>
-                <input type="file" name="img" id="headshotBtn" accept="image/*">
+                <input type="file" name="img" id="headshotBtn" accept="image/png">
             <!-- 編輯個人基本資料 END -->
           </div>    
           <hr>
@@ -397,9 +398,11 @@
           
           <hr>
           <!-- 興趣標籤 START -->
-          <div style="margin-top: 15px;">
+          <div style="margin-top: 15px;" id="interestingTags">
               <i class="fa fa-certificate" aria-hidden="true" style="color: #5D478B;"></i>
               <span style="font-size: 20px;">興趣標籤</span>
+          </div>
+          <div id="forwardPage">
           </div>
           <div id="chose_tag" style="margin-top: 5px;">
           </div>
