@@ -16,13 +16,15 @@ user_api = Blueprint("user_api", __name__)
 # 取得使用者簡易資料，不包含技能樹、發文紀錄
 @user_api.route('/query_user_profile', methods=['POST'])
 def query_user_profile():
+    print("query_user_profile")
     data = request.get_json()
-    print("data: ", data)
-    user_dict = user.query_user(data['id'])
+    print("data: ", data["_id"])
+    
+    user_dict = user.query_user(data['_id'])
     print("user_dict: ", user_dict)
     try:
         user_profile = {
-            '_id' : user_dict['id'],
+            '_id' : user_dict['_id'],
             'name': user_dict['name'],
             'email':user_dict['email'],
             'img': user_dict['img']
@@ -30,7 +32,8 @@ def query_user_profile():
     except Exception as e :
         user_profile = {"error" : e.__class__.__name__ + e.args[0]}
         print(e)
-    return jsonify(user_profile),200
+    return jsonify({'profile':user_profile})
+    #return jsonify(user_profile),200
 
 
 # 取得使用者發文紀錄

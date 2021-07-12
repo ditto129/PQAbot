@@ -8,12 +8,12 @@ function start(){
     // 拿到使用者曾發布的貼文 START
     var myURL = head_url + "query_user_profile";
     var id = localStorage.getItem("sessionID");
-    var data = {"id": id};
+    var data = {"_id": id};
     console.log(data);
     $.ajax({
         url: myURL,
         type: "POST",
-        data: data,
+        data: JSON.stringify(data),
 //        async: false, 
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
