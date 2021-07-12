@@ -61,6 +61,9 @@ function user(string){
 
 //start
 function start(){
+    //讀取使用者大頭貼
+    getUserHeadshot();
+    
     //興趣標籤 準備
     getLanguageTag();
     
@@ -204,6 +207,30 @@ function readURL(input){
         }
         reader.readAsDataURL(input.files[0]);
       }
+}
+
+function getUserHeadshot(){
+    var myURL = head_url + "read_image?user_id=" + localStorage.getItem("sessionID");
+    console.log("myURL: "+myURL);
+    $.ajax({
+        url: myURL,
+        type: "GET",
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("讀取照片成功");
+            document.getElementById("userHeadshotMenubar").innerHTML = response;
+            document.getElementById("userHeadshotNav").innerHTML = response;
+            console.log("修改完畢");
+        },
+        error: function(response){
+            console.log(response);
+            console.log(response.responseText);
+            document.getElementById("userHeadshotMenubar").innerHTML = response.responseText;
+            document.getElementById("userHeadshotNav").innerHTML = response.responseText;
+            console.log("讀取照片失敗！");
+        }
+    });
 }
 // 照片 END
 
@@ -413,50 +440,27 @@ function save(){
     // 把資料傳給後端
 
     var userImgName = localStorage.getItem("sessionID") + ".png";
-    console.log("imgname: "+userImgName);
     let form = new FormData();
     form.append("img", document.getElementById("headshotBtn").files[0], userImgName);
         
     var myURL = head_url + "save_user_img";
     
     fetch(myURL, {
-      method: 'POST',
-      body: form,
+        method: 'POST',
+        body: form,
+        async: false, 
     }).then(res => {
         return res.json();   // 使用 json() 可以得到 json 物件
     }).then(result => {
         console.log(result); // 得到 {name: "oxxo", age: 18, text: "你的名字是 oxxo，年紀 18 歲～"}
-//        var myURL = "http://localhost:5000/upload_image?book_id="+book_id;
-//        console.log("myURL: "+myURL);
-//        $.ajax({
-//            url: myURL,
-//            type: "GET",
-//            dataType: "json",
-//            async:false,
-//            contentType: 'application/json; charset=utf-8',
-//            success: function(response){
-//                console.log("success");
-//                window.alert("新增成功～");
-//                window.location.href = 'add_book.html';
-//            },
-//            error: function(){
-//                console.log("error");
-//                window.alert("新增失敗T^T");
-//            }
-//        });
     });
-
+    // 照片的更新
+    getUserHeadshot();
     
     // 並將新的資訊顯示在螢幕上
-    var userHeadshotMenubar = document.getElementById("userHeadshotMenubar");
+
     var userNameMenubar = document.getElementById("userNameMenubar");
-    
-    var userHeadshotNav = document.getElementById("userHeadshotNav");
-    console.log("userheadshot: "+userHeadshotNav);
     var userNameNav = document.getElementById("userNameNav");
-    
-    userHeadshotMenubar.setAttribute("src", userHeadshotURL);
-    userHeadshotNav.setAttribute("src", userHeadshotURL);
     
     var name = $("#userName").val();
     userNameMenubar.innerHTML = name;

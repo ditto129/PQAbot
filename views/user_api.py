@@ -127,13 +127,13 @@ def read_image():
     
     #define an image object with the location.
     #file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
-    file = "/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img"+user_id+".png"
+    file = "/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
     #file = "../images/"+book_id+".png"
     #Open the image in read-only format.
     with open(file, 'rb') as f:
         contents = f.read()
         
     data_uri = base64.b64encode(contents).decode('utf-8')
-    img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
+    img_tag = '<img class="img-40 img-radius" alt="User-Profile-Image" src="data:image/png;base64,{0}">'.format(data_uri)
     return img_tag
 ''' 湘的 end '''
