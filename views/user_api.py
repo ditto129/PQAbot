@@ -3,6 +3,7 @@
 from flask import Blueprint, request, jsonify, Flask
 # from flask_security import logout_user, login_required
 import base64
+from werkzeug.utils import secure_filename
 
 # --- our models ---- #
 from models import user
