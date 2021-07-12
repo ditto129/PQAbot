@@ -21,8 +21,9 @@ def query_user(user_id):
 # 編輯使用者資料
 def update_user(user_dict):
     _db.USER_COLLECTION.update_one({'_id':user_dict['_id']},{'$set':user_dict})
-    
-# 調整使用者特定tag一般積分
+
+
+# 增加使用者特定tag一般積分
 def update_user_score(user_id,tag_id,tag_name,score):
     # 若使用者沒有該技能，新增該技能
     if _db.USER_COLLECTION.find_one({'_id':user_id,'skill.tag_id': tag_id}) == None:
@@ -37,7 +38,7 @@ def update_user_score(user_id,tag_id,tag_name,score):
     else:
         _db.USER_COLLECTION.update_one({'_id':user_id,'skill.tag_id': tag_id},{'$inc':{'skill.$.score':score }})
         
-    
+# 增加使用者特定tag興趣積分    
 def update_user_interested_score(user_id,tag_id,tag_name,score):
     # 若使用者沒有該技能，新增該技能
     if _db.USER_COLLECTION.find_one({'_id':user_id,'skill.tag_id': tag_id}) == None:
