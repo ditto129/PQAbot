@@ -1,10 +1,8 @@
 
 # --- flask --- #
-from flask import Blueprint, request, jsonify, Flask, flash, redirect
+from flask import Blueprint, request, jsonify, Flask
 # from flask_security import logout_user, login_required
 import base64
-from werkzeug.utils import secure_filename
-import os
 
 # --- our models ---- #
 from models import user
@@ -16,12 +14,9 @@ user_api = Blueprint("user_api", __name__)
 # 取得使用者簡易資料，不包含技能樹、發文紀錄
 @user_api.route('/query_user_profile', methods=['POST'])
 def query_user_profile():
-    print("query_user_profile")
     data = request.get_json()
-    print("data: ", data["_id"])
-    
+    print(data)
     user_dict = user.query_user(data['_id'])
-    print("user_dict: ", user_dict)
     try:
         user_profile = {
             '_id' : user_dict['_id'],
@@ -29,69 +24,68 @@ def query_user_profile():
             'email':user_dict['email'],
             'img': user_dict['img']
         }
+        
     except Exception as e :
-        user_profile = {"error" : e.__class__.__name__ + e.args[0]}
+        user_profile = {"error" : e.__class__.__name__ + ":" +e.args[0]}
         print(e)
-    return jsonify({'profile':user_profile})
-    #return jsonify(user_profile),200
+    return jsonify(user_profile)
 
 
 # 取得使用者發文紀錄
 @user_api.route('/query_user_post_list', methods=['POST'])
 def query_user_post_list():
     data = request.get_json()
-    user_dict = user.query_user(data['id'])
+    user_dict = user.query_user(data['_id'])
     try:
         user_posts = user_dict['record']['posts']
     except Exception as e :
-        user_posts = {"error" : e.__class__.__name__ + e.args[0]}
+        user_posts = {"error" : e.__class__.__name__ + ":" +e.args[0]}
         print(e)
-    return jsonify(user_posts),200
+    return jsonify(user_posts)
     
 # 取得使用者回覆紀錄
 @user_api.route('/query_user_response_list', methods=['POST'])
 def query_user_response_list():
     data = request.get_json()
-    user_dict = user.query_user(data['id'])
+    user_dict = user.query_user(data['_id'])
     try:
         user_posts = user_dict['record']['responses']
     except Exception as e :
-        user_posts = {"error" : e.__class__.__name__ + e.args[0]}
+        user_posts = {"error" : e.__class__.__name__ + ":" +e.args[0]}
         print(e)
-    return jsonify(user_posts),200
+    return jsonify(user_posts)
 
 # 取得使用者技能樹
 @user_api.route('/query_user_skill', methods=['POST'])
 def query_user_skill():
     data = request.get_json()
-    user_dict = user.query_user(data['id'])
+    user_dict = user.query_user(data['_id'])
     try:
         user_skill = user_dict['skill']
     except Exception as e :
-        user_skill = {"error" : e.__class__.__name__ + e.args[0]}
+        user_skill = {"error" : e.__class__.__name__ + ":" +e.args[0]}
         print(e)
-    return jsonify(user_skill),200
+    return jsonify(user_skill)
     
 # 編輯使用者簡易資料，不包含技能樹、發文紀錄
 @user_api.route('/update_user_profile', methods=['POST'])
 def update_user_profile():
-    data = request.get_json()
+    data = request.query_json()
     try:
         user_profile = {
-            '_id' : data['id'],
+            '_id' : data['_id'],
             'name': data['name'],
             'email':data['email'],
             'img': data['img']
         }
         user.update_user(user_profile)
     except Exception as e :
-        user_profile = {"error" : e.__class__.__name__ + e.args[0]}
+        user_profile = {"error" : e.__class__.__name__ + ":" +e.args[0]}
         print(e)
-    return jsonify(user_profile),200
+    return jsonify(user_profile)
     
 ''' 湘的 start '''
-#UPLOAD_FOLDER = '/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img'
-UPLOAD_FOLDER = '/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img'
+UPLOAD_FOLDER = '/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img'
 ALLOWED_EXTENSIONS = {'png'}
 
 app = Flask(__name__)
@@ -102,7 +96,6 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
           
-# 前端OK
 @user_api.route('save_user_img', methods=['post'])
 #將書的img存入目錄
 def save_user_img():
@@ -111,36 +104,31 @@ def save_user_img():
          flash('No file part')
          return redirect(request.url)
     file = request.files['img']
-    print("file: ", file)
     # if user does not select file, browser also
     # submit an empty part without filename
-    print("allowed_file(file.filename): ", allowed_file(file.filename))
     if file.filename == '':
          flash('No selected file')
          return redirect(request.url)
     if file and allowed_file(file.filename):
          filename = secure_filename(file.filename)
-         print("filename: ", filename)
          file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
          return jsonify({'message':'success'})
     else:
          return jsonify({'message':'falied'})
 
-# 前端OK
 @user_api.route('read_image', methods=['get'])
 #讀取照片
 def read_image():
     user_id=request.values.get('user_id')
     
     #define an image object with the location.
-    #file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
-    file = "/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
+    file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
     #file = "../images/"+book_id+".png"
     #Open the image in read-only format.
     with open(file, 'rb') as f:
         contents = f.read()
         
     data_uri = base64.b64encode(contents).decode('utf-8')
-    img_tag = '<img class="img-40 img-radius" alt="User-Profile-Image" src="data:image/png;base64,{0}">'.format(data_uri)
+    img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
     return img_tag
 ''' 湘的 end '''
