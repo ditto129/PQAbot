@@ -16,8 +16,10 @@ user_api = Blueprint("user_api", __name__)
 # 取得使用者簡易資料，不包含技能樹、發文紀錄
 @user_api.route('/query_user_profile', methods=['POST'])
 def query_user_profile():
-    data = request.query_json()
+    data = request.get_json()
+    print("data: ", data)
     user_dict = user.query_user(data['id'])
+    print("user_dict: ", user_dict)
     try:
         user_profile = {
             '_id' : user_dict['id'],
@@ -34,7 +36,7 @@ def query_user_profile():
 # 取得使用者發文紀錄
 @user_api.route('/query_user_post_list', methods=['POST'])
 def query_user_post_list():
-    data = request.query_json()
+    data = request.get_json()
     user_dict = user.query_user(data['id'])
     try:
         user_posts = user_dict['record']['posts']
@@ -46,7 +48,7 @@ def query_user_post_list():
 # 取得使用者回覆紀錄
 @user_api.route('/query_user_response_list', methods=['POST'])
 def query_user_response_list():
-    data = request.query_json()
+    data = request.get_json()
     user_dict = user.query_user(data['id'])
     try:
         user_posts = user_dict['record']['responses']
@@ -58,7 +60,7 @@ def query_user_response_list():
 # 取得使用者技能樹
 @user_api.route('/query_user_skill', methods=['POST'])
 def query_user_skill():
-    data = request.query_json()
+    data = request.get_json()
     user_dict = user.query_user(data['id'])
     try:
         user_skill = user_dict['skill']
@@ -70,7 +72,7 @@ def query_user_skill():
 # 編輯使用者簡易資料，不包含技能樹、發文紀錄
 @user_api.route('/update_user_profile', methods=['POST'])
 def update_user_profile():
-    data = request.query_json()
+    data = request.get_json()
     try:
         user_profile = {
             '_id' : data['id'],
@@ -97,6 +99,7 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
           
+# 前端OK
 @user_api.route('save_user_img', methods=['post'])
 #將書的img存入目錄
 def save_user_img():
@@ -120,6 +123,7 @@ def save_user_img():
     else:
          return jsonify({'message':'falied'})
 
+# 前端OK
 @user_api.route('read_image', methods=['get'])
 #讀取照片
 def read_image():
