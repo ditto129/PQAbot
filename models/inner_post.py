@@ -55,6 +55,11 @@ def query_post_list(page_size,page_number):
 def query_post(post_id):
     return _db.INNER_POST_COLLECTION.find_one({'_id':post_id})
 
+# 依post_id,response_id取得特定回覆
+def query_response(post_id,response_id):
+    post = _db.INNER_POST_COLLECTION.find_one({'_id':post_id})
+    return next(response for response in post['answer'] if response['_id'] == response_id)
+
 # 新增貼文回覆
 def insert_response(response_dict):
     target_post = _db.INNER_POST_COLLECTION.find_one({'_id':response_dict['post_id']})
@@ -96,14 +101,30 @@ def update_response(response_dict):
 
 # 編輯貼文評分
 def update_score(score_dict):
+    target_post = _db.INNER_POST_COLLECTION.find_one({'_id':score_dict['post_id']})
+    new_score_record = {
+                "user_id": score_dict['user'],
+                "score" : score_dict['score']
+    }
     # response_id為空表示更新貼文評分
     if len(score_dict['response_id']) == 0 :
-        _db.INNER_POST_COLLECTION.update_one({'_id':score_dict['post_id']},{'$inc':{'score':score_dict['score']}})
+        # 若使用者按過讚/倒讚，使用set
+        if any(s['user_id'] == score_dict['user'] for s in target_post['score']):
+            _db.INNER_POST_COLLECTION.update_one({'_id':score_dict['post_id'],'score.user_id': score_dict['user']},{'$set':{'score.$':new_score_record}})
+        else:
+            _db.INNER_POST_COLLECTION.update_one({'_id':score_dict['post_id']},{'$push':{'score':new_score_record}})
     # response_id不為空表示更新回覆評分
     else :
-        _db.INNER_POST_COLLECTION.update_one({'_id':score_dict['post_id'],'answer._id':score_dict['response_id']},{'$inc':{'answer.$.score':score_dict['score']}})
+        target_response = query_response(score_dict['post_id'],score_dict['response_id'])
+        # 若使用者按過讚/倒讚，使用set
+        if any(s['user_id'] == score_dict['user'] for s in target_response['score']):
+            original_score_record = next(s for s in target_response['score'] if s['user_id'] == score_dict['user'])
+            _db.INNER_POST_COLLECTION.update_one({'_id':score_dict['post_id'],'answer._id':score_dict['response_id']},{'$pull':{'answer.$.score':original_score_record}})
+            _db.INNER_POST_COLLECTION.update_one({'_id':score_dict['post_id'],'answer._id':score_dict['response_id']},{'$push':{'answer.$.score':new_score_record}})
+        else:
+            _db.INNER_POST_COLLECTION.update_one({'_id':score_dict['post_id'],'answer._id':score_dict['response_id']},{'$push':{'answer.$.score':new_score_record}})
     # 更新使用者相關技能積分
-    tags = _db.INNER_POST_COLLECTION.find_one({'_id':score_dict['post_id']})['tag']
+    tags = target_post['tag']
     for tag in tags:
         # 使用者相關標籤積分 + 1
         user.update_user_score(score_dict['target_user'],tag['tag_id'],tag['tag_name'], 1)

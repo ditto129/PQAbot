@@ -2,10 +2,6 @@
 from flask import Blueprint, request, jsonify
 #from flask_security import logout_user, login_required
 
-# --- google sign-in --- #
-from google.oauth2 import id_token
-from google.auth.transport import requests
-
 # --- our models ---- #
 from models import inner_post
 
@@ -61,7 +57,6 @@ def insert_inner_post_response():
         "replier_id" : data['replier_id'],
         "replier_name" : data['replier_name'],
         "response" : data['response'],
-        "score" : data['score'],
         "time" : data['time']
     }
     inner_post.insert_response(response_dict)
@@ -81,6 +76,7 @@ def like_inner_post():
     score_dict = {
         'post_id' : data['post_id'],
         'response_id' : data['response_id'],
+        'user':data['user'],
         'target_user':data['target_user'],
         'score' : 1,
     }
@@ -94,6 +90,7 @@ def dislike_inner_post():
     score_dict = {
         'post_id' : data['post_id'],
         'response_id' : data['response_id'],
+        'user':data['user'],
         'target_user':data['target_user'],
         'score' : -1,
     }
