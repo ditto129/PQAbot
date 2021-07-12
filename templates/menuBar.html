@@ -29,6 +29,7 @@
     <link rel="stylesheet" type="text/css" href="../static/assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="../static/assets/css/jquery.mCustomScrollbar.css">
     <link rel="stylesheet" type="text/css" href="../static/assets/css/pages/menuBarCSS/menuBar.css">
+    <link rel="stylesheet" type="text/css" href="../static/assets/css/pages/profileCSS/custom.css">
 </head>
 
 <body>
@@ -133,9 +134,10 @@
                             </li>
                             <li class="user-profile header-notification">
                                 
-                                <img id="userHeadshotNav" src="../static/images/jackson.png" class="img-radius" alt="User-Profile-Image">
-                                <span id="userNameNav">易烊千璽</span>
-                                 
+                                <div id="userHeadshotNav">
+<!--                                    <img src="../static/images/jackson.png" class="img-radius" alt="User-Profile-Image">-->
+                                    <span id="userNameNav">易烊千璽</span>
+                                </div>
                                 
                             </li>
                         </ul>
@@ -160,16 +162,18 @@
                         <div class="pcoded-inner-navbar main-menu" style="display: inline-block">
                             <div class="">
                                 <div class="main-menu-header">
-                                    <img id="userHeadshotMenubar" class="img-40 img-radius" src="../static/images/jackson.png" alt="User-Profile-Image">
+                                    <div id="userHeadshotMenubar">
+<!--                                        <img class="img-40 img-radius" src="../static/images/jackson.png" alt="User-Profile-Image">-->
+                                    </div>
                                     
                                     <div class="user-details">
                                         <span id="userNameMenubar">易烊千璽</span>
                                         <span id="more-details">一般使用者</span>
                                     </div>
                                     
-                                    <button class="btn btn-outline" style="width: 90px; background-color: #5D478B; margin-left: 0px;" type="button" data-toggle="modal" data-target="#exampleModal">
+                                    <button class="btn btn-outline" style="width: 50px; background-color: #5D478B; margin-left: 0px;" type="button" data-toggle="modal" data-target="#exampleModal">
                                             <i class="fa fa-pencil-square-o" aria-hidden="true" style="color: white;"></i>
-                                            <span data-i18n="nav.dash.main" style="color: white; font-size: 10px; margin-right: 10px;">編輯</span>
+<!--                                            <span data-i18n="nav.dash.main" style="color: white; font-size: 10px; margin-right: 10px;">編輯</span>-->
                                     </button>
 <!--                                    <i class="fa fa-pencil-square-o editBtn" aria-hidden="true" type="button" data-toggle="modal" data-target="#exampleModal"></i>-->
                                     
@@ -270,7 +274,7 @@
                                                             <div class="accordion-heading" role="tab" id="headingOne">
                                                                 <h3 class="card-title accordion-title">
                                                                     <a class="accordion-msg" href="#">
-                                                                    <img src="../static/images/person_3.jpg" class="chatImg">
+                                                                    <img src="../static/images/person_3.png" class="chatImg">
                                                                     宋亞軒
                                                                     </a>
                                                                 </h3>
@@ -383,7 +387,7 @@
                 <!-- 或者用class = "chatImg"(這個是圓形＋紫色框) -->
                 <img id="headshot" class="img-100 img-radius" style="margin-left: 10px;" src="../static/images/defaultPic.jpg">
                 <br><br>
-                <input type="file" name="img" id="headshotBtn" accept="image/*">
+                <input type="file" name="img" id="headshotBtn" accept="image/png">
             <!-- 編輯個人基本資料 END -->
           </div>    
           <hr>
@@ -394,6 +398,21 @@
           <div>
               <input id="userName" type="text" name="fname" value="易烊千璽">
           </div>
+          
+          <hr>
+          <!-- 興趣標籤 START -->
+          <div style="margin-top: 15px;" id="interestingTags">
+              <i class="fa fa-certificate" aria-hidden="true" style="color: #5D478B;"></i>
+              <span style="font-size: 20px;">興趣標籤</span>
+          </div>
+          <div id="forwardPage">
+          </div>
+          <div id="chose_tag" style="margin-top: 5px;">
+          </div>
+          
+          <div id="chosen_tag_in_modal" style="margin-top: 15px;">
+          </div>
+          <!-- 興趣標籤 START -->
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-primary" onclick="save()" data-dismiss="modal">儲存</button>

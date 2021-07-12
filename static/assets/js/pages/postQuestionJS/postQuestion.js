@@ -112,7 +112,7 @@ function click_tag(id, page){
 }
 
 function showChildrenAndSetColor(){
-    
+    localStorage.setItem("chooseTags", 1);
     // 標題 START
     // 需加上上一頁的按鈕
     var titleContent = "";
@@ -172,7 +172,7 @@ function getLanguageTag(){
 
 // 顯示「語言」tag的content
 function showLanguageTag(){
-    
+    localStorage.setItem("chooseTags", 0);
     // 標題 START
     var titleContent = "";
     titleContent += "選擇相關標籤";
@@ -212,20 +212,25 @@ function cancle(id, page){
         showChosenTags(page);
     }
     
-    if(language.indexOf(id)==-1){
+    var temp = parseInt(localStorage.getItem("chooseTags"));
+    console.log("page為: "+temp);
+    if(temp==0 && language.indexOf(id)==-1){
+        showChildrenAndSetColor();
+        showLanguageTag();
+        localStorage.setItem("chooseTags", 0);
+    }
+    else if(temp==0 && language.indexOf(id)!=-1){
+        showLanguageTag();
+    }
+    else if(temp==1 && language.indexOf(id)==-1){
         showChildrenAndSetColor();
     }
     else{
         showLanguageTag();
-    }
-    if(page==0){
-        showLanguageTag();
-    }
-    else{
         showChildrenAndSetColor();
+        localStorage.setItem("chooseTags", 1);
     }
-    
-    
 }
+
 
 window.addEventListener("load", start, false);
