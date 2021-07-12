@@ -1,8 +1,8 @@
 
 # --- flask --- #
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, Flask
 # from flask_security import logout_user, login_required
-
+import base64
 
 # --- our models ---- #
 from models import user
