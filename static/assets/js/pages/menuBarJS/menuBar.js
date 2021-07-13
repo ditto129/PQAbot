@@ -2,22 +2,17 @@
 var session_id;
 var first_start = true;
 
-function setPage(page){
-    localStorage.setItem("page", page);
-    console.log("呼叫");
-    changePage();
-}
-
 function changePage(){
-    console.log("執行");
+    console.log("變更頁面");
     var page = localStorage.getItem("page");
-    console.log("執行page: "+page);
+    console.log(page);
     var content = "";
     content += '<iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="';
     content += page;
+    content += '.html';
     content += '" height="100%" width="100%"></iframe>';
+    console.log("content: "+content);
     document.getElementById("main_page").innerHTML = content;
-
 }
 
 function bot(string){
@@ -61,10 +56,10 @@ function user(string){
 
 //start
 function start(){
-    //讀取使用者大頭貼
-    getUserHeadshot();
+    //讀取使用者大頭貼＆姓名
+    getUserHeadshotAndName();
     
-    //興趣標籤 準備
+    //準備編輯個人資訊（大頭貼＋姓名＋興趣標籤）
     getLanguageTag();
     
     localStorage.setItem("page", "home");
@@ -80,7 +75,7 @@ function start(){
     //到時候要用session_id
     
     //session_id = window.prompt("請輸入mail的前綴(要用來當session_id)");
-    localStorage.setItem("sessionID", 107366305800670160795);
+//    localStorage.setItem("sessionID", 123);
     var session_id = localStorage.getItem("sessionID");
     console.log("session_id: "+ session_id);
     console.log("head_url: "+head_url);
@@ -191,8 +186,9 @@ function open_close(){
 
 //編輯個人資訊 START
 
-//照片 START
+//////////////////照片＆姓名 START////////////////////
 var userHeadshotURL = "";
+
 $("#headshotBtn").change(function(){
     readURL(this);
 });
@@ -209,30 +205,64 @@ function readURL(input){
       }
 }
 
-function getUserHeadshot(){
-    var myURL = head_url + "read_image?user_id=" + localStorage.getItem("sessionID");
-    console.log("myURL: "+myURL);
+// 抓新資料顯示在menuBar上
+// 同時更新modal的內容
+function getUserHeadshotAndName(){
+    
+    // 照片
+    var id = localStorage.getItem("sessionID");
+    var myURL = head_url + "read_image?user_id=" + id;
+    var img = "";
     $.ajax({
         url: myURL,
         type: "GET",
         dataType: "json",
+        async: false,
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-            console.log("讀取照片成功");
-            document.getElementById("userHeadshotMenubar").innerHTML = response;
-            document.getElementById("userHeadshotNav").innerHTML = response;
-            console.log("修改完畢");
+            console.log("成功: 拿照片（read_image）");
+            img += '<img class="img-40 img-radius" alt="User-Profile-Image" src="';
+            img += response.src;
+            img += '">';
+            document.getElementById("headshot").setAttribute("src", response.src);
         },
         error: function(response){
-            console.log(response);
-            console.log(response.responseText);
-            document.getElementById("userHeadshotMenubar").innerHTML = response.responseText;
-            document.getElementById("userHeadshotNav").innerHTML = response.responseText;
-            console.log("讀取照片失敗！");
+            console.log("失敗: 拿照片（read_image）");
         }
     });
+    
+    // 姓名
+    myURL = head_url + "query_user_profile";
+    
+    var data = {"_id": id};
+    var name = "";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 拿姓名（query_user_profile）");
+            name += '<span>';
+            name += response.name;
+            name += '</span>';
+            
+            document.getElementById("userName").setAttribute("value", response.name);
+        },
+        error: function(){
+            console.log("失敗: 拿姓名（query_user_profile）");
+        }
+    });
+    
+    document.getElementById("userHeadshotMenubar").innerHTML = img;
+    document.getElementById("userNameMenubar").innerHTML = name;
+    document.getElementById("userProfileNav").innerHTML = img+name;
 }
-// 照片 END
+
+//////////////////照片＆姓名 END//////////////////////
+
 
 // 興趣標籤 START
 // 用來記使用者選擇的所有標籤
@@ -436,36 +466,54 @@ function cancle(id, page){
 }
 // 興趣標籤 END
 
+
+//////////////////儲存 照片＆姓名＆興趣標籤 START////////////////////
 function save(){
     // 把資料傳給後端
-
-    var userImgName = localStorage.getItem("sessionID") + ".png";
+    
+    var id = localStorage.getItem("sessionID");
+    var userImgName = id + ".png";
     let form = new FormData();
-    form.append("img", document.getElementById("headshotBtn").files[0], userImgName);
+    if(document.getElementById("headshotBtn").files[0] != null){
+        form.append("img", document.getElementById("headshotBtn").files[0], userImgName);
         
-    var myURL = head_url + "save_user_img";
-    
-    fetch(myURL, {
-        method: 'POST',
-        body: form,
-        async: false, 
-    }).then(res => {
-        return res.json();   // 使用 json() 可以得到 json 物件
-    }).then(result => {
-        console.log(result); // 得到 {name: "oxxo", age: 18, text: "你的名字是 oxxo，年紀 18 歲～"}
-    });
-    // 照片的更新
-    getUserHeadshot();
-    
-    // 並將新的資訊顯示在螢幕上
+        var myURL = head_url + "save_user_img";
 
-    var userNameMenubar = document.getElementById("userNameMenubar");
-    var userNameNav = document.getElementById("userNameNav");
-    
+        fetch(myURL, {
+            method: 'POST',
+            body: form,
+            async: false, 
+        }).then(res => {
+            return res.json();   // 使用 json() 可以得到 json 物件
+        }).then(result => {
+            console.log(result); // 得到 {name: "oxxo", age: 18, text: "你的名字是 oxxo，年紀 18 歲～"}
+        });
+    }
+
+    myURL = head_url + "update_user_profile";
     var name = $("#userName").val();
-    userNameMenubar.innerHTML = name;
-    userNameNav.innerHTML = name;
+    var data = {"_id": id, "name": name};
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 更新姓名（update_user_profile）");
+        },
+        error: function(response){
+            console.log("失敗: 更新姓名（update_user_profile）");
+            console.log(response);
+        }
+    });
+    
+    // 更新畫面
+    getUserHeadshotAndName();
 }
+//////////////////儲存 照片＆姓名＆興趣標籤 END////////////////////
+
 //編輯個人資訊 END
 
 function logOut(){
@@ -473,9 +521,7 @@ function logOut(){
     window.location.href = "login.html";
 }
 
-window.addEventListener("load", start, false);
-
-window.addEventListener('storage',function(e){
+window.addEventListener("storage", function(e){
     if(e.key == "page"){//判斷page是否改變
         console.log("page有改變");
         changePage();
@@ -483,4 +529,6 @@ window.addEventListener('storage',function(e){
     else{
         console.log("是其他的有變～"+e.key);
     }
-})
+});
+
+window.addEventListener("load", start, false);
