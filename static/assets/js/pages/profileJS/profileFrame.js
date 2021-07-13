@@ -19,6 +19,7 @@ function start(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("post成功");
+            console.log(response);
         },
         error: function(){
             console.log("post失敗");
