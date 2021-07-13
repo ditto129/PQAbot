@@ -22,7 +22,6 @@ def query_user_profile():
             '_id' : user_dict['_id'],
             'name': user_dict['name'],
             'email':user_dict['email'],
-            'img': user_dict['img']
         }
         
     except Exception as e :
@@ -76,7 +75,6 @@ def update_user_profile():
             '_id' : data['_id'],
             'name': data['name'],
             'email':data['email'],
-            'img': data['img']
         }
         user.update_user(user_profile)
     except Exception as e :

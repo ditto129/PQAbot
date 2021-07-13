@@ -36,7 +36,6 @@ def google_sign_in():
             "_id" : id_info['sub'],
             "name" : id_info['name'],
             "email" : id_info['email'],
-            "img" : "../static/images/default_user_img.png",
             "skill" : [],
             "record" : {
                 "posts" : [],
@@ -57,7 +56,6 @@ def facebook_sign_in():
             "_id" : data['id'],
             "name" : data['name'],
             "email" : data['email'],
-            "img" : "../static/images/default_user_img.png",
             "skill" : [],
             "record" : {
                 "posts" : [],
