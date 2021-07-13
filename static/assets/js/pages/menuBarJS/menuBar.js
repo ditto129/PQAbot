@@ -61,28 +61,9 @@ function user(string){
 
 //start
 function start(){
-    //讀取使用者大頭貼
-    getUserHeadshot();
-    var myURL = head_url + "query_user_profile";
-    var id = localStorage.getItem("sessionID");
-    var data = {"_id": id};
-    console.log(data);
-    $.ajax({
-        url: myURL,
-        type: "POST",
-        data: JSON.stringify(data),
-//        async: false, 
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        success: function(response){
-            console.log("post成功");
-            console.log(response);
-        },
-        error: function(){
-            console.log("post失敗");
-        }
-    });
-    // 拿到使用者曾發布的貼文 END
+    //讀取使用者大頭貼＆姓名
+    getUserHeadshotAndName();
+    
     
     //興趣標籤 準備
     getLanguageTag();
@@ -211,8 +192,9 @@ function open_close(){
 
 //編輯個人資訊 START
 
-//照片 START
+//////////////////照片＆姓名 START////////////////////
 var userHeadshotURL = "";
+
 $("#headshotBtn").change(function(){
     readURL(this);
 });
@@ -229,9 +211,12 @@ function readURL(input){
       }
 }
 
-function getUserHeadshot(){
-    var myURL = head_url + "read_image?user_id=" + localStorage.getItem("sessionID");
-    console.log("myURL: "+myURL);
+function getUserHeadshotAndName(){
+    
+    // 照片
+    var id = localStorage.getItem("sessionID");
+    var myURL = head_url + "read_image?user_id=" + id;
+    var img = "";
     $.ajax({
         url: myURL,
         type: "GET",
@@ -239,20 +224,47 @@ function getUserHeadshot(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("讀取照片成功");
-            document.getElementById("userHeadshotMenubar").innerHTML = response;
-            document.getElementById("userHeadshotNav").innerHTML = response;
-            console.log("修改完畢");
+            img += response;
         },
         error: function(response){
-            console.log(response);
-            console.log(response.responseText);
-            document.getElementById("userHeadshotMenubar").innerHTML = response.responseText;
-            document.getElementById("userHeadshotNav").innerHTML = response.responseText;
-            console.log("讀取照片失敗！");
         }
     });
+    
+    
+    // 姓名
+    myURL = head_url + "query_user_profile";
+    
+    var data = {"_id": id};
+    var name = "";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 拿姓名（query_user_profile）")
+            name += '<span>';
+            name += response.name;
+            name += '</span>';
+        },
+        error: function(){
+            console.log("失敗: 拿姓名（query_user_profile）");
+        }
+    });
+    
+    document.getElementById("userHeadshotMenubar").innerHTML = img;
+    document.getElementById("userNameMenubar").innerHTML = name;
+    document.getElementById("userProfileNav").innerHTML = img+name;
+    
+    
+    
+    
+    
 }
-// 照片 END
+//////////////////照片＆姓名 END//////////////////////
+
 
 // 興趣標籤 START
 // 用來記使用者選擇的所有標籤

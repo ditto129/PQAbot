@@ -126,7 +126,8 @@ def read_image():
     #file = "../images/"+book_id+".png"
     #Open the image in read-only format.
     if path.exists(file) == False:
-        file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/defaultPic.png"
+        #file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/defaultPic.png"
+        file = "/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img/defaultPic.png"
     with open(file, 'rb') as f:
         contents = f.read()
         
