@@ -232,5 +232,60 @@ function cancle(id, page){
     }
 }
 
+function save(){
+    // id
+    var id = localStorage.getItem("sessionID");
+    // 姓名
+    var myURL = head_url + "query_user_profile";
+    var temp = {"_id": id};
+    var name = "";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(temp),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 拿姓名（query_user_profile）");
+            name = response.name;
+        },
+        error: function(){
+            console.log("失敗: 拿姓名（query_user_profile）");
+        }
+    });
+    // 標題
+    var title = $("#postTitle").val();
+    // 內容
+    var question = $("#postContent").val();
+    // 標籤
+    var tag = [];
+    for(var i=0; i<chosenTags.length; i++){
+        var temp = {"tag_id": chosenTags[i], "tag_name": allTags[chosenTags[i]]};
+        tag.push(temp);
+    }
+    // 時間
+    var time = new Date();
+    
+    var data = {"asker_id": id, "asker_name": name, "title": title, "question": question, "keyword": [], "tag": tag, "time": time, "incognito": false};
+    console.log("傳出去的data資料");
+    console.log(data);
+    myURL = head_url + "insert_inner_post";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 發布貼文（insert_inner_post）");
+        },
+        error: function(response){
+            console.log("失敗: 發布貼文（insert_inner_post）");
+            console.log(response);
+        }
+    });
+}
 
 window.addEventListener("load", start, false);

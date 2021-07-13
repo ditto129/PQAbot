@@ -2,22 +2,17 @@
 var session_id;
 var first_start = true;
 
-function setPage(page){
-    localStorage.setItem("page", page);
-    console.log("呼叫");
-    changePage();
-}
-
 function changePage(){
-    console.log("執行");
+    console.log("變更頁面");
     var page = localStorage.getItem("page");
-    console.log("執行page: "+page);
+    console.log(page);
     var content = "";
     content += '<iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="';
     content += page;
+    content += '.html';
     content += '" height="100%" width="100%"></iframe>';
+    console.log("content: "+content);
     document.getElementById("main_page").innerHTML = content;
-
 }
 
 function bot(string){
@@ -471,36 +466,54 @@ function cancle(id, page){
 }
 // 興趣標籤 END
 
+
+//////////////////儲存 照片＆姓名＆興趣標籤 START////////////////////
 function save(){
     // 把資料傳給後端
-
-    var userImgName = localStorage.getItem("sessionID") + ".png";
+    
+    var id = localStorage.getItem("sessionID");
+    var userImgName = id + ".png";
     let form = new FormData();
-    form.append("img", document.getElementById("headshotBtn").files[0], userImgName);
+    if(document.getElementById("headshotBtn").files[0] != null){
+        form.append("img", document.getElementById("headshotBtn").files[0], userImgName);
         
-    var myURL = head_url + "save_user_img";
-    
-    fetch(myURL, {
-        method: 'POST',
-        body: form,
-        async: false, 
-    }).then(res => {
-        return res.json();   // 使用 json() 可以得到 json 物件
-    }).then(result => {
-        console.log(result); // 得到 {name: "oxxo", age: 18, text: "你的名字是 oxxo，年紀 18 歲～"}
-    });
-    // 照片的更新
-    getUserHeadshotAndName();
-    
-    // 並將新的資訊顯示在螢幕上
+        var myURL = head_url + "save_user_img";
 
-    var userNameMenubar = document.getElementById("userNameMenubar");
-    var userNameNav = document.getElementById("userNameNav");
-    
+        fetch(myURL, {
+            method: 'POST',
+            body: form,
+            async: false, 
+        }).then(res => {
+            return res.json();   // 使用 json() 可以得到 json 物件
+        }).then(result => {
+            console.log(result); // 得到 {name: "oxxo", age: 18, text: "你的名字是 oxxo，年紀 18 歲～"}
+        });
+    }
+
+    myURL = head_url + "update_user_profile";
     var name = $("#userName").val();
-    userNameMenubar.innerHTML = name;
-    userNameNav.innerHTML = name;
+    var data = {"_id": id, "name": name};
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 更新姓名（update_user_profile）");
+        },
+        error: function(response){
+            console.log("失敗: 更新姓名（update_user_profile）");
+            console.log(response);
+        }
+    });
+    
+    // 更新畫面
+    getUserHeadshotAndName();
 }
+//////////////////儲存 照片＆姓名＆興趣標籤 END////////////////////
+
 //編輯個人資訊 END
 
 function logOut(){
@@ -508,9 +521,7 @@ function logOut(){
     window.location.href = "login.html";
 }
 
-window.addEventListener("load", start, false);
-
-window.addEventListener('storage',function(e){
+window.addEventListener("storage", function(e){
     if(e.key == "page"){//判斷page是否改變
         console.log("page有改變");
         changePage();
@@ -518,4 +529,6 @@ window.addEventListener('storage',function(e){
     else{
         console.log("是其他的有變～"+e.key);
     }
-})
+});
+
+window.addEventListener("load", start, false);

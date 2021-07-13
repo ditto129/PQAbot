@@ -71,15 +71,17 @@ def query_user_skill():
         print(e)
     return jsonify(user_skill)
     
+# 前端OK
 # 編輯使用者簡易資料，不包含技能樹、發文紀錄
 @user_api.route('/update_user_profile', methods=['POST'])
 def update_user_profile():
-    data = request.query_json()
+    data = request.get_json()
+    print("更新姓名: ", data)
     try:
         user_profile = {
             '_id' : data['_id'],
             'name': data['name'],
-            'email':data['email'],
+#            'email':data['email'],
         }
         user.update_user(user_profile)
     except Exception as e :
@@ -100,7 +102,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-          
+
+# 前端OK
 @user_api.route('save_user_img', methods=['post'])
 #將書的img存入目錄
 def save_user_img():
@@ -121,6 +124,7 @@ def save_user_img():
     else:
          return jsonify({'message':'falied'})
 
+# 前端OK
 @user_api.route('read_image', methods=['get'])
 #讀取照片
 def read_image():
@@ -141,6 +145,5 @@ def read_image():
         
     data_uri = base64.b64encode(contents).decode('utf-8')
     img_tag = '<img class="img-40 img-radius" alt="User-Profile-Image"  src="data:image/png;base64,{0}">'.format(data_uri)
-    print("src: ", "data:image/png;base64,{0}".format(data_uri))
     return jsonify({'src': "data:image/png;base64,{0}".format(data_uri)})
 ''' 湘的 end '''
