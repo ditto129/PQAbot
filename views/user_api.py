@@ -3,7 +3,7 @@
 from flask import Blueprint, request, jsonify
 # from flask_security import logout_user, login_required
 '''湘的import'''
-import Flask, flash, redirect
+from flask import Flask, flash, redirect
 import base64
 import os
 from os import path
