@@ -64,7 +64,7 @@ function start(){
     //讀取使用者大頭貼＆姓名
     getUserHeadshotAndName();
     
-    //興趣標籤 準備
+    //準備編輯個人資訊（大頭貼＋姓名＋興趣標籤）
     getLanguageTag();
     
     localStorage.setItem("page", "home");
@@ -210,6 +210,8 @@ function readURL(input){
       }
 }
 
+// 抓新資料顯示在menuBar上
+// 同時更新modal的內容
 function getUserHeadshotAndName(){
     
     // 照片
@@ -220,15 +222,19 @@ function getUserHeadshotAndName(){
         url: myURL,
         type: "GET",
         dataType: "json",
+        async: false,
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-            console.log("讀取照片成功");
-            img += response;
+            console.log("成功: 拿照片（read_image）");
+            img += '<img class="img-40 img-radius" alt="User-Profile-Image" src="';
+            img += response.src;
+            img += '">';
+            document.getElementById("headshot").setAttribute("src", response.src);
         },
         error: function(response){
+            console.log("失敗: 拿照片（read_image）");
         }
     });
-    
     
     // 姓名
     myURL = head_url + "query_user_profile";
@@ -243,10 +249,12 @@ function getUserHeadshotAndName(){
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-            console.log("成功: 拿姓名（query_user_profile）")
+            console.log("成功: 拿姓名（query_user_profile）");
             name += '<span>';
             name += response.name;
             name += '</span>';
+            
+            document.getElementById("userName").setAttribute("value", response.name);
         },
         error: function(){
             console.log("失敗: 拿姓名（query_user_profile）");
@@ -256,12 +264,8 @@ function getUserHeadshotAndName(){
     document.getElementById("userHeadshotMenubar").innerHTML = img;
     document.getElementById("userNameMenubar").innerHTML = name;
     document.getElementById("userProfileNav").innerHTML = img+name;
-    
-    
-    
-    
-    
 }
+
 //////////////////照片＆姓名 END//////////////////////
 
 
@@ -486,7 +490,7 @@ function save(){
         console.log(result); // 得到 {name: "oxxo", age: 18, text: "你的名字是 oxxo，年紀 18 歲～"}
     });
     // 照片的更新
-    getUserHeadshot();
+    getUserHeadshotAndName();
     
     // 並將新的資訊顯示在螢幕上
 
