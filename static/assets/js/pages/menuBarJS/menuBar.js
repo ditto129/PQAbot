@@ -64,7 +64,6 @@ function start(){
     //讀取使用者大頭貼＆姓名
     getUserHeadshotAndName();
     
-    
     //興趣標籤 準備
     getLanguageTag();
     
