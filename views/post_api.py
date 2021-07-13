@@ -26,7 +26,7 @@ def insert_inner_post():
             'title' : data['title'],
             'question' : data['question'],
             'answer' : [],
-            'keyword' : data['keyword'],
+            'keyword' : [],
             'tag' : data['tag'],
             'time' : data['time'],
             'incognito' :data['incognito'],
