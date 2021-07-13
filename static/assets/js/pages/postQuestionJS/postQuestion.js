@@ -267,7 +267,7 @@ function save(){
     // 時間
     var time = new Date();
     
-    var data = {"asker_id": id, "asker_name": name, "title": title, "question": question, "keyword": [], "tag": tag, "time": time, "incognito": false};
+    var data = {"asker_id": id, "asker_name": name, "title": title, "question": question, "tag": tag, "time": time, "incognito": false};
     console.log("傳出去的data資料");
     console.log(data);
     myURL = head_url + "insert_inner_post";
