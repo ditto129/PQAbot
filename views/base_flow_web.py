@@ -60,3 +60,10 @@ def summaryFrame():
 def skillTreeFrame():
     return render_template("example.html")
 
+@base_flow_web.route("/editPostFrame")
+def editPostFrame():
+    return render_template("editPostFrame.html")
+    
+@base_flow_web.route("/editReplyFrame")
+def editReplyFrame():
+    return render_template("editReplyFrame.html")
