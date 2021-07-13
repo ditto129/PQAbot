@@ -1,9 +1,14 @@
 
 # --- flask --- #
-from flask import Blueprint, request, jsonify, Flask
+from flask import Blueprint, request, jsonify
 # from flask_security import logout_user, login_required
+'''湘的import'''
+import Flask, flash, redirect
 import base64
-
+import os
+from os import path
+from werkzeug.utils import secure_filename
+'''end'''
 # --- our models ---- #
 from models import user
 # rom models import psa_excption_handler
