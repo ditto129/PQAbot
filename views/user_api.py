@@ -26,7 +26,7 @@ def query_user_profile():
         
     except Exception as e :
         user_profile = {"error" : e.__class__.__name__ + ":" +e.args[0]}
-        print(e)
+        print("錯誤訊息: ", e)
     return jsonify(user_profile)
 
 
@@ -83,7 +83,8 @@ def update_user_profile():
     return jsonify(user_profile)
     
 ''' 湘的 start '''
-UPLOAD_FOLDER = '/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img'
+#UPLOAD_FOLDER = '/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img'
+UPLOAD_FOLDER = '/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img'
 ALLOWED_EXTENSIONS = {'png'}
 
 app = Flask(__name__)
@@ -120,7 +121,8 @@ def read_image():
     user_id=request.values.get('user_id')
     
     #define an image object with the location.
-    file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
+    #file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
+    file = "/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
     #file = "../images/"+book_id+".png"
     #Open the image in read-only format.
     with open(file, 'rb') as f:

@@ -63,6 +63,26 @@ function user(string){
 function start(){
     //讀取使用者大頭貼
     getUserHeadshot();
+    var myURL = head_url + "query_user_profile";
+    var id = localStorage.getItem("sessionID");
+    var data = {"_id": id};
+    console.log(data);
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+//        async: false, 
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("post成功");
+            console.log(response);
+        },
+        error: function(){
+            console.log("post失敗");
+        }
+    });
+    // 拿到使用者曾發布的貼文 END
     
     //興趣標籤 準備
     getLanguageTag();
@@ -80,7 +100,7 @@ function start(){
     //到時候要用session_id
     
     //session_id = window.prompt("請輸入mail的前綴(要用來當session_id)");
-    localStorage.setItem("sessionID", 107366305800670160795);
+//    localStorage.setItem("sessionID", 123);
     var session_id = localStorage.getItem("sessionID");
     console.log("session_id: "+ session_id);
     console.log("head_url: "+head_url);
