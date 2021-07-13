@@ -13,7 +13,7 @@ from . import user
 
 # 新增一筆貼文
 def insert_post(post_dict):
-    all_post = _db.TAG_COLLECTION.find()
+    all_post = _db.INNER_POST_COLLECTION.find()
     if all_post.count() == 0 : 
         # 處理第一篇貼文編號
         post_dict['_id'] = '000001'

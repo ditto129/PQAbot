@@ -26,10 +26,11 @@ def insert_inner_post():
             'title' : data['title'],
             'question' : data['question'],
             'answer' : [],
-            'keyword' : data['keyword'],
+            'keyword' : [],
             'tag' : data['tag'],
             'time' : data['time'],
-            'incognito' :data['incognito']
+            'incognito' :data['incognito'],
+            'score' : []
         }
     except Exception as e :
         post_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}
