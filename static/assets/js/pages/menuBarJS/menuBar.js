@@ -80,7 +80,7 @@ function start(){
     //到時候要用session_id
     
     //session_id = window.prompt("請輸入mail的前綴(要用來當session_id)");
-    localStorage.setItem("sessionID", 123);
+    localStorage.setItem("sessionID", 107366305800670160795);
     var session_id = localStorage.getItem("sessionID");
     console.log("session_id: "+ session_id);
     console.log("head_url: "+head_url);
