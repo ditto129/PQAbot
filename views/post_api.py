@@ -42,6 +42,7 @@ def insert_inner_post():
 @post_api.route('/update_inner_post', methods=['POST'])
 def update_inner_post():
     data = request.get_json()
+    print("data", data)
     try:
         post_dict = {
             '_id' : data['_id'],

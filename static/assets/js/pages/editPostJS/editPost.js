@@ -1,5 +1,5 @@
 //_id, title, question, keyword, tag, time, incognito
-var postId, title, question, tag, time, incognito;
+var userId, postId, title, question, tag, time, incognito;
 
 ////////////// 拿貼文資料＆顯示 START //////////////
 function start(){
@@ -22,6 +22,9 @@ function start(){
             tag = response.tag;
             incognito = response.incognito;
             
+            console.log("title: "+response.title);
+            console.log("question: "+response.question);
+            
             document.getElementById("title").setAttribute("value", response.title);
             document.getElementById("question").innerHTML = response.question;
         },
@@ -36,11 +39,12 @@ function start(){
 ////////////// 儲存貼文 START //////////////
 function save(){
     postId = localStorage.getItem("singlePostId");
+    userId = localStorage.getItem("sessionID");
     title = $("#title").val();
     question = $("#question").val();
     time = new Date();
     
-    var data = {_id: postId, title: title, question: question, time: time};
+    var data = {asker_id: userId, _id: postId, title: title, question: question, time: time};
     console.log(data);
     
     var myURL = head_url + "update_inner_post";
@@ -53,7 +57,8 @@ function save(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("成功: 編輯貼文（update_inner_post）");
-            setPage('mySinglePostFrame');
+            console.log(response);
+//            setPage('mySinglePostFrame');
         },
         error: function(response){
             console.log("失敗: 編輯貼文（update_inner_post）");
