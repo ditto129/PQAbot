@@ -33,9 +33,9 @@ def insert_inner_post():
             'incognito' :data['incognito'],
             'score' : []
         }
+        inner_post.insert_post(post_dict)
     except Exception as e :
         post_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}
-    inner_post.insert_post(post_dict)
     return jsonify(post_dict)
 
 # 編輯內部貼文
