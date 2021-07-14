@@ -28,6 +28,7 @@ def insert_post(post_dict):
     record_dict = {'_id' : post_dict['_id'],
              'title': post_dict['title'],
              'time' : post_dict['time'],
+             'score': post_dict['score'],
              'tag' : post_dict['tag']}
     _db.USER_COLLECTION.update_one({'_id':post_dict['asker_id']},{'$push':{'record.posts':record_dict}})
     # 更新每個tag 的 usage_counter,recent_use
