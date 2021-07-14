@@ -45,6 +45,7 @@ def update_inner_post():
     try:
         post_dict = {
             '_id' : data['_id'],
+            'asker_id':data['asker_id'],
             'title' : data['title'],
             'question' : data['question'],
             'time' : data['time']
