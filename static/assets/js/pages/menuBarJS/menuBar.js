@@ -52,8 +52,6 @@ function user(string){
     history.scrollTop = history.scrollHeight;
 }
 
-
-
 //start
 function start(){
     //讀取使用者大頭貼＆姓名
@@ -510,6 +508,7 @@ function save(){
     });
     
     // 更新畫面
+//    setTimeout(getUserHeadshotAndName, 2000);
     getUserHeadshotAndName();
 }
 //////////////////儲存 照片＆姓名＆興趣標籤 END////////////////////

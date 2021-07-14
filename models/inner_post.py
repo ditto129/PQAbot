@@ -54,13 +54,15 @@ def update_post(post_data):
     
     _db.INNER_POST_COLLECTION.update_one({'_id': post_data['_id']},{'$set':post_data})
     # 使用者發文更新
-    _db.USER_COLLECTION.update_one({'_id': post_data['asker_id'],'record.posts._id':post_data['_id']},{'$set':{'record.posts.$':new_dict}})
+    _db.USER_COLLECTION.update_one({'_id': post_data['asker_id'],'record.posts._id':post_data['_id']},{'$set':{'record.$.title':post_data['title'], 'record.$.question':post_data['question'], 'record.$.time':post_data['time']}})
+    
     post = _db.INNER_POST_COLLECTION.find_one({'_id':post_data['_id']})
     # 使用者回覆紀錄更新
     new_dict = {
         '_id' : post_data['_id'],       # 貼文id
         'title': post_data['title'],
         'time' : post_data['time'],}
+    
     for response in post['answer']:
         _db.USER_COLLECTION.update_one({'_id': response['replier_id'],'record.responses._id':response['_id']},{'$set':{'record.responses.$':new_dict}})
 
