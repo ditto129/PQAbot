@@ -90,8 +90,8 @@ def update_user_profile():
     return jsonify(user_profile)
     
 ''' 湘的 start '''
-#UPLOAD_FOLDER = '/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img'
-UPLOAD_FOLDER = '/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img'
+UPLOAD_FOLDER = '/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img'
+#UPLOAD_FOLDER = '/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img'
 #UPLOAD_FOLDER = "../static/images/user_img"
 ALLOWED_EXTENSIONS = {'png'}
 
@@ -131,14 +131,14 @@ def read_image():
     user_id=request.values.get('user_id')
     
     #define an image object with the location.
-    #file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
-    file = "/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
+    file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
+    #file = "/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img/"+user_id+".png"
     #file = "../static/images/user_img"+user_id+".png"
     #file = "../images/"+book_id+".png"
     #Open the image in read-only format.
     if path.exists(file) == False:
-        #file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/defaultPic.png"
-        file = "/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img/defaultPic.png"
+        file = "/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img/defaultPic.png"
+        #file = "/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img/defaultPic.png"
         #file = "../static/images/user_img/defaultPic.png"
     with open(file, 'rb') as f:
         contents = f.read()
