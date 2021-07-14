@@ -30,7 +30,9 @@ function start(){
             
             content += '<h5>問題</h5>';
             if(response.asker_id == localStorage.getItem("sessionID")){
-                content += '<button type="button" class="scoreBtn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';                        
+                content += '<button type="button" class="scoreBtn" onclick="setPage(';
+                content += "'editPostFrame'";
+                content += ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';                        
             }
             document.getElementById("header").innerHTML = content;
             

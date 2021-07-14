@@ -142,7 +142,7 @@ function showChildrenAndSetColor(){
 //    console.log("innerHTML: "+content);
     document.getElementById("chose_tag").innerHTML = content;
 }
-
+ 
 // 顯示可選擇的語言標籤
 function getLanguageTag(){
     
