@@ -86,39 +86,6 @@ function start(){
     });
     
     document.getElementById("post").innerHTML = content;
-    
-//    <!--貼文1 start-->
-//    <div class="col-lg-4 col-xl-3 col-sm-12">
-//        <!-- 貼文連結start -->
-//        <a href="#" onclick="setPage('444', 'mySinglePostFrame')">
-//            <div class="badge-box">
-//                <!-- 貼文編號與分數start -->
-//                <div class="sub-title">
-//                    <span>貼文 #00001</span>
-//                    <span style="float:right;"><i class="fa fa-trophy" aria-hidden="true"></i>5</span>
-//                </div>
-//                <!-- 貼文編號與分數end -->
-//                <!-- 貼文標題start -->
-//                <div>
-//                <span>連不上 server</span>
-//                </div>
-//                <!-- 貼文標題end -->
-//                <div style="margin-top: 20px;">
-//                    <!-- tag start-->
-//                    <label class="badge badge-default purpleLabel">html</label>
-//                    <label class="badge badge-default purpleLabel">javascript</label>
-//                    <label class="badge badge-default purpleLabel">css</label>
-//                    <!-- tag end-->
-//                    <!-- 貼文日期start -->
-//                    <div>
-//                    <label class="badge purpleLabel2">2021 - 09 - 08</label>
-//                    </div>
-//                    <!-- 貼文日期end -->
-//                </div>
-//            </div>
-//        </a>
-//        <!-- 貼文連結end -->
-//    </div>
 }
 
 window.addEventListener("load", start, false);
