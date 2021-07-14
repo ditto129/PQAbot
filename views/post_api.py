@@ -33,17 +33,15 @@ def insert_inner_post():
             'incognito' :data['incognito'],
             'score' : []
         }
-        print("post_dict: ", post_dict)
+        inner_post.insert_post(post_dict)
     except Exception as e :
         post_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}
-    inner_post.insert_post(post_dict)
     return jsonify(post_dict)
 
 # 編輯內部貼文
 @post_api.route('/update_inner_post', methods=['POST'])
 def update_inner_post():
     data = request.get_json()
-    print("data", data)
     try:
         post_dict = {
             '_id' : data['_id'],
