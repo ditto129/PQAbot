@@ -8,6 +8,7 @@ import base64
 import os
 from os import path
 from werkzeug.utils import secure_filename
+import asyncio
 '''end'''
 # --- our models ---- #
 from models import user
@@ -119,7 +120,7 @@ def save_user_img():
          return redirect(request.url)
     if file and allowed_file(file.filename):
          filename = secure_filename(file.filename)
-         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+         await file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
          return jsonify({'message':'success'})
     else:
          return jsonify({'message':'falied'})
