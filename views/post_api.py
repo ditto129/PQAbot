@@ -47,10 +47,7 @@ def update_inner_post():
             '_id' : data['_id'],
             'title' : data['title'],
             'question' : data['question'],
-            'keyword' : data['keyword'],
-            'tag' : data['tag'],
-            'time' : data['time'],
-            'incognito' :data['incognito']
+            'time' : data['time']
         }
         inner_post.update_post(post_dict)
     except Exception as e :
@@ -94,7 +91,6 @@ def update_inner_post_response():
             'post_id' : data['post_id'],
             '_id' : data['_id'],
             "replier_id" : data['replier_id'],
-            "replier_name" : data['replier_name'],
             "response" : data['response'],
             "time" : data['time']
         }
