@@ -56,7 +56,7 @@ def update_post(post_data):
     # 使用者發文更新
     _db.USER_COLLECTION.update_one({'_id': post_data['asker_id'],'record.posts._id':post_data['_id']},{'$set':{'record.posts.$':new_dict}})
     post = _db.INNER_POST_COLLECTION.find_one({'_id':post_data['_id']})
-    # 使用者回復紀錄更新
+    # 使用者回覆紀錄更新
     new_dict = {
         '_id' : post_data['_id'],       # 貼文id
         'title': post_data['title'],
@@ -103,7 +103,7 @@ def insert_response(response_dict):
         'tag' : target_post['tag'],
         'score' : target_post['score']
         }
-    _db.USER_COLLECTION.update_one({'_id':response_dict['replier_id']},{'$push':{'record.responses':post_dict}})
+    _db.USER_COLLECTION.update_one({'_id':response_dict['replier_id']},{'$set':{'record.responses':post_dict}})
     # 更新每個tag 的 usage_counter,recent_use
     for tag in target_post['tag']:
         target_tag = _db.TAG_COLLECTION.find_one({'_id':tag['tag_id']})
