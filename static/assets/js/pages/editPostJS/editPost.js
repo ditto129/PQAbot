@@ -40,7 +40,7 @@ function save(){
     question = $("#question").val();
     time = new Date();
     
-    var data = {"_id": postId, "title": title, "question": question, "keyword": [], "tag": tag, "time": time, "incognito": incognito};
+    var data = {_id: postId, title: title, question: question, time: time};
     console.log(data);
     
     var myURL = head_url + "update_inner_post";
