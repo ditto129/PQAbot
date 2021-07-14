@@ -33,6 +33,7 @@ def insert_inner_post():
             'incognito' :data['incognito'],
             'score' : []
         }
+        print("post_dict: ", post_dict)
     except Exception as e :
         post_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}
     inner_post.insert_post(post_dict)

@@ -67,6 +67,8 @@ function start(){
             
                 content += '<div>';
                     content += '<span>';
+                    question = question.replaceAll('\n', '<br>');
+                    console.log("question: "+question);
                     content += question;
                     content += '</span>';
                 content += '</div>';

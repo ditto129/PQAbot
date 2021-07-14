@@ -27,6 +27,7 @@ function start(){
                 var tag = response[i].tag;
                 var time = response[i].time.slice(0, 10);
                 var score = 0;
+                
                 for(var j=0; j<response[i].score.length; j++){
                     score += response[i].score.score;
                 }
