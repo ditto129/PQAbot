@@ -11,6 +11,7 @@ post_api = Blueprint('post_api', __name__)
 @post_api.route('/query_inner_post_list', methods=['POST'])
 def query_inner_post_list():
     data = request.get_json()
+    print("data: ", data)
     post_list = inner_post.query_post_list(data['page_size'],data['page_number'])
     return jsonify(post_list)
 

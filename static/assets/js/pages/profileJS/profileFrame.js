@@ -25,8 +25,12 @@ function start(){
                 var id = response[i]._id;
                 var title = response[i].title;
                 var tag = response[i].tag;
-                var time = response[i].time.slice(0, 9);
-                var score = "score";
+                var time = response[i].time.slice(0, 10);
+                var score = 0;
+                for(var j=0; j<response[i].score.length; j++){
+                    score += response[i].score.score;
+                }
+                
                 content += '<div class="col-lg-4 col-xl-3 col-sm-12">';
                 content += '<a href="#" onclick="setLocalStorage(';
                 content += "'";

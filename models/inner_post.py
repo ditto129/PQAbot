@@ -44,8 +44,8 @@ def update_post(post_data):
 
 # 取得所有貼文列表
 def query_post_list(page_size,page_number):
-    return [{'_id' : doc['post_id'],
-             'tittle': doc['title'],
+    return [{'_id' : doc['_id'],
+             'title': doc['title'],
              'time' : doc['time'],
              'tag' : doc['tag'],
              'score' : doc['score']} 
@@ -76,7 +76,7 @@ def insert_response(response_dict):
     # 更新使用者回覆紀錄
     post_dict = {
         '_id' : target_post['_id'],
-        'tittle': target_post['title'],
+        'title': target_post['title'],
         'time' : target_post['time'],
         'tag' : target_post['tag'],
         'score' : target_post['score']
