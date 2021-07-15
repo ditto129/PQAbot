@@ -25,7 +25,7 @@ function summaryContent(){
     var content = "";
     for(var i=1; i<5; i++){
         content += '<div class="accordion-msg" style="">';
-            content += ' <a class="ourHover" style="color: #5D478B; font-size: 20px;">最佳解答';
+            content += ' <a class="ourHover" style="font-size: 20px; color: #505458;">最佳解答';
             content += i;
             content += '</a>';
         
@@ -52,9 +52,11 @@ function summaryContent(){
 //                content += '<span id="dislike';
 //                content += i;
 //                content += '" style="margin-right: 5px; color: gray;">0</span>';
-
-                content += '<i class="fa fa-trophy" aria-hidden="true" style="color: #5D478B"></i>';
-                content += '<span style="margin-right: 5px; color: gray;">30</span>';
+                content += '<button type="button" class="scoreBtn"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>';
+                content += '<button type="button" class="scoreBtn" style="margin-right: 10px;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button>';
+                    
+                content += '<i class="fa fa-trophy" aria-hidden="true" style="color: #505458;"></i>';
+                content += '<span style="margin-right: 5px; color: #505458;">30</span>';
             content += '</div>';
 
         content += '</div>';

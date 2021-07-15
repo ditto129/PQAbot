@@ -9,7 +9,7 @@ function changePage(){
     var content = "";
     content += '<iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="';
     content += page;
-//    content += '.html';
+    content += '.html';
     content += '" height="100%" width="100%"></iframe>';
     console.log("content: "+content);
     document.getElementById("main_page").innerHTML = content;
@@ -508,8 +508,8 @@ function save(){
     });
     
     // 更新畫面
-//    setTimeout(getUserHeadshotAndName, 2000);
-    getUserHeadshotAndName();
+    setTimeout(getUserHeadshotAndName, 1500);
+//    getUserHeadshotAndName();
 }
 //////////////////儲存 照片＆姓名＆興趣標籤 END////////////////////
 
