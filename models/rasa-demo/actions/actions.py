@@ -72,10 +72,10 @@ class outer_search(Action):
        # random.shuffle(testReply)
        # answer=testReply[0:3]
         reply = "謝謝您的等待，以下為搜尋結果的資料摘要："
-        for i in range(0, len(url)):
+        for i in range(0, len(resultpage)):
 #        for i in range(0, 3):
 #            reply += ("<br>" + str(i+1) + ".<a href=\"" + answer[i][0] + "\">" + answer[i][1] + "</a>")
-            reply += ("<br>" + str(i+1) + ".<a href=\"" + result_title[i] + "\"></a>")
+            reply += ("<br>" + str(i+1) + ".<a href=\"" + resultpage[i] + "\">"+ result_title[i] + "</a>")
         reply += "<br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"
         dispatcher.utter_message(text=reply)
         return []
