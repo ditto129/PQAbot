@@ -54,7 +54,11 @@ def update_post(post_data):
     
     _db.INNER_POST_COLLECTION.update_one({'_id': post_data['_id']},{'$set':post_data})
     # 使用者發文更新
-    _db.USER_COLLECTION.update_one({'_id': post_data['asker_id'],'record.posts._id':post_data['_id']},{'$set':{'record.$.title':post_data['title'], 'record.$.question':post_data['question'], 'record.$.time':post_data['time']}})
+    _db.USER_COLLECTION.update_one({'_id': post_data['asker_id'],'record.posts._id':post_data['_id']},
+                                   {'$set':
+                                        {'record.$.title':post_data['title'], 
+                                         'record.$.question':post_data['question'], 
+                                         'record.$.time':post_data['time']}})
     
     post = _db.INNER_POST_COLLECTION.find_one({'_id':post_data['_id']})
     # 使用者回覆紀錄更新
@@ -64,7 +68,9 @@ def update_post(post_data):
         'time' : post_data['time'],}
     
     for response in post['answer']:
-        _db.USER_COLLECTION.update_one({'_id': response['replier_id'],'record.responses._id':response['_id']},{'$set':{'record.responses.$':new_dict}})
+        _db.USER_COLLECTION.update_one({'_id': response['replier_id'],'record.responses._id':response['_id']},
+                                       {'$set':
+                                            {'record.responses.$':new_dict}})
 
 # 取得所有貼文列表
 def query_post_list(page_size,page_number):
@@ -96,7 +102,7 @@ def insert_response(response_dict):
         response_dict['_id'] = str(biggest_response_id + 1).zfill(6)
     # 新增到answer
     response_dict.pop('post_id')
-    _db.INNER_POST_COLLECTION.update_one({'_id':response_dict['post_id']},{'$push':{'answer':response_dict}})
+    _db.INNER_POST_COLLECTION.update_one({'_id':target_post['_id']},{'$push':{'answer':response_dict}})
     # 更新使用者回覆紀錄
     post_dict = {
         '_id' : target_post['_id'],
@@ -105,15 +111,14 @@ def insert_response(response_dict):
         'tag' : target_post['tag'],
         'score' : target_post['score']
         }
-    _db.USER_COLLECTION.update_one({'_id':response_dict['replier_id']},{'$set':{'record.responses':post_dict}})
+    _db.USER_COLLECTION.update_one({'_id':response_dict['replier_id']},{'$addToSet':{'record.responses':post_dict}})
     # 更新每個tag 的 usage_counter,recent_use
     for tag in target_post['tag']:
         target_tag = _db.TAG_COLLECTION.find_one({'_id':tag['tag_id']})
-        new_data = {
-            "recent_use": response_dict['time'],
-            "usage_counter":target_tag['usage_counter'] + 1
-        }
-        _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$set':new_data})
+        _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},
+            {'$set':{
+                'recent_use':response_dict['time'],
+                'usage_counter':target_tag['usage_counter'] + 1}})
         # 使用者相關標籤積分 + 1
         user.update_user_score(response_dict['replier_id'],tag['tag_id'],tag['tag_name'], 1)
     
@@ -121,7 +126,9 @@ def insert_response(response_dict):
 # 編輯貼文回覆
 def update_response(response_dict):
     post_id = response_dict.pop('post_id')
-    _db.INNER_POST_COLLECTION.update_one({'_id':post_id,'answer._id':response_dict['_id']},{'$set':{'answer.$':response_dict}})
+    _db.INNER_POST_COLLECTION.update_one({'_id':post_id,'answer._id':response_dict['_id']},
+                                         {'$set':{'answer.$.response':response_dict['response'],
+                                                  'answer.$.time':response_dict['time']}})
     
 # 編輯貼文評分
 def update_score(score_dict):
