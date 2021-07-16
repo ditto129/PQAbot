@@ -7,12 +7,34 @@ from models import inner_post
 
 post_api = Blueprint('post_api', __name__)
 
-# 依照每頁筆數以及頁碼取得貼文摘要
+# 依照每頁筆數,頁碼取得貼文摘要
 @post_api.route('/query_inner_post_list', methods=['POST'])
 def query_inner_post_list():
     data = request.get_json()
-    print("data: ", data)
-    post_list = inner_post.query_post_list(data['page_size'],data['page_number'])
+    try: 
+        post_list = inner_post.query_post_list(data['page_size'],data['page_number'])
+    except Exception as e :
+        post_list = {"error" : e.__class__.__name__ + " : " +e.args[0]}
+    return jsonify(post_list)
+
+# 依照貼文標題,每頁筆數,頁碼取得貼文摘要
+@post_api.route('/query_inner_post_list_by_title', methods=['POST'])
+def query_inner_post_list_by_title():
+    data = request.get_json()
+    try:
+        post_list = inner_post.query_post_list_by_title(data['title'],data['page_size'],data['page_number'])
+    except Exception as e :
+        post_list = {"error" : e.__class__.__name__ + " : " +e.args[0]}
+    return jsonify(post_list)
+
+# 依照標籤,每頁筆數,頁碼取得貼文摘要
+@post_api.route('/query_inner_post_list_by_tag', methods=['POST'])
+def query_inner_post_list_by_tag():
+    data = request.get_json()
+    try:
+        post_list = inner_post.query_post_list_by_tag(data['tag'],data['page_size'],data['page_number'])
+    except Exception as e :
+        post_list = {"error" : e.__class__.__name__ + " : " +e.args[0]}
     return jsonify(post_list)
 
 # 新增內部貼文
