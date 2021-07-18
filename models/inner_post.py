@@ -90,7 +90,11 @@ def update_post(post_data):
         'question': post_data['question'],
         'time' : post_data['time'],}
     
-    _db.INNER_POST_COLLECTION.update_one({'_id': post_data['_id']},{'$set':post_data})
+    _db.INNER_POST_COLLECTION.update_one({'_id': post_data['_id']},{'$set':
+                                                                    {
+                                                                        'title':post_data['title'],
+                                                                        'question':post_data['question'],
+                                                                        'time':post_data['time']}})
     # 使用者發文更新
     _db.USER_COLLECTION.update_one({'_id': post_data['asker_id'],'record.posts._id':post_data['_id']},
                                    {'$set':
@@ -170,14 +174,20 @@ def update_score(score_dict):
             for response in target_post['answer']:
                 _db.USER_COLLECTION.update_one({'_id':response['replier_id'],'record.responses._id': score_dict['post_id']},{'$pull':{'record.responses.$.score':original_score_record}})
                 _db.USER_COLLECTION.update_one({'_id':response['replier_id'],'record.responses._id': score_dict['post_id']},{'$push':{'record.responses.$.score':new_score_record}})
+            # 更新被按的人的技能分數
+            for tag in target_post['tag']:
+                user.update_user_score(target_post['asker_id'],tag['tag_id'],tag['tag_name'],new_score_record['score'] - original_score_record['score'])
         else:
-            # 貼文push一個使用者評分
+            # 貼文本身push一個使用者評分
             _db.INNER_POST_COLLECTION.update_one({'_id':score_dict['post_id']},{'$push':{'score':new_score_record}})
             # 使用者發文紀錄push一個評分
             _db.USER_COLLECTION.update_one({'_id':score_dict['user'],'record.posts._id':score_dict['post_id'],},{'$push':{'score.posts.$.score':new_score_record}})
             # 使用者回覆紀錄push一個評分
             for response in target_post['answer']:
                 _db.USER_COLLECTION.update_one({'_id':response['replier_id'],'record.responses._id': score_dict['post_id']},{'$push':{'record.responses.$.score':new_score_record}})
+            # 更新被讚的人的技能分數
+            for tag in target_post['tag']:
+                user.update_user_score(target_post['asker_id'],tag['tag_id'],tag['tag_name'],new_score_record['score'])
     # response_id不為空表示更新回覆評分
     else :
         target_response = query_response(score_dict['post_id'],score_dict['response_id'])
@@ -186,11 +196,34 @@ def update_score(score_dict):
             original_score_record = next(s for s in target_response['score'] if s['user_id'] == score_dict['user'])
             _db.INNER_POST_COLLECTION.update_one({'_id':score_dict['post_id'],'answer._id':score_dict['response_id']},{'$pull':{'answer.$.score':original_score_record}})
             _db.INNER_POST_COLLECTION.update_one({'_id':score_dict['post_id'],'answer._id':score_dict['response_id']},{'$push':{'answer.$.score':new_score_record}})
+            for tag in target_post['tag']:
+                user.update_user_score(target_response['replier_id'],tag['tag_id'],tag['tag_name'],new_score_record['score'] - original_score_record['score'])
         else:
             _db.INNER_POST_COLLECTION.update_one({'_id':score_dict['post_id'],'answer._id':score_dict['response_id']},{'$push':{'answer.$.score':new_score_record}})
-    # 更新使用者相關技能積分
-    tags = target_post['tag']
-    for tag in tags:
-        # 使用者相關標籤積分 + 1
-        user.update_user_score(score_dict['target_user'],tag['tag_id'],tag['tag_name'], 1)
-        
+            for tag in target_post['tag']:
+                user.update_user_score(target_response['replier_id'],tag['tag_id'],tag['tag_name'],new_score_record['score'])
+# 刪除貼文
+def remove_post(post_id):
+    post_dict = _db.INNER_POST_COLLECTION.find_one({'_id':post_id})
+    record_dict = {'_id' : post_dict['_id'],
+             'title': post_dict['title'],
+             'time' : post_dict['time'],
+             'score': post_dict['score'],
+             'tag' : post_dict['tag']}
+    # 從發文者及回覆者記錄移除post
+    _db.USER_COLLECTION.update_one({'_id':post_dict['asker_id']},{'$pull':{'record.posts':record_dict}})
+    for response in post_dict['answer']:
+        _db.USER_COLLECTION.update_one({'_id':response['replier_id']},{'$pull':{'record.responses':record_dict}})
+    # 依標籤扣除使用者分數
+    for tag in post_dict['tag']:
+        # 扣除發文時的分數
+        user.update_user_score(post_dict['asker_id'],tag['tag_id'],tag['tag_name'],-2)
+        user.update_user_score(post_dict['asker_id'],tag['tag_id'],tag['tag_name'],-sum(score['score'] for score in post_dict['score']))
+        # 扣除每則回應的分數
+        for response in post_dict['answer']:
+            user.update_user_score(response['replier_id'],tag['tag_id'],tag['tag_name'],-1)
+            user.update_user_score(response['replier_id'],tag['tag_id'],tag['tag_name'],-sum(score['score'] for score in response['score']))
+    # 扣除標籤使用次數??
+    # 從collection移除post
+    _db.INNER_POST_COLLECTION.remove_one({'_id':post_id})
+    
