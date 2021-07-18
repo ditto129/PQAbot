@@ -21,7 +21,6 @@ user_api = Blueprint("user_api", __name__)
 @user_api.route('/query_user_profile', methods=['POST'])
 def query_user_profile():
     data = request.get_json()
-    print(data)
     user_dict = user.query_user(data['_id'])
     try:
         user_profile = {
@@ -77,18 +76,27 @@ def query_user_skill():
 @user_api.route('/update_user_profile', methods=['POST'])
 def update_user_profile():
     data = request.get_json()
-    print("更新姓名: ", data)
     try:
         user_profile = {
             '_id' : data['_id'],
             'name': data['name'],
-#            'email':data['email'],
         }
         user.update_user(user_profile)
     except Exception as e :
         user_profile = {"error" : e.__class__.__name__ + ":" +e.args[0]}
         print(e)
     return jsonify(user_profile)
+
+# 編輯使用者興趣
+@user_api.route('/update_user_interest', methods=['POST'])
+def update_user_interest():
+    data = request.get_json()
+    try:
+        user.update_user_interest(data['_id'],data['tag'])
+    except Exception as e :
+        data = {"error" : e.__class__.__name__ + ":" +e.args[0]}
+        print(e)
+    return jsonify(data)
     
 ''' 湘的 start '''
 #UPLOAD_FOLDER = '/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img'
