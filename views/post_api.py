@@ -131,7 +131,6 @@ def like_inner_post():
             'post_id' : data['post_id'],
             'response_id' : data['response_id'],
             'user':data['user'],
-            'target_user':data['target_user'],
             'score' : 1,
         }
         inner_post.update_score(score_dict)
@@ -148,10 +147,20 @@ def dislike_inner_post():
             'post_id' : data['post_id'],
             'response_id' : data['response_id'],
             'user':data['user'],
-            'target_user':data['target_user'],
             'score' : -1,
         }
         inner_post.update_score(score_dict)
     except Exception as e :
         score_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}
     return jsonify(score_dict)
+
+# 刪除貼文
+@post_api.route('/delete_innser_post',methods=['POST'])
+def delete_inner_post():
+    data = request.get_json()
+    try: 
+        inner_post.remove_post(data['_id'])
+    except Exception as e :
+        data = {"error" : e.__class__.__name__ + ":" +e.args[0]}
+        print(e)
+    return jsonify(data)
