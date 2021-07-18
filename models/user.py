@@ -22,11 +22,6 @@ def query_user(user_id):
 def update_user(user_dict):
     _db.USER_COLLECTION.update_one({'_id':user_dict['_id']},{'$set':user_dict})
 
-# def update_skill(user_dict):
-#     user = _db.USER_COLLECTION.find_one({'_id':user_dict['_id']})
-#     for new_skill in user_dict['skill']:
-#         if any(original_skill['tag_id'] == new_skill['tag_id'] for original_skill in user['skill']):
-#             _db.USER_COLLECTION.update_one({'_id':user_dict['_id'],'skill.tag_id':new_skill['tag_id']},{'$set:'{''}}}
 
 # 增加使用者特定tag一般積分
 def update_user_score(user_id,tag_id,tag_name,score):
@@ -57,3 +52,11 @@ def update_user_interested_score(user_id,tag_id,tag_name,score):
     # 使用者持有該技能，技能積分增加
     else:
         _db.USER_COLLECTION.update_one({'_id':user_id,'skill.tag_id': tag_id},{'$set':{'skill.$.interested_score': score }})
+
+# 更新使用者興趣
+def update_user_interest(user_id,tag_list):
+    for t in tag_list:
+        update_user_interested_score(user_id,t["tag_id"],t["skill_name"],t["interested_score"])
+        
+    
+    
