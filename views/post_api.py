@@ -53,7 +53,8 @@ def insert_inner_post():
             'tag' : data['tag'],
             'time' : data['time'],
             'incognito' :data['incognito'],
-            'score' : []
+            'score' : [],
+            'view_count' : 0
         }
         inner_post.insert_post(post_dict)
     except Exception as e :
