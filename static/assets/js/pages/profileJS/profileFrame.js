@@ -19,6 +19,10 @@ function start(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("成功: 拿貼文紀錄（query_user_post_list）");
+            // 把拿到的資料 從新到舊排序
+            response.sort(function(a, b){
+                return a.time < b.time ? 1 : -1;
+            });
             console.log(response);
             
             for(var i=0; i<response.length; i++){
