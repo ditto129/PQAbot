@@ -73,7 +73,7 @@ function start(){
     //到時候要用session_id
     
     //session_id = window.prompt("請輸入mail的前綴(要用來當session_id)");
-//    localStorage.setItem("sessionID", 123);
+    localStorage.setItem("sessionID", 123);
     var session_id = localStorage.getItem("sessionID");
     console.log("session_id: "+ session_id);
     console.log("head_url: "+head_url);
@@ -248,6 +248,8 @@ function getUserHeadshotAndName(){
             name += '</span>';
             
             document.getElementById("userName").setAttribute("value", response.name);
+            
+            localStorage.setItem("userName", response.name);
         },
         error: function(){
             console.log("失敗: 拿姓名（query_user_profile）");
@@ -499,6 +501,7 @@ function save(){
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
         success: function(response){
+            localStorage.setItem("userName", name);
             console.log("成功: 更新姓名（update_user_profile）");
         },
         error: function(response){
