@@ -89,6 +89,49 @@ function start(){
             content += '</div>';
             
             document.getElementById("question").innerHTML = content;
+            
+            content = "";
+            for(var i=0; i<response.answer.length; i++){
+                var score = 0;
+                for(var j=0; j<response.answer[i].score.length; j++){
+                    score += response.answer[i].score[j].score;
+                }
+                content += '<div class="col-12">';
+                    content += '<div class="badge-box">';
+                        content += '<div class="sub-title">';
+                            content += '<span>';
+                                content += response.answer[i].replier_name;
+                            content += '</span>';
+                            content += '<span style="float:right;"><i class="fa fa-trophy" aria-hidden="true"></i>';
+                                content += score;
+                            content += '</span>';
+                        content += '</div>';
+                        
+                        content += '<span>';
+                            content += response.answer[i].response;
+                        content += '</span>';
+//                        <span><br><code>hello world</code></span>
+                        
+                        content += '<div style="margin-top: 20px;">';
+                            content += '<label class="badge purpleLabel2">';
+                                content += response.answer[i].time.slice(0, 10);
+                            content += '</label>';
+                
+                            content += '<div style="float:right;">';
+                                content += '<button type="button" class="scoreBtn" onclick="thumbs(';
+                                content += "'1')";
+                                content += '"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>';
+                                    
+                                content += '<button type="button" class="scoreBtn" onclick="thumbs(';
+                                content += "'-1')";
+                                content += '"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button>';
+                            content += '</div>';
+                        content += '</div>';
+                    content += '</div>';
+                content += '</div>';
+            }
+            
+            document.getElementById("response").innerHTML = content;
         },
         error: function(){
             console.log("失敗: 拿單篇貼文（query_inner_post）");
