@@ -100,7 +100,9 @@ def insert_inner_post_response():
             "replier_id" : data['replier_id'],
             "replier_name" : data['replier_name'],
             "response" : data['response'],
-            "time" : datetime.fromisoformat(data['time'])
+            "time" : datetime.fromisoformat(data['time']),
+            "score":[],
+            "incognito":data['incognito']
         }
         inner_post.insert_response(response_dict)
     except Exception as e :
