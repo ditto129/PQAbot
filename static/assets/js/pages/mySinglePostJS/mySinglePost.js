@@ -6,8 +6,8 @@
 //}
 
 function setLocalStorage(id){
-    localStorage.setItem("singlePostId", id);
-    setPage('mySinglePostFrame');
+    localStorage.setItem("replyId", id);
+    setPage('editReplyFrame');
 }
 
 var pageNumber = 1;
@@ -40,7 +40,9 @@ function start(){
             var title = response.title;
             var question = response.question;
             var tag = response.tag;
-            var time = response.time.slice(0, 10);
+            var time = new Date(response.time);
+            time = time.toISOString();
+            time = time.slice(0, 10);
             var score = 0;
             for(var i=0; i<score.length; i++){
                 score += score[i].score;
@@ -63,7 +65,6 @@ function start(){
                     content += '<span><h5>';
                     content += title;
                     content += '</h5></span>';
-                
             
                 content += '<div>';
                     content += '<span>';
@@ -85,12 +86,26 @@ function start(){
                     content += '<label class="badge purpleLabel2">';
                     content += time;
                     content += '</label>';
+                    
+                    content += '<div style="float:right;">';
+                        content += '<button type="button" class="scoreBtn" onclick="thumbs(';
+                        content += "'1')";
+                        content += '"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>';
+
+                        content += '<button type="button" class="scoreBtn" onclick="thumbs(';
+                        content += "'-1')";
+                        content += '"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button>';
+                    content += '</div>';
                 content += '</div>';
             content += '</div>';
             
             document.getElementById("question").innerHTML = content;
             
             content = "";
+            response.answer.sort(function(a, b){
+                return a.time < b.time ? 1 : -1;
+            });
+            
             for(var i=0; i<response.answer.length; i++){
                 var score = 0;
                 for(var j=0; j<response.answer[i].score.length; j++){
@@ -100,21 +115,37 @@ function start(){
                     content += '<div class="badge-box">';
                         content += '<div class="sub-title">';
                             content += '<span>';
-                                content += response.answer[i].replier_name;
+                                if(response.answer[i].incognito == true){
+                                    content += "匿名";
+                                }
+                                else{
+                                    content += response.answer[i].replier_name;
+                                }
                             content += '</span>';
+                
+                            if(response.answer[i].replier_id == localStorage.getItem("sessionID")){
+                            content += '<button type="button" class="scoreBtn" onclick="setLocalStorage(';
+                            content += "'";
+                            content += response.answer[i]._id;
+                            content += "'";
+                            content += ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';                        
+                        }
+                            
                             content += '<span style="float:right;"><i class="fa fa-trophy" aria-hidden="true"></i>';
                                 content += score;
                             content += '</span>';
                         content += '</div>';
                         
                         content += '<span>';
-                            content += response.answer[i].response;
+                            content += response.answer[i].response.replaceAll('\n', '<br>');
                         content += '</span>';
 //                        <span><br><code>hello world</code></span>
                         
                         content += '<div style="margin-top: 20px;">';
                             content += '<label class="badge purpleLabel2">';
-                                content += response.answer[i].time.slice(0, 10);
+                                var time = new Date(response.answer[i].time);
+                                time = time.toISOString();
+                                content += time.slice(0, 10);
                             content += '</label>';
                 
                             content += '<div style="float:right;">';

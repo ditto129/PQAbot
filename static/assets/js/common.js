@@ -16,4 +16,4 @@ function changePage(){
     content += page;
     content += '.html" height="100%" width="100%"></iframe>';
     document.getElementById("main_page").innerHTML = content;
-}
+}f

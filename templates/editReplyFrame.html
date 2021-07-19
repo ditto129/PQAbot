@@ -28,6 +28,8 @@
     <link rel="stylesheet" type="text/css" href="../static/assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="../static/assets/css/jquery.mCustomScrollbar.css">
     <link rel="stylesheet" type="text/css" href="../static/assets/css/pages/profileCSS/custom.css">
+    <!-- font-awesome.css -->
+    <link rel="stylesheet" type="text/css" href="../static/assets/css/font-awesome.css">
 </head>
 
 <body style="background: white;">
@@ -41,6 +43,13 @@
                             <!-- Page body start -->
                             <div class="page-body">
                                 <div class="row">
+                                    <!-- 上一頁 START -->
+                                    <div class="pagination2" style="margin: -25px 0px 10px -10px;">
+                                        <a href="#" onclick="setPage('mySinglePostFrame')">
+                                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                    <!-- 上一頁 END -->
                                     <div class="col-sm-12">
                                         <!-- Basic Form Inputs card start -->
                                         <div class="card">
@@ -50,11 +59,11 @@
                                                     <div class="form-group row">
                                                         <label class="col-sm-2 col-form-label">回覆內容</label>
                                                         <div class="col-sm-10">
-                                                            <textarea rows="5" cols="5" class="form-control">請引用相關css, js檔</textarea>
+                                                            <textarea id="response" rows="5" cols="5" class="form-control" placeholder="請引用相關css, js檔"></textarea>
                                                         </div>
                                                     </div>
                                                     <!-- 回覆內容 row end -->
-                                                    <input class="btn btn-primary purpleBtn" type="submit" value="Edit">
+                                                    <input class="btn btn-primary purpleBtn" value="編輯" onclick="edit()">
                                                 </form>
                                             </div>
                                         </div>
@@ -132,6 +141,8 @@
 <script src="../static/assets/js/pcoded.min.js"></script>
 <script src="../static/assets/js/demo-12.js"></script>
 <script src="../static/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="../static/assets/js/common.js"></script>
+    <script src="../static/assets/js/pages/editReplyJS/editReply.js"></script>
 </body>
 
 </html>

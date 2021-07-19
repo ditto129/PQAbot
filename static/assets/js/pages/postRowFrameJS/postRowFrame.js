@@ -33,7 +33,9 @@ function start(){
                 var id = response[i]._id;
                 var title = response[i].title;
                 var tag = response[i].tag;
-                var time = response[i].time.slice(0, 10);
+                var time = new Date(response[i].time);
+                time = time.toISOString();
+                time = time.slice(0, 10);
                 var score = 0;
                 for(var j=0; j<response[i].score.length; j++){
                     score += response[i].score.score;
