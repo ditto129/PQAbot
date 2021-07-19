@@ -3,9 +3,13 @@ function save(){
     var replierId = localStorage.getItem("sessionID");
     var replierName = localStorage.getItem("userName");
     var response = $("#response").val();
+    
+    //true->匿名, false->不是匿名
+    var anonymous = document.getElementById('anonymous').checked;
+    
     var time = new Date();
     
-    var data = {post_id: postId, replier_id: replierId, replier_name: replierName, response: response, time: time};
+    var data = {post_id: postId, replier_id: replierId, replier_name: replierName, response: response, time: time, incognito: anonymous};
     console.log("傳出去的data資料");
     console.log(data);
     myURL = head_url + "insert_inner_post_response";

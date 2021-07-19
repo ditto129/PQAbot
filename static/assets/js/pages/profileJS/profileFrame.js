@@ -130,7 +130,7 @@ function start(){
                             content += '</span>';
                             
                             content += '<span style="float:right;"><i class="fa fa-trophy" aria-hidden="true"></i>';
-                            content += '0';//score
+                            content += score;//score
                             content += '</span>';
                         content += '</div>';
                     
