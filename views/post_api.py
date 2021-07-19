@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify
 
 # --- our models ---- #
 from models import inner_post
+from datetime import datetime
 
 post_api = Blueprint('post_api', __name__)
 
@@ -51,7 +52,7 @@ def insert_inner_post():
             'answer' : [],
             'keyword' : [],
             'tag' : data['tag'],
-            'time' : data['time'],
+            'time' : datetime.fromisoformat(data['time']),
             'incognito' :data['incognito'],
             'score' : [],
             'view_count' : 0
@@ -71,7 +72,7 @@ def update_inner_post():
             'asker_id':data['asker_id'],
             'title' : data['title'],
             'question' : data['question'],
-            'time' : data['time']
+            'time' : datetime.fromisoformat(data['time'])
         }
         inner_post.update_post(post_dict)
     except Exception as e :
@@ -99,7 +100,7 @@ def insert_inner_post_response():
             "replier_id" : data['replier_id'],
             "replier_name" : data['replier_name'],
             "response" : data['response'],
-            "time" : data['time']
+            "time" : datetime.fromisoformat(data['time'])
         }
         inner_post.insert_response(response_dict)
     except Exception as e :
@@ -116,7 +117,7 @@ def update_inner_post_response():
             '_id' : data['_id'],
             "replier_id" : data['replier_id'],
             "response" : data['response'],
-            "time" : data['time']
+            "time" : datetime.fromisoformat(data['time'])
         }
         inner_post.update_response(response_dict)
     except Exception as e :
