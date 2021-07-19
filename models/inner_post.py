@@ -37,11 +37,13 @@ def query_post_list_by_tag(tag_list,page_size,page_number):
              'tag' : doc['tag'],
              'score' : doc['score']}
            for doc in _db.INNER_POST_COLLECTION.aggregate([
-                                                           {'$match':{'$expr':{'$setIsSubset':[tag_list,'$tag']}}}
-                                                         ])]
+                                                           {'$match':{'$expr':{'$setIsSubset':[tag_list,'$tag']}}},
+                                                           {'$skip':page_size * (page_number - 1)},
+                                                           {'$limit': page_size }])]
            
 # 依post_id取得特定貼文
 def query_post(post_id):
+    _db.INNER_POST_COLLECTION.update_one({'_id':post_id},{'$inc':{'view_count':1}})
     return _db.INNER_POST_COLLECTION.find_one({'_id':post_id})
 
 
@@ -215,9 +217,11 @@ def remove_post(post_id):
              'tag' : post_dict['tag']}
     # 從發文者及回覆者記錄移除post
     _db.USER_COLLECTION.update_one({'_id':post_dict['asker_id']},{'$pull':{'record.posts':record_dict}})
+    tag_usage = len(post_dict['answer']) + 1
     for response in post_dict['answer']:
         _db.USER_COLLECTION.update_one({'_id':response['replier_id']},{'$pull':{'record.responses':record_dict}})
     # 依標籤扣除使用者分數
+    tag_usage = len(post_dict['answer']) + 1
     for tag in post_dict['tag']:
         # 扣除發文時的分數
         user.update_user_score(post_dict['asker_id'],tag['tag_id'],tag['tag_name'],-2)
@@ -226,7 +230,8 @@ def remove_post(post_id):
         for response in post_dict['answer']:
             user.update_user_score(response['replier_id'],tag['tag_id'],tag['tag_name'],-1)
             user.update_user_score(response['replier_id'],tag['tag_id'],tag['tag_name'],-sum(score['score'] for score in response['score']))
-    # 扣除標籤使用次數??
+        # 扣除tag usage_count(發文(1)+回應數)
+        _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$inc':{'usage_counter': -tag_usage}})
     # 從collection移除post
     _db.INNER_POST_COLLECTION.remove_one({'_id':post_id})
     
