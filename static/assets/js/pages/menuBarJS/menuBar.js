@@ -8,8 +8,8 @@ function changePage(){
     console.log(page);
     var content = "";
     content += '<iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="';
-//    content += page;
-    content += 'comprehensive.html';
+    content += page;
+    content += '.html';
     content += '" height="100%" width="100%"></iframe>';
     console.log("content: "+content);
     document.getElementById("main_page").innerHTML = content;
