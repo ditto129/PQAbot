@@ -10,8 +10,43 @@ function setLocalStorage(id){
     setPage('editReplyFrame');
 }
 
+/////////////// 對貼文或回覆按讚、倒讚 START ///////////////
+function thumbs(score, replyId, targetUserId){
+    var postId = localStorage.getItem("singlePostId");
+    var userId = localStorage.getItem("sessionID");
+    var data = {post_id: postId, response_id: replyId, user: userId, target_user: targetUserId};
+    console.log(data);
+    var myURL;
+    
+    if(score == 1){
+        myURL = head_url + "like_inner_post";
+    }
+    else{
+        myURL = head_url + "dislike_inner_post";
+    }
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 對貼文/回覆評分（like_inner_post/dislike_inner_post）");
+            setPage('mySinglePostFrame');
+        },
+        error: function(response){
+            console.log("失敗: 對貼文/回覆評分（like_inner_post/dislike_inner_post）");
+            console.log(response);
+        }
+    });
+}
+/////////////// 對貼文或回覆按讚、倒讚 END ///////////////
+
 var pageNumber = 1;
 function start(){
+    
+    var userId = localStorage.getItem("sessionID");
     
     var myURL = head_url + "query_inner_post";
     var singlePostId = localStorage.getItem("singlePostId");
@@ -89,12 +124,39 @@ function start(){
                     
                     content += '<div style="float:right;">';
                         content += '<button type="button" class="scoreBtn" onclick="thumbs(';
-                        content += "'1')";
-                        content += '"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>';
+                        content += "'1', '', '";
+                        content += response.asker_id;
+                        content += "')";
+                        content += '">';
+            
+                        // 檢查有沒有按讚
+                        var temp = {score: 1, user_id: userId};
+                        console.log(temp);
+                        if(response.score.includes(temp)){
+                            content += '<i class="fa fa-thumbs-up" aria-hidden="true"></i>';
+                        }
+                        else{
+                            content += '<i class="fa fa-thumbs-o-up" aria-hidden="true"></i>';
+                        }
+                        
+                        content += '</button>';
 
                         content += '<button type="button" class="scoreBtn" onclick="thumbs(';
-                        content += "'-1')";
-                        content += '"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button>';
+                        content += "'-1', '', '";
+                        content += response.asker_id;
+                        content += "')";
+                        content += '">';
+            
+                        // 檢查有沒有按倒讚
+                        var temp = {score: -1, user_id: userId};
+                        if(response.score.includes(temp)){
+                            content += '<i class="fa fa-thumbs-down" aria-hidden="true"></i>';
+                        }
+                        else{
+                            content += '<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>';
+                        }
+                        
+                        content += '</button>';
                     content += '</div>';
                 content += '</div>';
             content += '</div>';
@@ -150,11 +212,19 @@ function start(){
                 
                             content += '<div style="float:right;">';
                                 content += '<button type="button" class="scoreBtn" onclick="thumbs(';
-                                content += "'1')";
-                                content += '"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>';
+                                content += "'1', '";
+                                content += response.answer[i]._id;
+                                content += "', '";
+                                content += response.answer[i].replier_id;
+                                content += "')";
+                                content += '"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></button>';
                                     
                                 content += '<button type="button" class="scoreBtn" onclick="thumbs(';
-                                content += "'-1')";
+                                content += "'-1', '";
+                                content += response.answer[i]._id;
+                                content += "', '";
+                                content += response.answer[i].replier_id;
+                                content += "')";
                                 content += '"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button>';
                             content += '</div>';
                         content += '</div>';
