@@ -19,9 +19,18 @@ def query_user(user_id):
     return _db.USER_COLLECTION.find_one({'_id':user_id})
 
 # 編輯使用者資料
-def update_user(user_dict):
-    _db.USER_COLLECTION.update_one({'_id':user_dict['_id']},{'$set':user_dict})
-
+def update_user(update_dict):
+    user_data = _db.USER_COLLECTION.find_one({'_id':update_dict['_id']})
+    _db.USER_COLLECTION.update_one({'_id':update_dict['_id']},{'$set':update_dict})
+    # 更改所有發過文的名字
+    if len(update_dict['name']) != 0:
+        for post in user_data['record']['posts']:
+            _db.INNER_POST_COLLECTION.update_one({'_id':post['_id']},{'$set':{'asker_name':update_dict['name']}})
+        # 更改所有回覆的名字
+        for post in user_data['record']['response']:
+            _db.INNER_POST_COLLECTION.update({'_id':post['_id']},
+                                             {'$set':{'answer.$[elem].replier_name':update_dict['name']}},
+                                             {'arrayFilters': [{ "elem.replier_id": update_dict['_id']}]},multi=True)
 
 # 增加使用者特定tag一般積分
 def update_user_score(user_id,tag_id,tag_name,score):

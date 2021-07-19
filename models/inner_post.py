@@ -135,7 +135,10 @@ def insert_response(response_dict):
         'tag' : target_post['tag'],
         'score' : target_post['score']
         }
-    _db.USER_COLLECTION.update_one({'_id':response_dict['replier_id']},{'$addToSet':{'record.responses':post_dict}})
+    _db.USER_COLLECTION.update_one({'_id':response_dict['replier_id'],'record.responses._id':response_dict['_id']},
+                                   {'$set':
+                                        {'record.responses.$':post_dict}},
+                                   upsert=True)
     # 更新每個tag 的 usage_counter,recent_use
     for tag in target_post['tag']:
         target_tag = _db.TAG_COLLECTION.find_one({'_id':tag['tag_id']})
