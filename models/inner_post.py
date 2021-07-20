@@ -12,34 +12,63 @@ from . import user
 # ======================= #
 
 # 取得所有貼文列表
-def query_post_list(page_size,page_number):
-    return [{'_id' : doc['_id'],
-             'title': doc['title'],
-             'time' : doc['time'],
-             'tag' : doc['tag'],
-             'score' : doc['score']} 
-            for doc in _db.INNER_POST_COLLECTION.find().skip(page_size * (page_number - 1)).limit(page_size)]
+def query_post_list(page_size,page_number,option):
+    if option == 'score': 
+        return [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$answer.score'}}}, 
+                                                                 {'$sort': {'score': -1}}, 
+                                                                 {'$skip': page_size * (page_number - 1)}, 
+                                                                 {'$limit': page_size}])]
+    elif option == 'view_count': 
+        return [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$answer.score'}}}, 
+                                                                 {'$sort': {'view_count': -1}}, 
+                                                                 {'$skip': page_size * (page_number - 1)}, 
+                                                                 {'$limit': page_size}])]
+    else : # 預設是用時間排
+        return [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$answer.score'}}}, 
+                                                                 {'$sort': {'time': -1}}, 
+                                                                 {'$skip': page_size * (page_number - 1)}, 
+                                                                 {'$limit': page_size}])]
 
 # 依貼文名稱頁數及筆數搜尋
-def query_post_list_by_title(post_title,page_size,page_number):
-    return[{'_id' : doc['_id'],
-             'title': doc['title'],
-             'time' : doc['time'],
-             'tag' : doc['tag'],
-             'score' : doc['score']}
-           for doc in _db.INNER_POST_COLLECTION.find({'title':{'$regex':'.*'+ post_title +'.*'}}).skip(page_size * (page_number - 1)).limit(page_size)]
-
+def query_post_list_by_title(post_title,page_size,page_number,option):
+    if option == 'score': 
+        return[ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'tag': 1, 'time': 1, 'score': {'$sum': '$answer.score'}, 'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
+                                                                    {'$match': {'match_title': True}},
+                                                                    {'$sort': {'score': -1}}, 
+                                                                    {'$skip': page_size * (page_number - 1)}, 
+                                                                    {'$limit': page_size}])]
+    elif option == 'view_count': 
+        return[ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'tag': 1, 'time': 1, 'score': {'$sum': '$answer.score'}, 'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
+                                                                    {'$match': {'match_title': True}},
+                                                                    {'$sort': {'view_count': -1}}, 
+                                                                    {'$skip': page_size * (page_number - 1)}, 
+                                                                    {'$limit': page_size}])]
+    else : # 預設是用時間排
+        return[ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'tag': 1, 'time': 1, 'score': {'$sum': '$answer.score'}, 'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
+                                                                    {'$match': {'match_title': True}},
+                                                                    {'$sort': {'time': -1}}, 
+                                                                    {'$skip': page_size * (page_number - 1)}, 
+                                                                    {'$limit': page_size}])]
 # 依貼文標籤篩選
-def query_post_list_by_tag(tag_list,page_size,page_number):
-    return[{'_id' : doc['_id'],
-             'title': doc['title'],
-             'time' : doc['time'],
-             'tag' : doc['tag'],
-             'score' : doc['score']}
-           for doc in _db.INNER_POST_COLLECTION.aggregate([
-                                                           {'$match':{'$expr':{'$setIsSubset':[tag_list,'$tag']}}},
-                                                           {'$skip':page_size * (page_number - 1)},
-                                                           {'$limit': page_size }])]
+def query_post_list_by_tag(tag_list,page_size,page_number,option):
+    if option == 'score': 
+        return[ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$answer.score'}, 'hastag': {'$setIsSubset': [[tag_list], '$tag']}}}, 
+                                                               {'$match': {'hastag': True}},
+                                                               {'$sort': {'score': -1}}, 
+                                                               {'$skip': page_size * (page_number - 1)}, 
+                                                               {'$limit': page_size}])]
+    elif option == 'view_count': 
+        return[ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$answer.score'}, 'hastag': {'$setIsSubset': [[tag_list], '$tag']}}}, 
+                                                               {'$match': {'hastag': True}},
+                                                               {'$sort': {'view_count': -1}}, 
+                                                               {'$skip': page_size * (page_number - 1)}, 
+                                                               {'$limit': page_size}])]
+    else : # 預設是用時間排
+        return[ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$answer.score'}, 'hastag': {'$setIsSubset': [[tag_list], '$tag']}}}, 
+                                                               {'$match': {'hastag': True}},
+                                                               {'$sort': {'time': -1}}, 
+                                                               {'$skip': page_size * (page_number - 1)}, 
+                                                               {'$limit': page_size}])]
            
 # 依post_id取得特定貼文
 def query_post(post_id):
