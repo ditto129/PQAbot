@@ -228,7 +228,7 @@ def remove_post(post_id):
         # 扣除tag usage_count(發文(1)+回應數)
         _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$inc':{'usage_counter': -tag_usage}})
     # 從collection移除post
-    _db.INNER_POST_COLLECTION.remove_one({'_id':post_id})
+    _db.INNER_POST_COLLECTION.delete_one({'_id':post_id})
     # 使用者發文紀錄更新
     record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'asker_id': post_dict['asker_id']}}, 
                                                                        {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
