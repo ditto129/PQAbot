@@ -1,15 +1,43 @@
-//function setPage(id, page){
-//    console.log("id: "+id);
-//    console.log("page: "+page);
-//    localStorage.setItem("single_post_id", id);
-//    localStorage.setItem("page", page);
-//}
+var pageNumber = 1;
 
 function setLocalStorage(id){
     localStorage.setItem("replyId", id);
     setPage('editReplyFrame');
 }
 
+/////////////// 刪除貼文 START ///////////////
+function deletePost(){
+    
+    var singlePostId = localStorage.getItem("singlePostId");
+    console.log("singlePostId: "+singlePostId);
+    
+    var data = {_id: singlePostId};
+    console.log(data);
+
+    var myURL = head_url + "delete_inner_post";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 刪除貼文（delete_inner_post）");
+            console.log(response);
+            localStorage.removeItem('singlePostId');
+            setPage(localStorage.getItem("forwardPage"));
+        },
+        error: function(response){
+            console.log("失敗: 刪除貼文（delete_inner_post）");
+            console.log(response);
+        }
+    });
+}
+///////////////  刪除貼文 END ///////////////
+
+
+/////////////// 檢查是否按過讚、倒讚 START ///////////////
 function objectInArrayThumb(obj, arr){//score, user_id
     for(var i=0; i<arr.length; i++){
         if(obj.score == arr[i].score && obj.user_id == arr[i].user_id){
@@ -18,6 +46,8 @@ function objectInArrayThumb(obj, arr){//score, user_id
     }
     return false;
 }
+///////////////  檢查是否按過讚、倒讚 END ///////////////
+
 
 /////////////// 對貼文或回覆按讚、倒讚 START ///////////////
 function thumbs(score, replyId, targetUserId){
@@ -50,37 +80,10 @@ function thumbs(score, replyId, targetUserId){
         }
     });
 }
-/////////////// 對貼文或回覆按讚、倒讚 END ///////////////
+///////////////  對貼文或回覆按讚、倒讚 END ///////////////
 
-function deletePost(){
-    
-    var singlePostId = localStorage.getItem("singlePostId");
-    console.log("singlePostId: "+singlePostId);
-    
-    var data = {_id: singlePostId};
-    console.log(data);
 
-    var myURL = head_url + "delete_inner_post";
-    $.ajax({
-        url: myURL,
-        type: "POST",
-        data: JSON.stringify(data),
-        async: false,
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        success: function(response){
-            console.log("成功: 刪除貼文（delete_inner_post）");
-            localStorage.removeItem('singlePostId');
-            setPage(localStorage.getItem("forwardPage"));
-        },
-        error: function(response){
-            console.log("失敗: 刪除貼文（delete_inner_post）");
-            console.log(response);
-        }
-    });
-}
-
-var pageNumber = 1;
+/////////////// 抓初始資料 START ///////////////
 function start(){
     
     var userId = localStorage.getItem("sessionID");
@@ -329,5 +332,6 @@ function start(){
         }
     });
 }
+///////////////  抓初始資料 END ///////////////
 
 window.addEventListener("load", start, false);
