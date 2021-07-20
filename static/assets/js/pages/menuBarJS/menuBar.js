@@ -54,6 +54,19 @@ function user(string){
 
 //start
 function start(){
+    var orignalSetItem = localStorage.setItem;
+    
+    localStorage.setItem = function(key,newValue){
+        orignalSetItem.apply(this,arguments);
+        var setItemEvent = new Event("setItemEvent");
+        setItemEvent.newValue = newValue;
+        window.dispatchEvent(setItemEvent);
+    }
+    window.addEventListener("setItemEvent", function (e) {
+//        alert(e.newValue);
+        changePage();
+    });
+    
     //讀取使用者大頭貼＆姓名
     getUserHeadshotAndName();
     
@@ -532,18 +545,6 @@ window.addEventListener("storage", function(e){
         console.log("是其他的有變～"+e.key);
     }
 });
-
-//var orignalSetItem = localStorage.setItem;
-//    localStorage.setItem = function(key,newValue){
-//        var setItemEvent = new Event("setItemEvent");
-//        setItemEvent.newValue = newValue;
-//        window.dispatchEvent(setItemEvent);
-//        orignalSetItem.apply(this,arguments);
-//    }
-//    window.addEventListener("setItemEvent", function (e) {
-//        alert(e.newValue);
-//        changePage();
-//    });
 //    localStorage.setItem("nm","1234");
 
 window.addEventListener("load", start, false);
