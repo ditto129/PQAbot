@@ -8,12 +8,12 @@ function setPage(page){
     changePage();
 }
 
-function changePage(){
-    var page = localStorage.getItem("page");
-    
-    var content = "";
-    content += '<iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="';
-    content += page;
-    content += '.html" height="100%" width="100%"></iframe>';
-    document.getElementById("main_page").innerHTML = content;
-}f
+//function changePage(){
+//    var page = localStorage.getItem("page");
+//    
+//    var content = "";
+//    content += '<iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="';
+//    content += page;
+//    content += '.html" height="100%" width="100%"></iframe>';
+//    document.getElementById("main_page").innerHTML = content;
+//}

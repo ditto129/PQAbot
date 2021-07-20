@@ -15,7 +15,7 @@ function start(){
     
     var myURL = head_url + "query_inner_post_list";
     
-    var data = {"page_size": 9, "page_number": pageNumber};
+    var data = {"page_size": 2, "page_number": pageNumber};
     console.log(data);
     var content = "";
     $.ajax({
@@ -29,16 +29,20 @@ function start(){
             console.log("成功: 拿所有貼文（query_inner_post_list）");
             console.log(response);
             
+            console.log("貼文有"+response.length+"篇");
+            
             for(var i=0; i<response.length; i++){
                 var id = response[i]._id;
                 var title = response[i].title;
+                console.log("title: "+title);
                 var tag = response[i].tag;
                 var time = new Date(response[i].time);
                 time = time.toISOString();
                 time = time.slice(0, 10);
                 var score = 0;
                 for(var j=0; j<response[i].score.length; j++){
-                    score += response[i].score.score;
+                    score += response[i].score[j].score;
+//                    console.log("算完的: "+score);
                 }
                 content += '<div class="col-lg-4 col-xl-3 col-sm-12">';
                 content += '<a href="#" onclick="setLocalStorage(';
@@ -52,7 +56,7 @@ function start(){
                             content += '<span>貼文 ';
                             content += id;
                             content += '</span>';
-                
+                            
                             content += '<span style="float:right;"><i class="fa fa-trophy" aria-hidden="true"></i>';
                             content += score;
                             content += '</span>';
