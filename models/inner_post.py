@@ -239,3 +239,228 @@ def remove_post(post_id):
                                                                        {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
         _db.USER_COLLECTION.update_one({'_id':response['replier_id']},{'$set':{'record.responses':record_list}})
     
+
+'''湘的'''
+#內部搜尋
+def query_inner_search(keywords):
+    # version2，可調整第一階篩選數、factor權重、output數
+    return [i['_id'] for i in _db.INNER_POST_COLLECTION.aggregate(
+    [
+    {
+        '$match': {
+            '$or': [
+                {
+                    'tag.tag_name': {
+                        '$in': keywords
+                    }
+                }, {
+                    'keyword': {
+                        '$in': keywords
+                    }
+                }
+            ]
+        }
+    }, {
+        '$project': {
+            'keyword': 1,
+            'tag': 1,
+            'score': 1,
+            'answer': 1,
+            'view_count': 1
+        }
+    }, {
+        '$unwind': {
+            'path': '$tag'
+        }
+    }, {
+        '$match': {
+            'tag.tag_name': {
+                '$in': keywords
+            }
+        }
+    }, {
+        '$group': {
+            '_id': '$_id',
+            'matches_tag': {
+                '$sum': 1
+            },
+            'score': {
+                '$first': '$score'
+            },
+            'keyword': {
+                '$first': '$keyword'
+            },
+            'answer': {
+                '$first': '$answer'
+            },
+            'view_count': {
+                '$first': '$view_count'
+            }
+        }
+    }, {
+        '$unwind': {
+            'path': '$keyword'
+        }
+    }, {
+        '$match': {
+            'keyword': {
+                '$in': keywords
+            }
+        }
+    }, {
+        '$group': {
+            '_id': '$_id',
+            'matches_keyword': {
+                '$sum': 1
+            },
+            'score': {
+                '$first': '$score'
+            },
+            'matches_tag': {
+                '$first': '$matches_tag'
+            },
+            'answer': {
+                '$first': '$answer'
+            },
+            'view_count': {
+                '$first': '$view_count'
+            }
+        }
+    }, {
+        '$project': {
+            'matches': {
+                '$sum': [
+                    '$matches_tag', '$matches_keyword'
+                ]
+            },
+            'score': 1,
+            'answer': 1,
+            'view_count': 1
+        }
+    }, {
+        '$project': {
+            'scoreTotal': {
+                '$sum': '$score.score'
+            },
+            'matches': 1,
+            'answer': 1,
+            'view_count': 1
+        }
+    }, {
+        '$sort': {
+            'matches': -1,
+            'scoreTotal': -1,
+            '_id': 1
+        }
+    }, {
+        '$limit': 10
+    }, {
+        '$sort': {
+            'matches': -1,
+            'scoreTotal': -1,
+            '_id': 1
+        }
+    }, {
+        '$group': {
+            '_id': '1',
+            'items': {
+                '$push': '$$ROOT'
+            }
+        }
+    }, {
+        '$unwind': {
+            'path': '$items',
+            'includeArrayIndex': 'items.matches_scoreTotal_order'
+        }
+    }, {
+        '$replaceRoot': {
+            'newRoot': '$items'
+        }
+    }, {
+        '$unwind': {
+            'path': '$answer',
+            'preserveNullAndEmptyArrays': True
+        }
+    }, {
+        '$unwind': {
+            'path': '$answer.score',
+            'preserveNullAndEmptyArrays': True
+        }
+    }, {
+        '$group': {
+            '_id': {
+                '_id': '$_id',
+                'ans': '$answer._id'
+            },
+            'totalAnsScore': {
+                '$sum': '$answer.score.score'
+            },
+            'matches_scoreTotal_order': {
+                '$first': '$matches_scoreTotal_order'
+            },
+            'view_count': {
+                '$first': '$view_count'
+            }
+        }
+    }, {
+        '$group': {
+            '_id': '$_id._id',
+            'maxTotalAnsScore': {
+                '$max': '$totalAnsScore'
+            },
+            'matches_scoreTotal_order': {
+                '$first': '$matches_scoreTotal_order'
+            },
+            'view_count': {
+                '$first': '$view_count'
+            }
+        }
+    }, {
+        '$sort': {
+            'view_count': -1,
+            'maxTotalAnsScore': -1,
+            '_id': 1
+        }
+    }, {
+        '$group': {
+            '_id': '1',
+            'items': {
+                '$push': '$$ROOT'
+            }
+        }
+    }, {
+        '$unwind': {
+            'path': '$items',
+            'includeArrayIndex': 'items.viewCount_maxTotalAnsScore_order'
+        }
+    }, {
+        '$replaceRoot': {
+            'newRoot': '$items'
+        }
+    }, {
+        '$addFields': {
+            'output_order': {
+                '$add': [
+                    {
+                        '$multiply': [
+                            '$matches_scoreTotal_order', 0.5
+                        ]
+                    }, {
+                        '$multiply': [
+                            '$viewCount_maxTotalAnsScore_order', 0.2
+                        ]
+                    }
+                ]
+            }
+        }
+    }, {
+        '$sort': {
+            'output_order': 1,
+            '_id': 1
+        }
+    }, {
+        '$limit': 3
+    }
+]
+    )]
+'''香的'''

@@ -180,3 +180,17 @@ def delete_inner_post():
         data = {"error" : e.__class__.__name__ + ":" +e.args[0]}
         print(e)
     return jsonify(data)
+    
+#內部搜尋
+@post_api.route('query_inner_search', methods=['POST'])
+def query_inner_search():
+    data = request.get_json()
+    #try:
+    inner_search_result=inner_post.query_inner_search(data['keywords'])
+    inner_search_result_dict = {
+        'inner_search_result': inner_search_result
+    }
+#    except Exception as e :
+#        inner_search_result_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}
+#        print(e)
+    return jsonify(inner_search_result_dict)
