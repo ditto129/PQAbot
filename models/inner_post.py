@@ -95,12 +95,9 @@ def insert_post(post_dict):
     # 將貼文新增至資料庫
     _db.INNER_POST_COLLECTION.insert_one(post_dict)
     # 更新使用者發文紀錄
-    record_dict = {'_id' : post_dict['_id'],
-             'title': post_dict['title'],
-             'time' : post_dict['time'],
-             'score': post_dict['score'],
-             'tag' : post_dict['tag']}
-    _db.USER_COLLECTION.update_one({'_id':post_dict['asker_id']},{'$push':{'record.posts':record_dict}})
+    record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'asker_id': post_dict['asker_id']}}, 
+                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
+    _db.USER_COLLECTION.update_one({'_id':post_dict['asker_id']},{'$set':{'record.posts':record_list}})
     # 更新每個tag 的 usage_counter,recent_use
     for tag in post_dict['tag']:
         target_tag = _db.TAG_COLLECTION.find_one({'_id':tag['tag_id']})
@@ -113,37 +110,24 @@ def insert_post(post_dict):
         user.update_user_score(post_dict['asker_id'],tag['tag_id'],tag['tag_name'],2)
 
 # 編輯一筆貼文內容
-def update_post(post_data):
-    new_dict = {
-        '_id' : post_data['_id'],
-        'asker_id': post_data['asker_id'],
-        'title': post_data['title'],
-        'question': post_data['question'],
-        'time' : post_data['time'],}
-    
+def update_post(post_data): 
     _db.INNER_POST_COLLECTION.update_one({'_id': post_data['_id']},{'$set':
                                                                     {
                                                                         'title':post_data['title'],
                                                                         'question':post_data['question'],
                                                                         'time':post_data['time']}})
     # 使用者發文更新
-    _db.USER_COLLECTION.update_one({'_id': post_data['asker_id'],'record.posts._id':post_data['_id']},
-                                   {'$set':
-                                        {'record.$.title':post_data['title'], 
-                                         'record.$.question':post_data['question'], 
-                                         'record.$.time':post_data['time']}})
+    record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'asker_id': post_data['asker_id']}}, 
+                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
+    _db.USER_COLLECTION.update_one({'_id':post_data['asker_id']},{'$set':{'record.posts':record_list}})
     
-    post = _db.INNER_POST_COLLECTION.find_one({'_id':post_data['_id']})
     # 使用者回覆紀錄更新
-    new_dict = {
-        '_id' : post_data['_id'],       # 貼文id
-        'title': post_data['title'],
-        'time' : post_data['time'],}
-    
+    post = _db.INNER_POST_COLLECTION.find_one({'_id':post_data['_id']})
     for response in post['answer']:
-        _db.USER_COLLECTION.update_one({'_id': response['replier_id'],'record.responses._id':response['_id']},
-                                       {'$set':
-                                            {'record.responses.$':new_dict}})
+        record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'answer.replier_id': response['replier_id']}}, 
+                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
+        _db.USER_COLLECTION.update_one({'_id':response['replier_id']},{'$set':{'record.responses':record_list}})
+        
 
 # 新增貼文回覆
 def insert_response(response_dict):
@@ -159,17 +143,9 @@ def insert_response(response_dict):
     response_dict.pop('post_id')
     _db.INNER_POST_COLLECTION.update_one({'_id':target_post['_id']},{'$push':{'answer':response_dict}})
     # 更新使用者回覆紀錄
-    post_dict = {
-        '_id' : target_post['_id'],
-        'title': target_post['title'],
-        'time' : target_post['time'],
-        'tag' : target_post['tag'],
-        'score' : target_post['score']
-        }
-    _db.USER_COLLECTION.update_one({'_id':response_dict['replier_id'],'record.responses._id':response_dict['_id']},
-                                   {'$set':
-                                        {'record.responses.$':post_dict}},
-                                   upsert=True)
+    record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'answer.replier_id': response_dict['replier_id']}}, 
+                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
+    _db.USER_COLLECTION.update_one({'_id':response_dict['replier_id']},{'$set':{'record.responses':record_list}})
     # 更新每個tag 的 usage_counter,recent_use
     for tag in target_post['tag']:
         target_tag = _db.TAG_COLLECTION.find_one({'_id':tag['tag_id']})
@@ -200,28 +176,26 @@ def update_score(score_dict):
         # 若使用者按過讚/倒讚，使用set
         if any(s['user_id'] == score_dict['user'] for s in target_post['score']):
             _db.INNER_POST_COLLECTION.update_one({'_id':score_dict['post_id'],'score.user_id': score_dict['user']},{'$set':{'score.$':new_score_record}})
-            # 更新使用者的發文紀錄評分:
             original_score_record = next(s for s in target_post['score'] if s['user_id'] == score_dict['user'])
-            _db.USER_COLLECTION.update_one({'_id':score_dict['user'],'record.posts._id': score_dict['post_id']},{'$pull':{'record.posts.$.score':original_score_record}})
-            _db.USER_COLLECTION.update_one({'_id':score_dict['user'],'record.posts._id': score_dict['post_id']},{'$push':{'record.posts.$.score':new_score_record}})
-            # 更新使用者回覆紀錄評分:
-            for response in target_post['answer']:
-                _db.USER_COLLECTION.update_one({'_id':response['replier_id'],'record.responses._id': score_dict['post_id']},{'$pull':{'record.responses.$.score':original_score_record}})
-                _db.USER_COLLECTION.update_one({'_id':response['replier_id'],'record.responses._id': score_dict['post_id']},{'$push':{'record.responses.$.score':new_score_record}})
             # 更新被按的人的技能分數
             for tag in target_post['tag']:
                 user.update_user_score(target_post['asker_id'],tag['tag_id'],tag['tag_name'],new_score_record['score'] - original_score_record['score'])
         else:
             # 貼文本身push一個使用者評分
             _db.INNER_POST_COLLECTION.update_one({'_id':score_dict['post_id']},{'$push':{'score':new_score_record}})
-            # 使用者發文紀錄push一個評分
-            _db.USER_COLLECTION.update_one({'_id':score_dict['user'],'record.posts._id':score_dict['post_id'],},{'$push':{'score.posts.$.score':new_score_record}})
-            # 使用者回覆紀錄push一個評分
-            for response in target_post['answer']:
-                _db.USER_COLLECTION.update_one({'_id':response['replier_id'],'record.responses._id': score_dict['post_id']},{'$push':{'record.responses.$.score':new_score_record}})
             # 更新被讚的人的技能分數
             for tag in target_post['tag']:
                 user.update_user_score(target_post['asker_id'],tag['tag_id'],tag['tag_name'],new_score_record['score'])
+        # 使用者發文紀錄更新
+        record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'asker_id': target_post['asker_id']}}, 
+                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
+        _db.USER_COLLECTION.update_one({'_id':target_post['asker_id']},{'$set':{'record.posts':record_list}})
+        # 使用者回覆紀錄更新
+        for response in target_post['answer']:
+            record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'answer.replier_id': response['replier_id']}}, 
+                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
+        _db.USER_COLLECTION.update_one({'_id':response['replier_id']},{'$set':{'record.responses':record_list}})
+    
     # response_id不為空表示更新回覆評分
     else :
         target_response = query_response(score_dict['post_id'],score_dict['response_id'])
@@ -239,16 +213,8 @@ def update_score(score_dict):
 # 刪除貼文
 def remove_post(post_id):
     post_dict = _db.INNER_POST_COLLECTION.find_one({'_id':post_id})
-    record_dict = {'_id' : post_dict['_id'],
-             'title': post_dict['title'],
-             'time' : post_dict['time'],
-             'score': post_dict['score'],
-             'tag' : post_dict['tag']}
-    # 從發文者及回覆者記錄移除post
-    _db.USER_COLLECTION.update_one({'_id':post_dict['asker_id']},{'$pull':{'record.posts':record_dict}})
+    response_list = post_dict['answer']
     tag_usage = len(post_dict['answer']) + 1
-    for response in post_dict['answer']:
-        _db.USER_COLLECTION.update_one({'_id':response['replier_id']},{'$pull':{'record.responses':record_dict}})
     # 依標籤扣除使用者分數
     tag_usage = len(post_dict['answer']) + 1
     for tag in post_dict['tag']:
@@ -263,4 +229,13 @@ def remove_post(post_id):
         _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$inc':{'usage_counter': -tag_usage}})
     # 從collection移除post
     _db.INNER_POST_COLLECTION.remove_one({'_id':post_id})
+    # 使用者發文紀錄更新
+    record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'asker_id': post_dict['asker_id']}}, 
+                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
+    _db.USER_COLLECTION.update_one({'_id':post_dict['asker_id']},{'$set':{'record.posts':record_list}})
+    # 使用者回覆紀錄更新
+    for response in response_list:
+        record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'answer.replier_id': response['replier_id']}}, 
+                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
+        _db.USER_COLLECTION.update_one({'_id':response['replier_id']},{'$set':{'record.responses':record_list}})
     

@@ -159,7 +159,7 @@ def dislike_inner_post():
     return jsonify(score_dict)
 
 # 刪除貼文
-@post_api.route('/delete_innser_post',methods=['POST'])
+@post_api.route('/delete_inner_post',methods=['POST'])
 def delete_inner_post():
     data = request.get_json()
     try: 
