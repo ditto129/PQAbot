@@ -52,6 +52,34 @@ function thumbs(score, replyId, targetUserId){
 }
 /////////////// 對貼文或回覆按讚、倒讚 END ///////////////
 
+function deletePost(){
+    
+    var singlePostId = localStorage.getItem("singlePostId");
+    console.log("singlePostId: "+singlePostId);
+    
+    var data = {_id: singlePostId};
+    console.log(data);
+
+    var myURL = head_url + "delete_inner_post";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 刪除貼文（delete_inner_post）");
+            localStorage.removeItem('singlePostId');
+            setPage(localStorage.getItem("forwardPage"));
+        },
+        error: function(response){
+            console.log("失敗: 刪除貼文（delete_inner_post）");
+            console.log(response);
+        }
+    });
+}
+
 var pageNumber = 1;
 function start(){
     
@@ -74,9 +102,13 @@ function start(){
             
             content += '<h5>問題</h5>';
             if(response.asker_id == localStorage.getItem("sessionID")){
+                // 編輯
                 content += '<button type="button" class="scoreBtn" onclick="setPage(';
                 content += "'editPostFrame'";
-                content += ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';                        
+                content += ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'; 
+                
+                // 刪除
+                content += '<button type="button" class="scoreBtn" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
             }
             document.getElementById("header").innerHTML = content;
             
@@ -88,9 +120,10 @@ function start(){
             time = time.toISOString();
             time = time.slice(0, 10);
             var score = 0;
-            for(var i=0; i<score.length; i++){
-                score += score[i].score;
+            for(var i=0; i<response.score.length; i++){
+                score += response.score[i].score;
             }
+            console.log("Score: "+score);
             
             
             content = "";

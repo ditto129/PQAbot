@@ -1,4 +1,5 @@
 function setLocalStorage(id){
+    localStorage.setItem("forwardPage", "profileFrame");
     localStorage.setItem("singlePostId", id);
     setPage('mySinglePostFrame');
 }
