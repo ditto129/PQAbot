@@ -64,7 +64,7 @@ def query_post_list_by_tag(tag_list,page_size,page_number,option):
                                                                {'$skip': page_size * (page_number - 1)}, 
                                                                {'$limit': page_size}])]
     else : # 預設是用時間排
-        return[ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score}, 'hastag': {'$setIsSubset': [[tag_list], '$tag']}}}, 
+        return[ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}, 'hastag': {'$setIsSubset': [[tag_list], '$tag']}}}, 
                                                                {'$match': {'hastag': True}},
                                                                {'$sort': {'time': -1}}, 
                                                                {'$skip': page_size * (page_number - 1)}, 
