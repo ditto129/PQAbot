@@ -14,7 +14,6 @@ import asyncio
 from models import user
 # rom models import psa_excption_handler
 
-
 user_api = Blueprint("user_api", __name__)
 
 # 取得使用者簡易資料，不包含技能樹、發文紀錄
