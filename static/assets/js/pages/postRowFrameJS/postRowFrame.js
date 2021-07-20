@@ -23,6 +23,7 @@ function search(){
     console.log(data);
 
     var myURL = head_url + "query_inner_post_list_by_title";
+    console.log("搜尋: "+myURL);
     $.ajax({
         url: myURL,
         type: "POST",

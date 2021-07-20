@@ -52,8 +52,12 @@ function user(string){
     history.scrollTop = history.scrollHeight;
 }
 
-//start
+////////////////// 初始化 START////////////////////
 function start(){
+    localStorage.setItem("sessionID", 123);
+    var session_id = localStorage.getItem("sessionID");
+    
+    // ---------- 同個頁面監聽localStorage START ---------- //
     var orignalSetItem = localStorage.setItem;
     
     localStorage.setItem = function(key,newValue){
@@ -63,18 +67,19 @@ function start(){
         window.dispatchEvent(setItemEvent);
     }
     window.addEventListener("setItemEvent", function (e) {
-//        alert(e.newValue);
         changePage();
     });
+    // ---------- 同個頁面監聽localStorage END ---------- //
     
-    //讀取使用者大頭貼＆姓名
+    
+    
+    // ---------- 個人資料 START ---------- //
     getUserHeadshotAndName();
+    getUserInterestTags();
+    // ---------- 個人資料 END ---------- //
     
-    //準備編輯個人資訊（大頭貼＋姓名＋興趣標籤）
-    getLanguageTag();
     
     localStorage.setItem("page", "home");
-    changePage();
     
 	$(document).ready(function(){
         $('#action_menu_btn').click(function(){
@@ -83,13 +88,9 @@ function start(){
     });
 
     
+    // ---------- PSABot聊天室 START ---------- //
     //到時候要用session_id
     
-    //session_id = window.prompt("請輸入mail的前綴(要用來當session_id)");
-    localStorage.setItem("sessionID", 123);
-    var session_id = localStorage.getItem("sessionID");
-    console.log("session_id: "+ session_id);
-    console.log("head_url: "+head_url);
     //傳session_start
     var myURL = head_url + "session_start?sender_id="+session_id;
 //    var myURL = head_url + "session_start?sender_id=123";
@@ -109,8 +110,6 @@ function start(){
         }
     });
     
-    //傳start
-    
     
     var myURL = head_url + "welcome?sender_id="+session_id;
     console.log("myURL: "+myURL);
@@ -129,6 +128,48 @@ function start(){
             console.log("error");
         }
     });
+    // ---------- PSABot聊天室 END ---------- //
+}
+////////////////// 初始化 END////////////////////
+
+function getUserInterestTags(){
+    language = [];
+    children = [];
+    originTags = [];
+    chosenTags = [];
+    
+    // 取得興趣標籤 START
+    var sessionId = localStorage.getItem("sessionID");
+    var data = {_id: sessionId};
+
+    myURL = head_url + "query_user_skill";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 興趣標籤（query_user_skill）");
+            console.log(response);
+            
+            for(var i=0; i<response.length; i++){
+                if(response[i].interested_score == 1){
+                    originTags.push(response[i].tag_id);
+                    chosenTags.push(response[i].tag_id);
+                }
+            }
+        },
+        error: function(response){
+            console.log("失敗: 興趣標籤（query_user_skill）");
+            console.log(response);
+        }
+    });
+    // 取得興趣標籤 END
+    
+    getLanguageTag();
+    showChosenTags();
 }
 
 function send_message(){
@@ -190,10 +231,6 @@ function open_close(){
     }
 
 }
-
-//function resize(){
-//    var iframeHeight = document.getElementById("iframeTag").contentWindow.document.documentElement.scrollHeight;
-//}
 
 //編輯個人資訊 START
 
@@ -282,8 +319,10 @@ function getUserHeadshotAndName(){
 var language = [];
 var children = [];
 var chosenTags = [];
-// 以上3個都是放id
+var originTags = []; // 紀錄原本的使用者的tag有哪些
+// 以上4個都是放id
 var allTags = {};
+
 
 //根據chosenTags的內容 顯示已選擇的tags
 function showChosenTags(page){
@@ -292,6 +331,7 @@ function showChosenTags(page){
     for(var i=0; i<chosenTags.length; i++){
         chosen_tag_content += '<label class="badge purpleLabel" style="margin-right: 5px;">';
             chosen_tag_content += allTags[chosenTags[i]];
+        
         chosen_tag_content += '<button type="button" class="labelXBtn" onclick="cancle(';
         chosen_tag_content += "'";
         chosen_tag_content += chosenTags[i];
@@ -315,7 +355,6 @@ function click_tag(id, page){
     
     // card的最下面顯示已選擇的tags
     if(!chosenTags.includes(id)){ //如果還沒選過
-        console.log("顯示起來～");
         chosenTags.push(id);
         document.getElementById(id).setAttribute("style", "margin-right: 5px; background-color: #E6E6FA;");
         if(language.indexOf(id)==-1){
@@ -350,7 +389,6 @@ function click_tag(id, page){
                         var temp = response.tags[i].tag_name;
                         temp = temp.replace("'", "&apos;");
                         
-                        allTags[response.tags[i].tag_id] = temp;
                         children.push(response.tags[i].tag_id);
                     }
                 },
@@ -406,6 +444,7 @@ function getLanguageTag(){
         url: myURL,
         type: "GET",
         dataType: "json",
+        async: false,
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("success");
@@ -413,14 +452,44 @@ function getLanguageTag(){
             for(var i=0; i<response.tags.length; i++){
                 language.push(response.tags[0]._id);
                 allTags[response.tags[0]._id] = response.tags[0].tag;
-                showLanguageTag();
+                
+                
+                // 把allTags建好 START
+                var tempURL = head_url+"query_all_offspring_tag?tag_id="+response.tags[0]._id;
+                
+                $.ajax({
+                    url: tempURL,
+                    type: "GET",
+                    async: false, 
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(response){
+                        console.log("success");
+                        //先記下allTags 包含名字&ID
+                        for(var i=0; i<response.tags.length; i++){
+
+                            var temp = response.tags[i].tag_name;
+                            temp = temp.replace("'", "&apos;");
+
+                            allTags[response.tags[i].tag_id] = temp;
+                        }
+                    },
+                    error: function(){
+                        console.log("error");
+                    }
+                });
+                // 把allTags建好 END
             }
+            showLanguageTag();
         },
         error: function(){
             console.log("error");
         }
     });
     // 中間內容 END
+    
+    console.log("allTags: ");
+    console.log(allTags);
 }
 
 // 顯示「語言」tag的content
@@ -484,8 +553,8 @@ function cancle(id, page){
 function save(){
     // 把資料傳給後端
     
-    var id = localStorage.getItem("sessionID");
-    var userImgName = id + ".png";
+    var userId = localStorage.getItem("sessionID");
+    var userImgName = userId + ".png";
     let form = new FormData();
     if(document.getElementById("headshotBtn").files[0] != null){
         form.append("img", document.getElementById("headshotBtn").files[0], userImgName);
@@ -505,7 +574,7 @@ function save(){
 
     myURL = head_url + "update_user_profile";
     var name = $("#userName").val();
-    var data = {"_id": id, "name": name};
+    var data = {"_id": userId, "name": name};
     $.ajax({
         url: myURL,
         type: "POST",
@@ -524,18 +593,65 @@ function save(){
     });
     
     // 更新畫面
-    setTimeout(getUserHeadshotAndName, 1500);
-//    getUserHeadshotAndName();
+    getUserHeadshotAndName();
+    
+    // ---------- 傳興趣標籤 START ---------- //
+    var sendTags = [];
+    
+    // 先檢查被取消的
+    for(var i=0; i<originTags.length; i++){
+        if(chosenTags.indexOf(originTags[i])==-1){
+            var temp = {tag_id: originTags[i], skill_name: allTags[originTags[i]], interested_score: 0};
+            sendTags.push(temp);
+        }
+    }
+    
+    // 再新增要加上去的
+    for(var i=0; i<chosenTags.length; i++){
+        if(originTags.indexOf(chosenTags[i])==-1){
+            var temp = {tag_id: chosenTags[i], skill_name: allTags[chosenTags[i]], interested_score: 1};
+            sendTags.push(temp);
+        }
+    }
+    
+    var data = {_id: userId, tag: sendTags}
+    console.log("興趣標籤的修改: ");
+    console.log(data);
+    
+    var myURL = head_url + "update_user_interest";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 修改興趣標籤（update_inner_post）");
+            console.log(response);
+        },
+        error: function(response){
+            console.log("失敗: 修改興趣標籤（update_inner_post）");
+            console.log(response);
+        }
+    });
+    // ---------- 傳興趣標籤 END ---------- //
+    
+    getUserInterestTags();
 }
 //////////////////儲存 照片＆姓名＆興趣標籤 END////////////////////
 
 //編輯個人資訊 END
 
+
+////////////////// 登出 START ////////////////////
 function logOut(){
     localStorage.clear();
     window.location.href = "login.html";
 }
+////////////////// 登出 END ////////////////////
 
+////////////////// 不同頁面監聽localStorage START //////////////////
 window.addEventListener("storage", function(e){
     if(e.key == "page"){//判斷page是否改變
         console.log("page有改變");
@@ -545,6 +661,6 @@ window.addEventListener("storage", function(e){
         console.log("是其他的有變～"+e.key);
     }
 });
-//    localStorage.setItem("nm","1234");
+////////////////// 不同頁面監聽localStorage END ////////////////////
 
 window.addEventListener("load", start, false);
