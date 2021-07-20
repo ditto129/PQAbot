@@ -1,9 +1,9 @@
-// 用來記使用者選擇的所有標籤
-var language = [];
-var children = [];
-var chosenTags = [];
-// 以上3個都是放id
-var allTags = {};
+//// 用來記使用者選擇的所有標籤
+//var language = [];
+//var children = [];
+//var chosenTags = [];
+//// 以上3個都是放id
+//var allTags = {};
 
 function start(){
     console.log("開始postQuestion.html");
