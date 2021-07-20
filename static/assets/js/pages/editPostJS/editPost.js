@@ -42,7 +42,9 @@ function save(){
     userId = localStorage.getItem("sessionID");
     title = $("#title").val();
     question = $("#question").val();
-    time = new Date();
+    // 時間
+    time = new Date().toJSON();
+    time = time.slice(0, 23);
     
     var data = {asker_id: userId, _id: postId, title: title, question: question, time: time};
     console.log(data);

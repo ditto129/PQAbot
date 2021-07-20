@@ -20,17 +20,20 @@ function start(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("成功: 拿貼文紀錄（query_user_post_list）");
+            
             // 把拿到的資料 從新到舊排序
             response.sort(function(a, b){
-                return a.time < b.time ? 1 : -1;
+                return new Date(a.time) < new Date(b.time) ? 1 : -1;
             });
+            
             console.log(response);
             
             for(var i=0; i<response.length; i++){
                 var postId = response[i]._id;
                 var title = response[i].title;
                 var tag = response[i].tag;
-                var time = response[i].time.slice(0, 10);
+                var time = new Date(response[i].time).toISOString();
+                time = time.slice(0, 10);
                 var score = 0;
                 
                 for(var j=0; j<response[i].score.length; j++){
@@ -104,7 +107,7 @@ function start(){
             console.log("成功: 拿回覆紀錄（query_user_response_list）");
             // 把拿到的資料 從新到舊排序
             response.sort(function(a, b){
-                return a.time < b.time ? 1 : -1;
+                return new Date(a.time) < new Date(b.time) ? 1 : -1;
             });
             console.log(response);
             
@@ -112,7 +115,9 @@ function start(){
                 var postId = response[i]._id;
                 if(responsePostId.indexOf(postId)==-1){
                     responsePostId.push(postId);
-                    var time = response[i].time.slice(0, 10);
+                    var time = new Date(response[i].time).toISOString();
+                    time = time.slice(0, 10);
+                    
                     var score = 0;
                     for(var j=0; j<response[i].score.length; j++){
                         score += response[i].score.score;

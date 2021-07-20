@@ -56,13 +56,16 @@
                                             <div class="card-header-right">
                                                 <i class="icofont icofont-spinner-alt-5"></i>
                                             </div>
+                                            
                                             <div style="margin-top: 20px;">
-                                                <input type="text" name="search" placeholder="Search..">
+                                                <input id="searchText" type="text" name="search" placeholder="Search..">
+                                                <br>
+                                                <button style="margin-top: 5px;" class="btn btn-outline-secondary btn-sm" onclick="search()">搜尋</button>
                                             </div>
                                             <!-- 翻頁 start-->
                                             <div class="pagination">
-                                                <a href="#">❮</a>
-                                                <a href="#">❯</a>
+                                                <a href="#" onclick="editPageNum('-1')">❮</a>
+                                                <a href="#" onclick="editPageNum('1')">❯</a>
                                             </div>
                                             <!-- 翻頁 end-->
                                             <!--已選標籤-->
@@ -206,7 +209,7 @@
 <script src="../static/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="../static/assets/js/pages/postRowFrameJS/postRowFrame.js"></script>
 <!--選標籤-->
-<script src="../static/assets/js/pages/postQuestionJS/postQuestion.js"></script>
+<!--<script src="../static/assets/js/pages/postQuestionJS/postQuestion.js"></script>-->
 <script src="../static/assets/js/common.js"></script>
 </body>
 

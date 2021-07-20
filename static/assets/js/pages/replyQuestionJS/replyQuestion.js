@@ -7,7 +7,9 @@ function save(){
     //true->匿名, false->不是匿名
     var anonymous = document.getElementById('anonymous').checked;
     
-    var time = new Date();
+    // 時間
+    var time = new Date().toJSON();
+    time = time.slice(0, 23);
     
     var data = {post_id: postId, replier_id: replierId, replier_name: replierName, response: response, time: time, incognito: anonymous};
     console.log("傳出去的data資料");

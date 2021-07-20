@@ -39,7 +39,9 @@ function edit(){
     var replierName = localStorage.getItem("userName");
     var response = $("#response").val();
     
-    var time = new Date();
+    // 時間
+    var time = new Date().toJSON();
+    time = time.slice(0, 23);
     
     var data = {_id: replyId, post_id: postId, replier_id: replierId, replier_name: replierName, response: response, time: time};
     console.log("傳出去的data資料");

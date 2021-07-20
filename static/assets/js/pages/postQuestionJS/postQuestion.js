@@ -267,7 +267,6 @@ function save(){
     // 時間
     var time = new Date().toJSON();
     time = time.slice(0, 23);
-    console.log("timezone: "+time);
     
     //true->匿名, false->不是匿名
     var anonymous = document.getElementById('anonymous').checked;
