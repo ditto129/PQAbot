@@ -269,7 +269,10 @@ function save(){
     time = time.slice(0, 23);
     console.log("timezone: "+time);
     
-    var data = {"asker_id": id, "asker_name": name, "title": title, "question": question, "tag": tag, "time": time, "incognito": false};
+    //true->匿名, false->不是匿名
+    var anonymous = document.getElementById('anonymous').checked;
+    
+    var data = {"asker_id": id, "asker_name": name, "title": title, "question": question, "tag": tag, "time": time, "incognito": anonymous};
     console.log("傳出去的data資料");
     console.log(data);
     myURL = head_url + "insert_inner_post";

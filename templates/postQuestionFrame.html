@@ -30,6 +30,11 @@
     <link rel="stylesheet" type="text/css" href="../static/assets/css/pages/profileCSS/custom.css">
     <!-- font-awesome -->
     <link rel="stylesheet" type="text/css" href="../static/assets/css/font-awesome.css">
+    
+    <!-- 匿名的bootstrap START -->
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+    <!-- 匿名的bootstrap END -->
 <!--
     <link rel="stylesheet" type="text/css" href="../static/assets/css/bootstrap4-toggle.css">
     <link rel="stylesheet" type="text/css" href="../static/assets/css/bootstrap4-toggle.min.css">
@@ -65,12 +70,13 @@
                                                     <!-- 貼文標題 row end -->  
                                                     <!-- 是否匿名 row start -->
                                                     <div class="form-group row">
-                                                        <label class="col-sm-2 col-form-label"> 是否匿名</label>
+                                                        <label class="col-sm-2 col-form-label">是否匿名</label>
                                                         <div class="col-sm-10">
-                                                            <input type="checkbox" checked data-toggle="toggle" data-onstyle="secondary" data-size="sm" data-on="是" data-off="否">
+                                                            <input id="anonymous" type="checkbox"  data-toggle="toggle" data-size="xs" data-onstyle="secondary" data-width="60" data-height="35" data-on="是" data-off="否">
+                                                        <!-- 是否匿名 row end --> 
                                                         </div>
                                                     </div>
-                                                    <!-- 是否匿名 row end -->  
+                                                    
                                                     <!-- 選標籤 row start -->
                                                     <div class="form-group row">
                                                         <label class="col-sm-2 col-form-label">相關標籤</label>
