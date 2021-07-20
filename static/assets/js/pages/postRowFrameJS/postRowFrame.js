@@ -14,6 +14,7 @@ var pageNumber = 1;
 var pageNumberSearch = 1;
 var pageNumberTag = 1;
 var option = "score";
+var postSum;
 
 function search(){
     var text = $("#searchText").val();
@@ -41,9 +42,8 @@ function search(){
 }
 
 function editPageNum(sum){
-    console.log("點擊");
     sum = parseInt(sum);
-    if(sum == 1){ // 下一頁
+    if(sum == 1 && pageNumber<Math.ceil((postSum/5))){ // 下一頁
         pageNumber += 1;
         start();
     }
@@ -126,8 +126,8 @@ function start(){
         success: function(response){
             console.log("成功: 拿所有貼文（query_inner_post_list）");
             console.log(response);
-            
-            showPost(response);
+            postSum = response.post_count;
+            showPost(response.post_list);
         },
         error: function(){
             console.log("失敗: 拿所有貼文（query_inner_post_list）");
