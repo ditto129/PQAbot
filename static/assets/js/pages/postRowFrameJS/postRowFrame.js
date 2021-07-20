@@ -32,7 +32,9 @@ function search(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("成功: 搜尋貼文（query_inner_post_list_by_title）");
-            showPost(response);
+            console.log(response);
+            postSum = response.post_count;
+            showPost(response.post_list);
         },
         error: function(response){
             console.log("失敗: 搜尋貼文（query_inner_post_list_by_title）");
