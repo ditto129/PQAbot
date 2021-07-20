@@ -95,12 +95,9 @@ def insert_post(post_dict):
     # 將貼文新增至資料庫
     _db.INNER_POST_COLLECTION.insert_one(post_dict)
     # 更新使用者發文紀錄
-    record_dict = {'_id' : post_dict['_id'],
-             'title': post_dict['title'],
-             'time' : post_dict['time'],
-             'score': post_dict['score'],
-             'tag' : post_dict['tag']}
-    _db.USER_COLLECTION.update_one({'_id':post_dict['asker_id']},{'$push':{'record.posts':record_dict}})
+    record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'answer.replier_id': '123'}}, 
+                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
+    _db.USER_COLLECTION.update_one({'_id':post_dict['asker_id']},{'$set':{'record.posts':record_list}})
     # 更新每個tag 的 usage_counter,recent_use
     for tag in post_dict['tag']:
         target_tag = _db.TAG_COLLECTION.find_one({'_id':tag['tag_id']})
