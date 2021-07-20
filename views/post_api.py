@@ -13,7 +13,7 @@ post_api = Blueprint('post_api', __name__)
 def query_inner_post_list():
     data = request.get_json()
     try: 
-        post_list = inner_post.query_post_list(data['page_size'],data['page_number'])
+        post_list = inner_post.query_post_list(data['page_size'],data['page_number'],data['option'])
     except Exception as e :
         post_list = {"error" : e.__class__.__name__ + " : " +e.args[0]}
     return jsonify(post_list)
@@ -23,7 +23,7 @@ def query_inner_post_list():
 def query_inner_post_list_by_title():
     data = request.get_json()
     try:
-        post_list = inner_post.query_post_list_by_title(data['title'],data['page_size'],data['page_number'])
+        post_list = inner_post.query_post_list_by_title(data['title'],data['page_size'],data['page_number'],data['option'])
     except Exception as e :
         post_list = {"error" : e.__class__.__name__ + " : " +e.args[0]}
     return jsonify(post_list)
@@ -33,7 +33,7 @@ def query_inner_post_list_by_title():
 def query_inner_post_list_by_tag():
     data = request.get_json()
     try:
-        post_list = inner_post.query_post_list_by_tag(data['tag'],data['page_size'],data['page_number'])
+        post_list = inner_post.query_post_list_by_tag(data['tag'],data['page_size'],data['page_number'],data['option'])
     except Exception as e :
         post_list = {"error" : e.__class__.__name__ + " : " +e.args[0]}
     return jsonify(post_list)
