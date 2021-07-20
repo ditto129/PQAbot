@@ -33,7 +33,7 @@ function start(){
                 var score = 0;
                 
                 for(var j=0; j<response[i].score.length; j++){
-                    score += response[i].score.score;
+                    score += response[i].score[j].score;
                 }
                 
                 content += '<div class="col-lg-4 col-xl-3 col-sm-12">';

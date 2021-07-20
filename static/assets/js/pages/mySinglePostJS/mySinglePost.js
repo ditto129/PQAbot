@@ -10,6 +10,15 @@ function setLocalStorage(id){
     setPage('editReplyFrame');
 }
 
+function objectInArrayThumb(obj, arr){//score, user_id
+    for(var i=0; i<arr.length; i++){
+        if(obj.score == arr[i].score && obj.user_id == arr[i].user_id){
+            return true;
+        }
+    }
+    return false;
+}
+
 /////////////// 對貼文或回覆按讚、倒讚 START ///////////////
 function thumbs(score, replyId, targetUserId){
     var postId = localStorage.getItem("singlePostId");
@@ -33,7 +42,7 @@ function thumbs(score, replyId, targetUserId){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("成功: 對貼文/回覆評分（like_inner_post/dislike_inner_post）");
-            setPage('mySinglePostFrame');
+            window.location.reload();
         },
         error: function(response){
             console.log("失敗: 對貼文/回覆評分（like_inner_post/dislike_inner_post）");
@@ -91,7 +100,9 @@ function start(){
                     content += id;
                     content += '</span>';
                 
-                    content += '<span style="float:right;"><i class="fa fa-trophy" aria-hidden="true"></i>';
+                    content += '<span id="';
+                    content += response._id;
+                    content += 'Score" style="float:right;"><i class="fa fa-trophy" aria-hidden="true"></i>';
                     content += score;
                     content += '</span>';
                 content += '</div>';
@@ -129,15 +140,20 @@ function start(){
                         content += "')";
                         content += '">';
             
-                        // 檢查有沒有按讚
+                        // 檢查有沒有按讚 START
                         var temp = {score: 1, user_id: userId};
                         console.log(temp);
-                        if(response.score.includes(temp)){
-                            content += '<i class="fa fa-thumbs-up" aria-hidden="true"></i>';
+                        if(objectInArrayThumb(temp, response.score)){
+                            content += '<i id="';
+                            content += response._id;
+                            content += '" class="fa fa-thumbs-up" aria-hidden="true"></i>';
                         }
                         else{
-                            content += '<i class="fa fa-thumbs-o-up" aria-hidden="true"></i>';
+                            content += '<i id="';
+                            content += response._id;
+                            content += '" class="fa fa-thumbs-o-up" aria-hidden="true"></i>';
                         }
+                        // 檢查有沒有按讚 END
                         
                         content += '</button>';
 
@@ -147,14 +163,19 @@ function start(){
                         content += "')";
                         content += '">';
             
-                        // 檢查有沒有按倒讚
+                        // 檢查有沒有按倒讚 START
                         var temp = {score: -1, user_id: userId};
-                        if(response.score.includes(temp)){
-                            content += '<i class="fa fa-thumbs-down" aria-hidden="true"></i>';
+                        if(objectInArrayThumb(temp, response.score)){
+                            content += '<i id="';
+                            content += response._id;
+                            content += '" class="fa fa-thumbs-down" aria-hidden="true"></i>';
                         }
                         else{
-                            content += '<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>';
+                            content += '<i id="';
+                            content += response._id;
+                            content += '" class="fa fa-thumbs-o-down" aria-hidden="true"></i>';
                         }
+                        // 檢查有沒有按倒讚 END
                         
                         content += '</button>';
                     content += '</div>';
@@ -190,10 +211,12 @@ function start(){
                             content += "'";
                             content += response.answer[i]._id;
                             content += "'";
-                            content += ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';                        
+                            content += ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
                         }
                             
-                            content += '<span style="float:right;"><i class="fa fa-trophy" aria-hidden="true"></i>';
+                            content += '<span id="';
+                            content += response.answer[i]._id;
+                            content += 'Score" style="float:right;"><i class="fa fa-trophy" aria-hidden="true"></i>';
                                 content += score;
                             content += '</span>';
                         content += '</div>';
@@ -217,15 +240,49 @@ function start(){
                                 content += "', '";
                                 content += response.answer[i].replier_id;
                                 content += "')";
-                                content += '"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></button>';
-                                    
+                                content += '">';
+                
+                                // 檢查有沒有按讚 START
+                                var temp = {score: 1, user_id: userId};
+                                console.log(temp);
+                                if(objectInArrayThumb(temp, response.answer[i].score)){
+                                    content += '<i id="';
+                                    content += response.answer[i]._id;
+                                    content += '" class="fa fa-thumbs-up" aria-hidden="true"></i>';
+                                }
+                                else{
+                                    content += '<i id="';
+                                    content += response.answer[i]._id;
+                                    content += '" class="fa fa-thumbs-o-up" aria-hidden="true"></i>';
+                                }
+                                // 檢查有沒有按讚 END
+                                
+                
+                                content += '</button>';
+                                
                                 content += '<button type="button" class="scoreBtn" onclick="thumbs(';
                                 content += "'-1', '";
                                 content += response.answer[i]._id;
                                 content += "', '";
                                 content += response.answer[i].replier_id;
                                 content += "')";
-                                content += '"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button>';
+                                content += '">';
+                                
+                                // 檢查有沒有按倒讚 START
+                                var temp = {score: -1, user_id: userId};
+                                if(objectInArrayThumb(temp, response.answer[i].score)){
+                                    content += '<i id="';
+                                    content += response.answer[i]._id;
+                                    content += '" class="fa fa-thumbs-down" aria-hidden="true"></i>';
+                                }
+                                else{
+                                    content += '<i id="';
+                                    content += response.answer[i]._id;
+                                    content += '" class="fa fa-thumbs-o-down" aria-hidden="true"></i>';
+                                }
+                                // 檢查有沒有按倒讚 END
+                                
+                                content += '</button>';
                             content += '</div>';
                         content += '</div>';
                     content += '</div>';

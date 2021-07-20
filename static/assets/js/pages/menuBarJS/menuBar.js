@@ -533,4 +533,17 @@ window.addEventListener("storage", function(e){
     }
 });
 
+//var orignalSetItem = localStorage.setItem;
+//    localStorage.setItem = function(key,newValue){
+//        var setItemEvent = new Event("setItemEvent");
+//        setItemEvent.newValue = newValue;
+//        window.dispatchEvent(setItemEvent);
+//        orignalSetItem.apply(this,arguments);
+//    }
+//    window.addEventListener("setItemEvent", function (e) {
+//        alert(e.newValue);
+//        changePage();
+//    });
+//    localStorage.setItem("nm","1234");
+
 window.addEventListener("load", start, false);
