@@ -14,9 +14,13 @@ def query_inner_post_list():
     data = request.get_json()
     try: 
         post_list = inner_post.query_post_list(data['page_size'],data['page_number'],data['option'])
+        list_dict = {
+            'post_count': len(post_list),
+            'post_list':post_list
+        }
     except Exception as e :
-        post_list = {"error" : e.__class__.__name__ + " : " +e.args[0]}
-    return jsonify(post_list)
+        list_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
+    return jsonify(list_dict)
 
 # 依照貼文標題,每頁筆數,頁碼取得貼文摘要
 @post_api.route('/query_inner_post_list_by_title', methods=['POST'])
@@ -24,9 +28,13 @@ def query_inner_post_list_by_title():
     data = request.get_json()
     try:
         post_list = inner_post.query_post_list_by_title(data['title'],data['page_size'],data['page_number'],data['option'])
+        list_dict = {
+            'post_count': len(post_list),
+            'post_list':post_list
+        }
     except Exception as e :
-        post_list = {"error" : e.__class__.__name__ + " : " +e.args[0]}
-    return jsonify(post_list)
+        list_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
+    return jsonify(list_dict)
 
 # 依照標籤,每頁筆數,頁碼取得貼文摘要
 @post_api.route('/query_inner_post_list_by_tag', methods=['POST'])
@@ -34,9 +42,13 @@ def query_inner_post_list_by_tag():
     data = request.get_json()
     try:
         post_list = inner_post.query_post_list_by_tag(data['tag'],data['page_size'],data['page_number'],data['option'])
+        list_dict = {
+            'post_count': len(post_list),
+            'post_list':post_list
+        }
     except Exception as e :
-        post_list = {"error" : e.__class__.__name__ + " : " +e.args[0]}
-    return jsonify(post_list)
+        list_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
+    return jsonify(list_dict)
 
 # 新增內部貼文
 @post_api.route('/insert_inner_post', methods=['POST'])
