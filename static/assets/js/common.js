@@ -5,7 +5,7 @@ localStorage.setItem("sessionID", 123);
 
 function setPage(page){
     localStorage.setItem("page", page);
-    changePage();
+//    changePage();
 }
 
 //function changePage(){

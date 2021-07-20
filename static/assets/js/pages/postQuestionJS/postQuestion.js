@@ -6,7 +6,7 @@ var chosenTags = [];
 var allTags = {};
 
 function start(){
-    console.log("start");
+    console.log("開始postQuestion.html");
     $("#tag_content").hide();
     
     //先去準備Tag的內容
@@ -265,7 +265,9 @@ function save(){
         tag.push(temp);
     }
     // 時間
-    var time = new Date();
+    var time = new Date().toJSON();
+    time = time.slice(0, 23);
+    console.log("timezone: "+time);
     
     var data = {"asker_id": id, "asker_name": name, "title": title, "question": question, "tag": tag, "time": time, "incognito": false};
     console.log("傳出去的data資料");
@@ -280,6 +282,7 @@ function save(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("成功: 發布貼文（insert_inner_post）");
+            console.log(response);
             setPage('profileFrame');
         },
         error: function(response){
