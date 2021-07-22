@@ -9,7 +9,7 @@ function changePage(){
     var content = "";
     content += '<iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="';
     content += page;
-    content += '.html';
+//    content += '.html';
     content += '" height="100%" width="100%"></iframe>';
     console.log("content: "+content);
     document.getElementById("main_page").innerHTML = content;
@@ -18,7 +18,6 @@ function changePage(){
 ////////////////// 聊天室 START ////////////////////
 
 var keyWords = {};
-var keyWordsTime = -1;
 
 function bot(string){
     console.log("bot送訊息");
@@ -33,23 +32,23 @@ function bot(string){
     content += '<div class="msg_cotainer">';
     content += string;
     // 測試用 START
-    content += '<div id="keywords">';
-    // 關鍵字的id為 0~keyword.length-1
-    for(var i=0; i<4; i++){
-        content += '<label id="';
-        content += i;
-        content += '" class="badge badge-default purpleLabel">';
-        content += i;
-        content += 'hahaha<button class="labelXBtn" onclick="cancleKeyWords(';
-        content += "'";
-        content += i;
-        content += "'";
-        content += ')">x</button></label>';
-    }
-    content += '</div><hr>';
-    
-    content += '<input class="btn btn-primary purpleBtnInChatroom" value="新增" onclick="wantAddKeyWord()">';
-    content += '<input class="btn btn-primary purpleBtnInChatroom" value="完成" onclick="doneKeyWord()">';
+//    content += '<div id="keywords">';
+//    // 關鍵字的id為 0~keyword.length-1
+//    for(var i=0; i<4; i++){
+//        content += '<label id="';
+//        content += i;
+//        content += '" class="badge badge-default purpleLabel">';
+//        content += i;
+//        content += 'haha<button class="labelXBtn" onclick="cancleKeyWords(';
+//        content += "'";
+//        content += i;
+//        content += "'";
+//        content += ')">x</button></label>';
+//    }
+//    content += '</div><hr>';
+//    
+//    content += '<input id="addBtn" class="btn btn-primary purpleBtnInChatroom" value="新增" onclick="wantAddKeyWord()">';
+//    content += '<input id="doneBtn"class="btn btn-primary purpleBtnInChatroom" value="完成" onclick="doneKeyWord()">';
     // 測試用 END
     
     content += '<span class="msg_time">8:40 AM</span>';
@@ -60,9 +59,7 @@ function bot(string){
     history.scrollTop = history.scrollHeight;
     
     // 處理關鍵字 START
-    keyWordsTime += 1;
-    var tempId = "keywords"+keyWordsTime;
-    var temp = document.getElementById(tempId);
+    var temp = document.getElementById("keywords");
     if(temp != null){
         var count = temp.getElementsByTagName("label").length;
 
@@ -119,23 +116,8 @@ function addKeyWord(){
     var msg = document.getElementById("message");
     msg.value = "";
     
-    var tempId = "keywords"+keyWordsTime;
-    var keyWordsArea = document.getElementById(tempId);
+    var keyWordsArea = document.getElementById("keywords");
     keyWords[max] = newKeyWord;
-    
-//    var content = keyWordsArea.innerHTML;
-//    
-//    content += '<label id="';
-//        content += max;
-//        content += '" class="badge badge-default purpleLabel">';
-//        content += i;
-//        content += 'hahaha<button class="labelXBtn" onclick="cancleKeyWords(';
-//        content += "'";
-//        content += max;
-//        content += "'";
-//        content += ')">x</button></label>';
-//    
-//    keyWordsArea.innerHTML = content;
     showKeyWords();
 }
 
@@ -152,13 +134,16 @@ function showKeyWords(){
         content += "'";
         content += ')">x</button></label>';
     }
-    var tempId = "keywords"+keyWordsTime;
-    document.getElementById(tempId).innerHTML = content;
+    document.getElementById("keywords").innerHTML = content;
 }
 
 function cancleKeyWords(keyWordId){
+    console.log("取消前: ");
+    console.log(keyWords);
     delete keyWords[keyWordId];
     showKeyWords();
+    console.log("取消後: ");
+    console.log(keyWords);
 }
 
 function doneKeyWord(){
@@ -171,14 +156,50 @@ function doneKeyWord(){
     sendBtn.setAttribute("onclick", "send_message()");
     // 恢復原廠設定 END
     
-    // 傳給rasa START
+    document.getElementById("addBtn").setAttribute("style", "background-color: gray; border-color: gray;");
+    document.getElementById("doneBtn").setAttribute("style", "background-color: gray; border-color: gray;");
+    document.getElementById("addBtn").disabled = true;
+    document.getElementById("doneBtn").disabled = true;
+    
+    document.getElementById("addBtn").removeAttribute("id");
+    document.getElementById("doneBtn").removeAttribute("id");
+    
+    
     var sendKeyWords = "keywords";
     for(var id in keyWords){
         sendKeyWords += " ";
         sendKeyWords += keyWords[id];
+        document.getElementById(id).setAttribute("style", "background-color: gray;");
+        document.getElementById(id).removeAttribute("id");
     }
+    var keyWordsBtn = document.getElementById("keywords").getElementsByTagName("button");
+    for(var i=0; i<keyWordsBtn.length; i++){
+        keyWordsBtn[i].disabled = true;
+    }
+    console.log("keyWordsBtn");
+    console.log(keyWordsBtn);
+    
     console.log("送出字串: "+sendKeyWords);
-    user(sendKeyWords);
+//    user(sendKeyWords);
+    
+    // 傳給rasa START
+    var sessionId = localStorage.getItem("sessionID");
+    var myURL = head_url + "keywords?sender_id="+sessionID+"&keywords="+sendKeyWords;
+    console.log("myURL: "+myURL);
+    $.ajax({
+        url: myURL,
+        type: "GET",
+        dataType: "json",
+        async:false,
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("response: "+response);
+            console.log(response.message);
+        },
+        error: function(){
+            console.log("error");
+        }
+    });
     // 傳給rasa END
 }
 
@@ -188,7 +209,7 @@ function doneKeyWord(){
 ////////////////// 初始化 START////////////////////
 function start(){
     // 測試用 START
-    bot("您的關鍵字如下");
+//    bot("您的關鍵字如下");
     // 測試用 END
     
     localStorage.setItem("sessionID", 123);
@@ -341,9 +362,6 @@ function send_message(){
             console.log("error");
         }
     });
-    
-    
-    
 }
 
 function open_close(){

@@ -66,10 +66,20 @@ class analyze_and_select_keyword(Action):
         qkey.append(os)
         qkey.append(pl)
 
-        reply = '新增/刪除用來搜尋的關鍵字<br><div id="keywords">'
+        reply = '新增/刪除用來搜尋的關鍵字<br><div id="keywords'
+        reply += keywordsTime
+        reply += '">'
+        id = 0
         for i in qkey:
-            reply += '<label class="badge badge-default purpleLabel">'+i+'<button type="button" class="labelXBtn">x</button></label>'
-        reply += '</div><br><input class="btn btn-primary purpleBtn" value="新增" onclick=""><input class="btn btn-primary purpleBtn" value="完成" onclick="">'
+            content += '<label id="'
+            content += id
+            content += '" class="badge badge-default purpleLabel">'
+            content += i
+            content += '<button class="labelXBtn" onclick="cancleKeyWords(\''
+            content += id
+            content += '\')">x</button></label>'
+            id += 1
+        reply += '</div><br><input id="addBtn" class="btn btn-primary purpleBtnInChatroom" value="新增" onclick="wantAddKeyWord()"><input id="doneBtn"class="btn btn-primary purpleBtnInChatroom" value="完成" onclick="doneKeyWord()">'
         
         dispatcher.utter_message(text=reply)
         return []
