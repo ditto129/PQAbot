@@ -20,6 +20,7 @@ from .OuterSearch import outerSearch
 #摘要
 from .StackData import StackData
 
+#將整句話(問題描述、錯誤訊息)填入slot
 class fill_slot(Action):
     def name(self) -> Text:
         return "fill_slot"
@@ -44,26 +45,58 @@ class fill_slot(Action):
         dispatcher.utter_message(text=reply)
         return []
 
+#給user選關鍵字
+class analyze_and_select_keyword(Action):
+    def name(self) -> Text:
+        return "analyze_and_select_keyword"
+    def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
+        #拿到所需訊息
+        question_or_error_message = tracker.get_slot("question_or_error_message")
+        function = tracker.get_slot("function")
+        os = tracker.get_slot("os")
+        pl = tracker.get_slot("pl")
+        #宣告文字分析器
+        textAnalyzer = TextAnalyze()
+        #擷取使用者問題的關鍵字
+        qkey = textAnalyzer.keywordExtration(question_or_error_message)[0]
+        #加上作業系統與程式語言作為關鍵字
+        qkey.append(os)
+        qkey.append(pl)
+        
+        reply = '新增/刪除用來搜尋的關鍵字<br>'
+        for i in qkey:
+            reply += '<label class="badge badge-default purpleLabel">'+i+'<button type="button" class="labelXBtn">x</button></label>'
+        reply += '<br><input class="btn btn-primary purpleBtn" value="新增" onclick=""><input class="btn btn-primary purpleBtn" value="完成" onclick="">'
+        
+        dispatcher.utter_message(text=reply)
+        return []
+
 class outer_search(Action):
     def name(self) -> Text:
         return "outer_search"
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
-    
+        #拿到所需訊息
         question_or_error_message = tracker.get_slot("question_or_error_message")
-#        #宣告文字分析器
+        function = tracker.get_slot("function")
+        os = tracker.get_slot("os")
+        pl = tracker.get_slot("pl")
+        #宣告文字分析器
         textAnalyzer = TextAnalyze()
-#        #擷取使用者問題的關鍵字
+        #擷取使用者問題的關鍵字
         qkey = textAnalyzer.keywordExtration(question_or_error_message)[0]
-#        #外部搜尋結果（URL）
+        
+        
+        
+        #外部搜尋結果（URL）
         resultpage = outerSearch(qkey, 10, 1)
-#
+        
         for url in resultpage:
             print(url)
-#
+
         stack_items = [StackData(url) for url in resultpage]
         result_title = []
         for items in stack_items:
-#            #showData回傳的資料即是傳送到前端的json格式
+            #showData回傳的資料即是傳送到前端的json格式
             display = items.showData()
             result_title.append(display['question']['title'])
         

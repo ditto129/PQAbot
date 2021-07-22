@@ -12,8 +12,8 @@ import flask
 from flask import request, Blueprint, jsonify
 
 
-welcome_api=Blueprint('welcome_api', __name__)
-@welcome_api.route('welcome')
+rasa_api=Blueprint('rasa_api', __name__)
+@rasa_api.route('welcome')
 def welcome():
     sender_id=request.values.get('sender_id')
     print('sender_id'+sender_id)
@@ -26,7 +26,7 @@ def welcome():
     else:
         return r.json()[0]
 
-@welcome_api.route('session_start')
+@rasa_api.route('session_start')
 def session_start():
     sender_id=request.values.get('sender_id')
     print('sender_id'+sender_id)

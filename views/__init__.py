@@ -8,7 +8,7 @@ Created on Tue Apr  6 23:30:56 2021
 
 from .exchange_api import exchange_api
 from .exchange_web import exchange_web
-from .welcome_api import welcome_api
+from .rasa_api import rasa_api
 from .base_flow_web import base_flow_web
 from .base_flow_rasa_api import base_flow_rasa_api
 from .tag_api import tag_api
@@ -20,7 +20,7 @@ from .post_api import post_api
 # from .post_web import post_web
 
 blueprint_prefix = [(exchange_api, ""), (exchange_web, ""), 
-                    (welcome_api, ""), (base_flow_web, ""), 
+                    (rasa_api, ""), (base_flow_web, ""), 
                     (base_flow_rasa_api, ""), (tag_api, ""),
                     (login_api, ""),(login_web, ""),
                     (user_api,""),
