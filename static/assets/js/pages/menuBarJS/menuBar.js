@@ -17,8 +17,11 @@ function changePage(){
 
 ////////////////// 聊天室 START ////////////////////
 
+var keyWords = {};
+
 function bot(string){
     console.log("bot送訊息");
+    keyWords = {};
     
     var history = document.getElementById("history_message");
     var content = history.innerHTML;
@@ -28,12 +31,49 @@ function bot(string){
     content += '</div>';
     content += '<div class="msg_cotainer">';
     content += string;
+    // 測試用 START
+    content += '<div id="keywords">';
+    // 關鍵字的id為 0~keyword.length-1
+    for(var i=0; i<4; i++){
+        content += '<label id="';
+        content += i;
+        content += '" class="badge badge-default purpleLabel">';
+        content += i;
+        content += 'hahaha<button class="labelXBtn" onclick="cancleKeyWords(';
+        content += "'";
+        content += i;
+        content += "'";
+        content += ')">x</button></label>';
+    }
+    content += '</div><hr>';
+    
+    content += '<input class="btn btn-primary purpleBtnInChatroom" value="新增" onclick="wantAddKeyWord()">';
+    content += '<input class="btn btn-primary purpleBtnInChatroom" value="完成" onclick="doneKeyWord()">';
+    // 測試用 END
+    
     content += '<span class="msg_time">8:40 AM</span>';
     content += '</div>';
     content += '</div>';
     
     history.innerHTML = content;
     history.scrollTop = history.scrollHeight;
+    
+    // 處理關鍵字 START
+    var temp = document.getElementById("keywords");
+    if(temp != null){
+        var count = temp.getElementsByTagName("label").length;
+
+        for(var i=0; i<count; i++){
+            
+            var tempName = document.getElementById(i).textContent;
+            tempName = tempName.slice(0, -1);
+            
+            keyWords[i] = tempName;
+        }
+        console.log("keywords: ");
+        console.log(keyWords);
+    }
+    // 處理關鍵字 END
 }
 
 function user(string){
@@ -53,10 +93,98 @@ function user(string){
     history.innerHTML = content;
     history.scrollTop = history.scrollHeight;
 }
+
+function wantAddKeyWord(){
+    
+    var textArea = document.getElementById("message");
+    textArea.setAttribute("placeholder", "請輸入欲新增之關鍵字");
+    
+    var sendBtn = document.getElementById("sendButton");
+    sendBtn.setAttribute("onclick", "addKeyWord()");
+}
+
+function addKeyWord(){
+    var max = -1;
+    for(var temp in keyWords){
+        if(parseInt(temp)>max){
+            max = parseInt(temp);
+        }
+    }
+    max += 1;
+    
+    var newKeyWord = $("#message").val();
+    var msg = document.getElementById("message");
+    msg.value = "";
+    var keyWordsArea = document.getElementById("keywords");
+    keyWords[max] = newKeyWord;
+    
+//    var content = keyWordsArea.innerHTML;
+//    
+//    content += '<label id="';
+//        content += max;
+//        content += '" class="badge badge-default purpleLabel">';
+//        content += i;
+//        content += 'hahaha<button class="labelXBtn" onclick="cancleKeyWords(';
+//        content += "'";
+//        content += max;
+//        content += "'";
+//        content += ')">x</button></label>';
+//    
+//    keyWordsArea.innerHTML = content;
+    showKeyWords();
+}
+
+function showKeyWords(){
+    var content = "";
+    for(var id in keyWords){
+        content += '<label id="';
+        content += id;
+        content += '" class="badge badge-default purpleLabel">';
+        content += keyWords[id];
+        content += '<button class="labelXBtn" onclick="cancleKeyWords(';
+        content += "'";
+        content += id;
+        content += "'";
+        content += ')">x</button></label>';
+    }
+    document.getElementById("keywords").innerHTML = content;
+}
+
+function cancleKeyWords(keyWordId){
+    delete keyWords[keyWordId];
+    showKeyWords();
+}
+
+function doneKeyWord(){
+    
+    // 恢復原廠設定 START
+    var textArea = document.getElementById("message");
+    textArea.setAttribute("placeholder", "輸入...");
+    
+    var sendBtn = document.getElementById("sendButton");
+    sendBtn.setAttribute("onclick", "send_message()");
+    // 恢復原廠設定 END
+    
+    // 傳給rasa START
+    var sendKeyWords = "keywords";
+    for(var id in keyWords){
+        sendKeyWords += " ";
+        sendKeyWords += keyWords[id];
+    }
+    console.log("送出字串: "+sendKeyWords);
+    user(sendKeyWords);
+    // 傳給rasa END
+}
+
+
 ////////////////// 聊天室 END ////////////////////
 
 ////////////////// 初始化 START////////////////////
 function start(){
+    // 測試用 START
+    bot("您的關鍵字如下");
+    // 測試用 END
+    
     localStorage.setItem("sessionID", 123);
     var session_id = localStorage.getItem("sessionID");
     
