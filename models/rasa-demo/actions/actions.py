@@ -80,6 +80,8 @@ class outer_search(Action):
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
         #拿到所需訊息及最後一句使用者輸入
         keywords = tracker.latest_message.get('text')
+        keywords = keywords.split(' ',1)[1]
+        print(keywords)
         
         #外部搜尋結果（URL）
         resultpage = outerSearch(qkey, 10, 1)
@@ -87,7 +89,7 @@ class outer_search(Action):
         for url in resultpage:
             print(url)
 
-        #stack_items = [StackData(url) for url in resultpage]
+        stack_items = [StackData(url) for url in resultpage]
         result_title = []
         for items in stack_items:
             #showData回傳的資料即是傳送到前端的json格式
