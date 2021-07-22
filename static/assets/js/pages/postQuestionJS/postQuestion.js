@@ -1,4 +1,4 @@
-// 用來記使用者選擇的所有標籤
+//// 用來記使用者選擇的所有標籤
 var language = [];
 var children = [];
 var chosenTags = [];

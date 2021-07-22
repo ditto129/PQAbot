@@ -110,5 +110,7 @@ class outer_search(Action):
 #            reply += ("<br>" + str(i+1) + ".<a href=\"" + answer[i][0] + "\">" + answer[i][1] + "</a>")
             reply += ("<br>" + str(i+1) + ".<a href=\"" + resultpage[i] + "\">"+ result_title[i] + "</a>")
         reply += "<br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"
+        
+        reply += "<a href=\"#\" onclick=\"summary('all')\">點我查看所有答案排名</a>"
         dispatcher.utter_message(text=reply)
         return []

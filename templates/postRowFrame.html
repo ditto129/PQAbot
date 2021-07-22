@@ -53,21 +53,22 @@
                                                 </div> 
                                                 <!--篩選貼文end-->
                                              </div>
+                                            <!-- 翻頁 start-->
+                                                <div class="pagination card-header-right" style="float: right;">
+                                                    <a href="#" onclick="editPageNum('-1')">❮</a>
+                                                    <a href="#" onclick="editPageNum('1')">❯</a>
+                                                </div>
+                                                <!-- 翻頁 end-->
+                                            
                                             <div class="card-header-right">
                                                 <i class="icofont icofont-spinner-alt-5"></i>
                                             </div>
                                             
                                             <div style="margin-top: 20px;">
                                                 <input id="searchText" type="text" name="search" placeholder="Search..">
-                                                <br>
-                                                <button style="margin-top: 5px;" class="btn btn-outline-secondary btn-sm" onclick="search()">搜尋</button>
+<!--                                                <button style="margin-top: 5px; display: inline-block;" class="btn btn-outline-secondary btn-sm" onclick="search('new')">搜尋</button>-->
                                             </div>
-                                            <!-- 翻頁 start-->
-                                            <div class="pagination">
-                                                <a href="#" onclick="editPageNum('-1')">❮</a>
-                                                <a href="#" onclick="editPageNum('1')">❯</a>
-                                            </div>
-                                            <!-- 翻頁 end-->
+                                            
                                             <!--已選標籤-->
                                             <div id="chosen_tag"></div>
                                         </div>
@@ -133,11 +134,25 @@
         </button>
       </div>    
       <div class="modal-body">     
+          <!-- 興趣標籤 START -->
+<!--
+          <div style="margin-top: 15px;" id="interestingTags">
+              <i class="fa fa-certificate" aria-hidden="true" style="color: #5D478B;"></i>
+              <span style="font-size: 20px;">興趣標籤</span>
+          </div>
+-->
+          <div id="forwardPage">
+          </div>
           <div id="chose_tag" style="margin-top: 5px;">
-          </div>    
+          </div>
+          
           <div id="chosen_tag_in_modal" style="margin-top: 15px;">
           </div>
+          <!-- 興趣標籤 END -->
       </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="searchByTags('new')" data-dismiss="modal">搜尋</button>
+        </div>
     </div>
   </div>
 </div>
@@ -208,8 +223,6 @@
 <script src="../static/assets/js/demo-12.js"></script>
 <script src="../static/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="../static/assets/js/pages/postRowFrameJS/postRowFrame.js"></script>
-<!--選標籤-->
-<!--<script src="../static/assets/js/pages/postQuestionJS/postQuestion.js"></script>-->
 <script src="../static/assets/js/common.js"></script>
 </body>
 
