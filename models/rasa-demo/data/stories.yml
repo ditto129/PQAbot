@@ -44,9 +44,11 @@ stories:
   steps:
   - checkpoint: reply_fill_slot
   - intent: say_question_or_error_message
-    entities:
-    - question_or_error_message
+#    entities:
+#    - question_or_error_message
 #  - action: utter_check_message
+  - action: analyze_and_select_keyword
+  - intent: say_keywords
   - action: outer_search
   - checkpoint: check_continue_search
 
@@ -78,6 +80,8 @@ stories:
   - checkpoint: check_continue_search
 #  - action: utter_detect_stroy
   - intent: affirm
+  - action: analyze_and_select_keyword
+  - intent: say_keywords
   - action: outer_search
   - checkpoint: check_continue_search
 

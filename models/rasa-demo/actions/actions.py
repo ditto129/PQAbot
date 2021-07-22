@@ -50,8 +50,11 @@ class analyze_and_select_keyword(Action):
     def name(self) -> Text:
         return "analyze_and_select_keyword"
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
-        #拿到所需訊息
-        question_or_error_message = tracker.get_slot("question_or_error_message")
+        #拿到所需訊息及最後一句使用者輸入
+        question_or_error_message = tracker.latest_message.get('text')
+        question_or_error_message = question_or_error_message.split(' ',1)[1]
+        print(question_or_error_message)
+        
         function = tracker.get_slot("function")
         os = tracker.get_slot("os")
         pl = tracker.get_slot("pl")
@@ -62,11 +65,11 @@ class analyze_and_select_keyword(Action):
         #加上作業系統與程式語言作為關鍵字
         qkey.append(os)
         qkey.append(pl)
-        
-        reply = '新增/刪除用來搜尋的關鍵字<br>'
+
+        reply = '新增/刪除用來搜尋的關鍵字<br><div id="keywords">'
         for i in qkey:
             reply += '<label class="badge badge-default purpleLabel">'+i+'<button type="button" class="labelXBtn">x</button></label>'
-        reply += '<br><input class="btn btn-primary purpleBtn" value="新增" onclick=""><input class="btn btn-primary purpleBtn" value="完成" onclick="">'
+        reply += '</div><br><input class="btn btn-primary purpleBtn" value="新增" onclick=""><input class="btn btn-primary purpleBtn" value="完成" onclick="">'
         
         dispatcher.utter_message(text=reply)
         return []
@@ -75,25 +78,16 @@ class outer_search(Action):
     def name(self) -> Text:
         return "outer_search"
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
-        #拿到所需訊息
-        question_or_error_message = tracker.get_slot("question_or_error_message")
-        function = tracker.get_slot("function")
-        os = tracker.get_slot("os")
-        pl = tracker.get_slot("pl")
-        #宣告文字分析器
-        textAnalyzer = TextAnalyze()
-        #擷取使用者問題的關鍵字
-        qkey = textAnalyzer.keywordExtration(question_or_error_message)[0]
-        
-        
+        #拿到所需訊息及最後一句使用者輸入
+        keywords = tracker.latest_message.get('text')
         
         #外部搜尋結果（URL）
         resultpage = outerSearch(qkey, 10, 1)
-        
+
         for url in resultpage:
             print(url)
 
-        stack_items = [StackData(url) for url in resultpage]
+        #stack_items = [StackData(url) for url in resultpage]
         result_title = []
         for items in stack_items:
             #showData回傳的資料即是傳送到前端的json格式
@@ -101,13 +95,8 @@ class outer_search(Action):
             result_title.append(display['question']['title'])
         
         
-       # testReply=[("https://stackoverflow.com/questions/48714769/python-flask-cors-importerror-no-module-named-flask-cors-raspberry-pi", "Flask-CORS not working for POST, but working for GET"), ("https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask", "Solve Cross Origin Resource Sharing with Flask"), ("https://stackoverflow.com/questions/39550920/flask-cors-not-working-for-post-but-working-for-get", "Flask CORS stopped allowing access to resources"), ("https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask", "How to enable CORS in flask"), ("https://stackoverflow.com/questions/39029767/flask-cors-and-flask-limiter", "Flask CORS and Flask Limiter")]
-       # random.shuffle(testReply)
-       # answer=testReply[0:3]
         reply = "謝謝您的等待，以下為搜尋結果的資料摘要："
         for i in range(0, len(resultpage)):
-#        for i in range(0, 3):
-#            reply += ("<br>" + str(i+1) + ".<a href=\"" + answer[i][0] + "\">" + answer[i][1] + "</a>")
             reply += ("<br>" + str(i+1) + ".<a href=\"" + resultpage[i] + "\">"+ result_title[i] + "</a>")
         reply += "<br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"
         dispatcher.utter_message(text=reply)

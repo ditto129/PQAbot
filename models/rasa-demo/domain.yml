@@ -7,6 +7,7 @@ intents:
   - say_pl
   - change_pl
   - say_question_or_error_message
+  - say_keywords
   - affirm
   - deny
   - say_satisfied
@@ -21,6 +22,7 @@ intents:
   ### 用來測試若intent裡有相同的句子 END
   
 entities:
+  - keywords
   - question_or_error_message
   - function
   - os
@@ -35,10 +37,13 @@ slots:
     type: text
   question_or_error_message:
     type: text
+  keywords:
+    type: text
 
 actions:
   - fill_slot
   - outer_search
+  - analyze_and_select_keyword
 
 responses:
   utter_detect_stroy:

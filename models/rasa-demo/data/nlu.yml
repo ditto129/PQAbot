@@ -11,6 +11,10 @@ nlu:
 #   - error_message
 #   - 共同討論
 
+- regex: keywords
+  examples: |
+   - keywords .*
+   
 - regex: function
   examples: |
    - \b引導式\b
@@ -33,7 +37,7 @@ nlu:
    - java
    - c語言
    
-- regex: message
+- regex: question_or_error_message
   examples: |
    - question_or_error_message .*
 
@@ -68,6 +72,10 @@ nlu:
 - intent: say_question_or_error_message
   examples: |
     - [my error message is: ...](question_or_error_message)
+    
+- intent: say_keywords
+  examples: |
+    - [my keywords is: ...](keywords)
     
 - intent: affirm
   examples: |
