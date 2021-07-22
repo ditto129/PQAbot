@@ -15,6 +15,8 @@ function changePage(){
     document.getElementById("main_page").innerHTML = content;
 }
 
+////////////////// 聊天室 START ////////////////////
+
 function bot(string){
     console.log("bot送訊息");
     
@@ -51,6 +53,7 @@ function user(string){
     history.innerHTML = content;
     history.scrollTop = history.scrollHeight;
 }
+////////////////// 聊天室 END ////////////////////
 
 ////////////////// 初始化 START////////////////////
 function start(){

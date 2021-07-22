@@ -10,7 +10,11 @@ var option = "score";
 var postSum;
 
 // 透過字搜尋
-function search(){
+function search(which){
+    localStorage.setItem("method", "text");
+    if(which == "new"){
+        pageNumberSearch = 1;
+    }
     var text = $("#searchText").val();
     
     var data = {title: text, page_size: 5, page_number: pageNumberSearch, option: option};
@@ -39,7 +43,11 @@ function search(){
 }
 
 // 透過tag搜尋
-function searchByTags(){
+function searchByTags(which){
+    localStorage.setItem("method", "tags");
+    if(which == "new"){
+        pageNumberTag = 1;
+    }
     var sendTags=[];
     for(var i=0; i<chosenTags.length; i++){
         var temp = {tag_id: chosenTags[i], tag_name: allTags[chosenTags[i]]};
@@ -71,19 +79,52 @@ function searchByTags(){
 }
 
 function editPageNum(sum){
-    console.log("點擊");
+    var method = localStorage.getItem("method");
+    console.log("method: "+method);
+    var temp;
     sum = parseInt(sum);
-    console.log("sum: "+sum);
     console.log("總共幾頁: "+Math.ceil((postSum/5)));
-    if(sum == 1 && pageNumber<Math.ceil((postSum/5))){ // 下一頁
-        console.log("下一頁");
-        pageNumber += 1;
-        start();
+    
+    if(method == "all"){
+        temp = pageNumber;
     }
-    else if(sum == -1 && pageNumber>1){
+    else if(method == "text"){
+        temp = pageNumberSearch;
+    }
+    else if(method == "tags"){
+        temp = pageNumberTag;
+    }
+    console.log("temp: "+temp)
+    if(sum == 1 && temp<Math.ceil((postSum/5))){ // 下一頁
+        console.log("下一頁");
+        if(method == "all"){
+            pageNumber += sum;
+            start("old");
+        }
+        else if(method == "text"){
+            pageNumberSearch += sum;
+            search("old");
+        }
+        else if(method == "tags"){
+            pageNumberTag += sum;
+            searchByTags("old");
+        }
+        
+    }
+    else if(sum == -1 && temp>1){
         console.log("上一頁");
-        pageNumber -= 1;
-        start();
+        if(method == "all"){
+            pageNumber += sum;
+            start("old");
+        }
+        else if(method == "text"){
+            pageNumberSearch += sum;
+            search("old");
+        }
+        else if(method == "tags"){
+            pageNumberTag += sum;
+            searchByTags("old");
+        }
     }
 }
 
@@ -143,7 +184,11 @@ function showPost(response){
     document.getElementById("post").innerHTML = content;
 }
 
-function start(){
+function start(which){
+    localStorage.setItem("method", "all");
+    if(which == "new"){
+        pageNumber = 1;
+    }
     getLanguageTag();
     var myURL = head_url + "query_inner_post_list";
     
@@ -386,4 +431,17 @@ function cancle(id, page){
 }
 ///////////////// 透過標籤篩選 END /////////////////
 
-window.addEventListener("load", start, false);
+function set(){
+    var searchButton = document.getElementById("searchText");
+    searchButton.addEventListener('keydown', function(e){
+      // enter 的 keyCode 是 13
+      if( e.keyCode === 13 ){
+          search("new");
+      }
+    }, false);
+}
+
+window.addEventListener("load", function(){
+    set();
+    start("new");
+}, false);

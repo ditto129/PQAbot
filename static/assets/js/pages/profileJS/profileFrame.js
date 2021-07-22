@@ -105,6 +105,7 @@ function start(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("成功: 拿回覆紀錄（query_user_response_list）");
+            
             // 把拿到的資料 從新到舊排序
             response.sort(function(a, b){
                 return new Date(a.time) < new Date(b.time) ? 1 : -1;
