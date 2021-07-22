@@ -18,6 +18,7 @@ function changePage(){
 ////////////////// 聊天室 START ////////////////////
 
 var keyWords = {};
+var keyWordsTime = -1;
 
 function bot(string){
     console.log("bot送訊息");
@@ -59,7 +60,9 @@ function bot(string){
     history.scrollTop = history.scrollHeight;
     
     // 處理關鍵字 START
-    var temp = document.getElementById("keywords");
+    keyWordsTime += 1;
+    var tempId = "keywords"+keyWordsTime;
+    var temp = document.getElementById(tempId);
     if(temp != null){
         var count = temp.getElementsByTagName("label").length;
 
@@ -115,7 +118,9 @@ function addKeyWord(){
     var newKeyWord = $("#message").val();
     var msg = document.getElementById("message");
     msg.value = "";
-    var keyWordsArea = document.getElementById("keywords");
+    
+    var tempId = "keywords"+keyWordsTime;
+    var keyWordsArea = document.getElementById(tempId);
     keyWords[max] = newKeyWord;
     
 //    var content = keyWordsArea.innerHTML;
@@ -147,7 +152,8 @@ function showKeyWords(){
         content += "'";
         content += ')">x</button></label>';
     }
-    document.getElementById("keywords").innerHTML = content;
+    var tempId = "keywords"+keyWordsTime;
+    document.getElementById(tempId).innerHTML = content;
 }
 
 function cancleKeyWords(keyWordId){
