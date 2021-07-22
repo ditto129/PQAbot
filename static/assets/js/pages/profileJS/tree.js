@@ -5,12 +5,14 @@ class TreeNode {
         this.child = [];
     }
 }
-var rootTreeNode;
+var rootTreeNode;   //之後改成array
 var secondLevelName = [];
 
 //建好root, 並且建立第二層(呼叫secondLevel)
 function getRootTag(){
     var myURL = head_url+"query_tag_child?tag_id=00000";
+    //之後要改成檢查tag parent為null的，拿到所有語言
+    
     $.ajax({
         url: myURL,
         type: "GET",
@@ -19,7 +21,7 @@ function getRootTag(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             //先建好root
-            rootTreeNode = new TreeNode("Python", -1);
+            rootTreeNode = new TreeNode("Python", 0);
             
             secondLevel(response);
         },
@@ -50,7 +52,7 @@ function getTagName(id){
     return tagName;
 }
 
-//先拿到第二層的tagName(呼叫getTagName)
+//先拿到第二層的tagName，直接從root tag的child array中拿
 //創節點 且 加到rootTreeNode.child裡面
 function secondLevel(data){
     for(var i=0; i<data.tag_child.length; i++){
@@ -59,7 +61,7 @@ function secondLevel(data){
         
         secondLevelName.push(tagName);
         
-        var temp = new TreeNode(tagName, -1);
+        var temp = new TreeNode(tagName, 0);
         rootTreeNode.child.push(temp);
     }
 }
@@ -99,10 +101,17 @@ function getUserTag(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             for(var i=0; i<response.tag_info.length; i++){
-                buildThirdLevel(response.tag_info[i]);
+                //檢查是否為第三層，是則buildThirdLevel，否則直接改一、二層node score
+                if(secondLevelName.includes(response.tag_info[i].tag_name)) {
+                    rootTreeNode.child[secondLevelName.indexOf(response.tag_info[i].tag_name)].score = response.tag_info[i].score;
+                }else if(response.tag_info[i].tag_name == rootTreeNode.name){
+                    rootTreeNode.score = response.tag_info[i].score;
+                }else{
+                    buildThirdLevel(response.tag_info[i]);   
+                }
             }
-            deleteEpmtyNode();
-            printTree();
+            //deleteEpmtyNode();
+            //printTree();
             buildTree();
         },
         error: function(){
@@ -123,18 +132,17 @@ function printTree(){
 
 var treeTag;
 function buildTree(){
-    treeTag = "<li>Python<ul>";
+    treeTag = "<li>"+rootTreeNode.name+"<br><div class='score'>"+rootTreeNode.score+"</div><ul>";
     //建出樹的tag
     for(var i=0;i<rootTreeNode.child.length;i++){
-        treeTag += "<li>"+rootTreeNode.child[i].name+"<ul>";
+        treeTag += "<li>"+rootTreeNode.child[i].name+"<br><div class='score'>"+rootTreeNode.child[i].score+"</div><ul>";
         
         for(var j=0;j<rootTreeNode.child[i].child.length;j++){
             treeTag += "<li><div>";
-                treeTag += rootTreeNode.child[i].child[j].name;
-                treeTag += '<br>';
-                treeTag += '<div class="score">';
-                    treeTag += rootTreeNode.child[i].child[j].score;
-                treeTag += "</div>";
+            treeTag += rootTreeNode.child[i].child[j].name;
+            treeTag += '<br>';
+            treeTag += '<div class="score">';               treeTag += rootTreeNode.child[i].child[j].score;
+            treeTag += "</div>";
             treeTag += "</div></li>";
         }
         

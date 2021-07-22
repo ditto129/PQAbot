@@ -14,8 +14,8 @@
         <link href="../static/assets/css/pages/profileCSS/prettify.css" type="text/css" rel="stylesheet"/>
         <script>
             jQuery(document).ready(function() {
-                getRootTag();
-                getUserTag();
+                getRootTag();   //第一步
+                getUserTag();   //第二步
         //        buildTree();
                 $("#org").jOrgChart({
                     chartElement : '#chart',
@@ -25,7 +25,7 @@
     </script>
   </head>
 
-  <body onload="prettyPrint();">
+  <body onload="prettyPrint();">    <!--第三步-->
     
       <ul id="org" style="display:none"></ul> 
           
