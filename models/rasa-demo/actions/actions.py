@@ -83,6 +83,7 @@ class outer_search(Action):
         keywords = keywords.split(' ',1)[1]
         print(keywords)
         
+        qkey = keywords.split(' ')
         #外部搜尋結果（URL）
         resultpage = outerSearch(qkey, 10, 1)
 
