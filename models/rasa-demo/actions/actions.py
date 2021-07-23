@@ -52,7 +52,7 @@ class analyze_and_select_keyword(Action):
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
         #拿到所需訊息及最後一句使用者輸入
         question_or_error_message = tracker.latest_message.get('text')
-        question_or_error_message = question_or_error_message.split(' ',1)[1]
+        question_or_error_message = question_or_error_message.split(',',1)[1]
         print(question_or_error_message)
         
         function = tracker.get_slot("function")
@@ -67,17 +67,17 @@ class analyze_and_select_keyword(Action):
         qkey.append(pl)
 
         reply = '新增/刪除用來搜尋的關鍵字<br><div id="keywords'
-        reply += keywordsTime
+        #reply += keywordsTime
         reply += '">'
         id = 0
         for i in qkey:
-            content += '<label id="'
-            content += id
-            content += '" class="badge badge-default purpleLabel">'
-            content += i
-            content += '<button class="labelXBtn" onclick="cancleKeyWords(\''
-            content += id
-            content += '\')">x</button></label>'
+            reply += '<label id="'
+            reply += str(id)
+            reply += '" class="badge badge-default purpleLabel">'
+            reply += i
+            reply += '<button class="labelXBtn" onclick="cancleKeyWords(\''
+            reply += str(id)
+            reply += '\')">x</button></label>'
             id += 1
         reply += '</div><br><input id="addBtn" class="btn btn-primary purpleBtnInChatroom" value="新增" onclick="wantAddKeyWord()"><input id="doneBtn"class="btn btn-primary purpleBtnInChatroom" value="完成" onclick="doneKeyWord()">'
         
