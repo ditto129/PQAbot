@@ -174,6 +174,8 @@ def delete_inner_post():
 @post_api.route('query_inner_search', methods=['POST'])
 def query_inner_search():
     data = request.get_json()
+    print("keyword陣列:")
+    print(data['keywords'])
     #try:
     inner_search_result=inner_post.query_inner_search(data['keywords'])
     inner_search_result_dict = {

@@ -9,7 +9,7 @@ function changePage(){
     var content = "";
     content += '<iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="';
     content += page;
-    content += '.html';
+//    content += '.html';
     content += '" height="100%" width="100%"></iframe>';
     console.log("content: "+content);
     document.getElementById("main_page").innerHTML = content;
@@ -198,8 +198,8 @@ function doneKeyWord(){
     console.log(keyWordsBtn);
     
     console.log("送出字串: "+sendKeyWords);
-//    user(sendKeyWords);
     
+    // outerSearch START
     // 傳給rasa START
     var sessionId = localStorage.getItem("sessionID");
     var myURL = head_url + "keywords?sender_id="+sessionId+"&keywords="+sendKeyWords;
@@ -220,6 +220,40 @@ function doneKeyWord(){
         }
     });
     // 傳給rasa END
+    // outerSearch END
+    
+    //innerSearch START
+    var myURL = head_url + "query_inner_search";
+    console.log("myURL: "+myURL);
+    var tempKeywords = []
+    for(var id in keyWords){
+        sendKeyWords += " ";
+        tempKeywords.push(keyWords[id]);
+    }
+    var data = {keywords: tempKeywords};
+    console.log(data);
+
+    var myURL = head_url + "query_inner_search";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 內部貼文搜尋（query_inner_search）");
+            console.log(response);
+            for(var i=0; i<response.inner_search_result.length; i++){
+                console.log(response.inner_search_result[i]);
+            }
+        },
+        error: function(response){
+            console.log("失敗: 內部貼文搜尋（query_inner_search）");
+            console.log(response);
+        }
+    });
+    //innerSearch END
 }
 
 

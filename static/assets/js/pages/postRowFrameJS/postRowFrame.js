@@ -432,7 +432,7 @@ function cancle(id, page){
 ///////////////// 透過標籤篩選 END /////////////////
 
 var optionVal = ["score", "view_count", "time"];
-var optionText = ["篩選條件 | 依分數高低", "篩選條件 | 依觀看次數", "篩選條件 | 依日期"];
+var optionText = ["貼文排序 | 依分數高低", "貼文排序 | 依觀看次數", "貼文排序 | 依日期"];
 function changeSort(){
     var radio=document.getElementsByName("postSort");
     for(var i=0;i<radio.length;i++){
