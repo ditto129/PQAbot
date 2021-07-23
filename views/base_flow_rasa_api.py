@@ -27,7 +27,7 @@ def base_flow_rasa():
         print(results['events'][-2]['text'])
         lastest_bot_reply=results['events'][-2]['text']
         if lastest_bot_reply == "請描述您遇到的問題" or lastest_bot_reply == "請貼上您的錯誤訊息":
-            message = 'question_or_error_message ' + message
+            message = 'question_or_error_message, ' + message
         
     payload = {'sender': sender_id, 'message': message}
     headers = {'content-type': 'application/json'}
