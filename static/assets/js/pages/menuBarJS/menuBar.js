@@ -61,6 +61,13 @@ function bot(string){
     // 處理關鍵字 START
     var temp = document.getElementById("keywords");
     if(temp != null){
+        var textArea = document.getElementById("message");
+        textArea.setAttribute("placeholder", "請點選「新增」或「完成」");
+        textArea.disabled = true;
+        
+        var sendBtn = document.getElementById("sendButton");
+        sendBtn.disabled = true;
+        
         var count = temp.getElementsByTagName("label").length;
 
         for(var i=0; i<count; i++){
@@ -97,9 +104,11 @@ function user(string){
 function wantAddKeyWord(){
     
     var textArea = document.getElementById("message");
+    textArea.disabled = false;
     textArea.setAttribute("placeholder", "請輸入欲新增之關鍵字");
     
     var sendBtn = document.getElementById("sendButton");
+    sendBtn.disabled = false;
     sendBtn.setAttribute("onclick", "addKeyWord()");
 }
 
@@ -119,6 +128,13 @@ function addKeyWord(){
     var keyWordsArea = document.getElementById("keywords");
     keyWords[max] = newKeyWord;
     showKeyWords();
+    
+    var textArea = document.getElementById("message");
+    textArea.setAttribute("placeholder", "請點選「新增」或「完成」");
+    textArea.disabled = true;
+    
+    var sendBtn = document.getElementById("sendButton");
+    sendBtn.disabled = true;
 }
 
 function showKeyWords(){
@@ -151,8 +167,10 @@ function doneKeyWord(){
     // 恢復原廠設定 START
     var textArea = document.getElementById("message");
     textArea.setAttribute("placeholder", "輸入...");
+    textArea.disabled = false;
     
     var sendBtn = document.getElementById("sendButton");
+    sendBtn.disabled = false;
     sendBtn.setAttribute("onclick", "send_message()");
     // 恢復原廠設定 END
     
@@ -184,7 +202,7 @@ function doneKeyWord(){
     
     // 傳給rasa START
     var sessionId = localStorage.getItem("sessionID");
-    var myURL = head_url + "keywords?sender_id="+sessionID+"&keywords="+sendKeyWords;
+    var myURL = head_url + "keywords?sender_id="+sessionId+"&keywords="+sendKeyWords;
     console.log("myURL: "+myURL);
     $.ajax({
         url: myURL,
@@ -193,8 +211,9 @@ function doneKeyWord(){
         async:false,
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-            console.log("response: "+response);
-            console.log(response.message);
+            console.log("response: ");
+            console.log(response);
+//            bot(response.text);
         },
         error: function(){
             console.log("error");
