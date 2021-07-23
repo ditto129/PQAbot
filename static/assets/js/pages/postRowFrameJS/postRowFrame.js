@@ -431,7 +431,32 @@ function cancle(id, page){
 }
 ///////////////// 透過標籤篩選 END /////////////////
 
+var optionVal = ["score", "view_count", "time"];
+var optionText = ["篩選條件 | 依分數高低", "篩選條件 | 依觀看次數", "篩選條件 | 依日期"];
+function changeSort(){
+    var radio=document.getElementsByName("postSort");
+    for(var i=0;i<radio.length;i++){
+        if(radio[i].checked==true) {
+            option = optionVal[i];
+            document.getElementById("optionText").innerHTML = optionText[i];
+            break;
+        }
+    }
+    
+    var method = localStorage.getItem("method");
+    if(method == "all"){
+        start("new");
+    }
+    else if(method == "text"){
+        search("new");
+    }
+    else{
+        searchByTags("new");
+    }
+}
+
 function set(){
+    localStorage.setItem("postAPI", "query_inner_post_list");
     var searchButton = document.getElementById("searchText");
     searchButton.addEventListener('keydown', function(e){
       // enter 的 keyCode 是 13

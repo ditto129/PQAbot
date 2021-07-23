@@ -47,11 +47,6 @@
                                         <div class="card-header">
                                             <div class="card-header-left">
                                                 <h5>貼文列表</h5>
-                                                <!--篩選貼文start-->
-                                                <div data-toggle="tooltip" data-placement="top" data-original-title="點我篩選標籤" style="display: inline;">
-                                                <i type="button" class="fa fa-filter scoreBtn" aria-hidden="true" data-toggle="modal" data-target="#exampleModal"></i>
-                                                </div> 
-                                                <!--篩選貼文end-->
                                              </div>
                                             <!-- 翻頁 start-->
                                                 <div class="pagination card-header-right" style="float: right;">
@@ -68,9 +63,25 @@
                                                 <input id="searchText" type="text" name="search" placeholder="Search..">
 <!--                                                <button style="margin-top: 5px; display: inline-block;" class="btn btn-outline-secondary btn-sm" onclick="search('new')">搜尋</button>-->
                                             </div>
+                                            <!--tags篩選貼文start-->
+                                            <div>
+<!--                                            <div data-toggle="tooltip" data-placement="top" data-original-title="點我篩選標籤" style="display: inline;">-->
+                                            <i type="button" class="fa fa-tags fa-lg scoreBtn" aria-hidden="true" data-toggle="modal" data-target="#exampleModal" style="margin-top: 20px; display: inline-block;"></i>
+                                            <span style="display: inline-block;">選擇相關標籤</span>
+                                            </div> 
+                                            <!--tags篩選貼文end-->
+                                            
                                             
                                             <!--已選標籤-->
                                             <div id="chosen_tag"></div>
+                                            
+                                            <!-- 貼文排序 START -->
+                                            <div>
+<!--                                            <div data-toggle="tooltip" data-placement="top" data-original-title="點我篩選標籤" style="display: inline;">-->
+                                            <i type="button" class="fa fa-filter fa-lg scoreBtn" aria-hidden="true" data-toggle="modal" data-target="#exampleModal2" style="margin-top: 20px; display: inline-block;"></i>
+                                            <span style="display: inline-block;" id="optionText">篩選條件 | 依分數高低</span>
+                                            </div>
+                                            <!-- 貼文排序 END -->
                                         </div>
                                         <div class="card-block">
                                             <div class="row" id="post">
@@ -157,6 +168,45 @@
   </div>
 </div>
 <!-- 選標籤視窗 END-->
+      
+<!-- 選擇貼文排序視窗 START -->
+      <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content"> 
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel2">選擇貼文如何排序</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>    
+                  <div class="modal-body">     
+                      <div>
+                          <input type="radio" name="postSort" id="radioScore" checked>
+                          <label class="form-check-label" for="radioScore">
+                              依分數排序
+                          </label>
+                      </div>
+                      <div>
+                          <input type="radio" name="postSort" id="radioViews">
+                          <label class="form-check-label" for="radioViews">
+                              依觀看次數排序
+                          </label>
+                      </div>
+                      <div class="form-check">
+                          <input type="radio" name="postSort" id="radioTime">
+                          <label class="form-check-label" for="radioTime">
+                              依日期排序
+                          </label>
+                      </div>
+                  </div>
+                  
+                  <div class="modal-footer">
+                      <button class="btn btn-secondary" onclick="changeSort()" data-dismiss="modal">確認</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+<!-- 選擇貼文排序視窗 END -->
         <!-- Warning Section Starts -->
         <!-- Older IE warning message -->
     <!--[if lt IE 9]>
