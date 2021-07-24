@@ -80,7 +80,7 @@ stories:
   - checkpoint: check_continue_search
 #  - action: utter_detect_stroy
   - intent: affirm
-  - action: analyze_and_select_keyword
+  - action: select_keyword
   - intent: say_keywords
   - action: outer_search
   - checkpoint: check_continue_search
