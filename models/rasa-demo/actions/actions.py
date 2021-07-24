@@ -46,6 +46,34 @@ class fill_slot(Action):
         return []
 
 #給user選關鍵字
+class select_keyword(Action):
+    def name(self) -> Text:
+        return "select_keyword"
+    def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
+        #！！！拿到之前存的關鍵字
+        qkey = tracker.get_slot("keywords")
+        qkey = qkey.split(' ')
+
+        reply = '新增/刪除用來搜尋的關鍵字<br><div id="keywords'
+        #reply += keywordsTime
+        reply += '">'
+        id = 0
+        for i in qkey:
+            reply += '<label id="'
+            reply += str(id)
+            reply += '" class="badge badge-default purpleLabel">'
+            reply += i
+            reply += '<button class="labelXBtn" onclick="cancleKeyWords(\''
+            reply += str(id)
+            reply += '\')">x</button></label>'
+            id += 1
+        reply += '</div><br><input id="addBtn" class="btn btn-primary purpleBtnInChatroom" value="新增" onclick="wantAddKeyWord()"><input id="doneBtn"class="btn btn-primary purpleBtnInChatroom" value="完成" onclick="doneKeyWord()">'
+        
+        dispatcher.utter_message(text=reply)
+        return []
+        
+        
+#分析並給user選關鍵字
 class analyze_and_select_keyword(Action):
     def name(self) -> Text:
         return "analyze_and_select_keyword"
@@ -65,7 +93,7 @@ class analyze_and_select_keyword(Action):
         #加上作業系統與程式語言作為關鍵字
         qkey.append(os)
         qkey.append(pl)
-
+        
         reply = '新增/刪除用來搜尋的關鍵字<br><div id="keywords'
         #reply += keywordsTime
         reply += '">'
@@ -82,7 +110,8 @@ class analyze_and_select_keyword(Action):
         reply += '</div><br><input id="addBtn" class="btn btn-primary purpleBtnInChatroom" value="新增" onclick="wantAddKeyWord()"><input id="doneBtn"class="btn btn-primary purpleBtnInChatroom" value="完成" onclick="doneKeyWord()">'
         
         dispatcher.utter_message(text=reply)
-        return []
+        #！！！將關鍵字存入slot
+        return [SlotSet("keywords", ' '.join(qkey))]
 
 class outer_search(Action):
     def name(self) -> Text:

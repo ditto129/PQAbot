@@ -264,12 +264,13 @@ def remove_post(post_id):
                                                                        {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
         _db.USER_COLLECTION.update_one({'_id':response['replier_id']},{'$set':{'record.responses':record_list}})
     
+    
 
 '''湘的'''
 #內部搜尋
 def query_inner_search(keywords):
-    # version2，可調整第一階篩選數、factor權重、output數
-    return [i['_id'] for i in _db.INNER_POST_COLLECTION.aggregate(
+    #第一階篩選數(相關貼文)，對資料做前處理（算好問題積分、最高答案積分）
+    top_ten_post_dict_array = [{'_id':i['_id'], 'maxTotalAnsScore':i['maxTotalAnsScore'], 'keyword':i['keyword'], 'tag':i['tag'], 'scoreTotal':i['scoreTotal'], 'view_count':i['view_count']} for i in _db.INNER_POST_COLLECTION.aggregate(
     [
     {
         '$match': {
@@ -294,112 +295,15 @@ def query_inner_search(keywords):
             'view_count': 1
         }
     }, {
-        '$unwind': {
-            'path': '$tag'
-        }
-    }, {
-        '$match': {
-            'tag.tag_name': {
-                '$in': keywords
-            }
-        }
-    }, {
-        '$group': {
-            '_id': '$_id',
-            'matches_tag': {
-                '$sum': 1
-            },
-            'score': {
-                '$first': '$score'
-            },
-            'keyword': {
-                '$first': '$keyword'
-            },
-            'answer': {
-                '$first': '$answer'
-            },
-            'view_count': {
-                '$first': '$view_count'
-            }
-        }
-    }, {
-        '$unwind': {
-            'path': '$keyword'
-        }
-    }, {
-        '$match': {
-            'keyword': {
-                '$in': keywords
-            }
-        }
-    }, {
-        '$group': {
-            '_id': '$_id',
-            'matches_keyword': {
-                '$sum': 1
-            },
-            'score': {
-                '$first': '$score'
-            },
-            'matches_tag': {
-                '$first': '$matches_tag'
-            },
-            'answer': {
-                '$first': '$answer'
-            },
-            'view_count': {
-                '$first': '$view_count'
-            }
-        }
-    }, {
-        '$project': {
-            'matches': {
-                '$sum': [
-                    '$matches_tag', '$matches_keyword'
-                ]
-            },
-            'score': 1,
-            'answer': 1,
-            'view_count': 1
-        }
-    }, {
         '$project': {
             'scoreTotal': {
                 '$sum': '$score.score'
             },
             'matches': 1,
             'answer': 1,
-            'view_count': 1
-        }
-    }, {
-        '$sort': {
-            'matches': -1,
-            'scoreTotal': -1,
-            '_id': 1
-        }
-    }, {
-        '$limit': 10
-    }, {
-        '$sort': {
-            'matches': -1,
-            'scoreTotal': -1,
-            '_id': 1
-        }
-    }, {
-        '$group': {
-            '_id': '1',
-            'items': {
-                '$push': '$$ROOT'
-            }
-        }
-    }, {
-        '$unwind': {
-            'path': '$items',
-            'includeArrayIndex': 'items.matches_scoreTotal_order'
-        }
-    }, {
-        '$replaceRoot': {
-            'newRoot': '$items'
+            'view_count': 1,
+            'keyword': 1,
+            'tag': 1
         }
     }, {
         '$unwind': {
@@ -420,11 +324,17 @@ def query_inner_search(keywords):
             'totalAnsScore': {
                 '$sum': '$answer.score.score'
             },
-            'matches_scoreTotal_order': {
-                '$first': '$matches_scoreTotal_order'
-            },
             'view_count': {
                 '$first': '$view_count'
+            },
+            'keyword': {
+                '$first': '$keyword'
+            },
+            'tag': {
+                '$first': '$tag'
+            },
+            'scoreTotal': {
+                '$first': '$scoreTotal'
             }
         }
     }, {
@@ -433,59 +343,62 @@ def query_inner_search(keywords):
             'maxTotalAnsScore': {
                 '$max': '$totalAnsScore'
             },
-            'matches_scoreTotal_order': {
-                '$first': '$matches_scoreTotal_order'
-            },
             'view_count': {
                 '$first': '$view_count'
+            },
+            'keyword': {
+                '$first': '$keyword'
+            },
+            'tag': {
+                '$first': '$tag'
+            },
+            'scoreTotal': {
+                '$first': '$scoreTotal'
             }
         }
     }, {
-        '$sort': {
-            'view_count': -1,
-            'maxTotalAnsScore': -1,
-            '_id': 1
-        }
-    }, {
-        '$group': {
-            '_id': '1',
-            'items': {
-                '$push': '$$ROOT'
-            }
-        }
-    }, {
-        '$unwind': {
-            'path': '$items',
-            'includeArrayIndex': 'items.viewCount_maxTotalAnsScore_order'
-        }
-    }, {
-        '$replaceRoot': {
-            'newRoot': '$items'
-        }
-    }, {
-        '$addFields': {
-            'output_order': {
-                '$add': [
-                    {
-                        '$multiply': [
-                            '$matches_scoreTotal_order', 0.5
-                        ]
-                    }, {
-                        '$multiply': [
-                            '$viewCount_maxTotalAnsScore_order', 0.2
-                        ]
-                    }
-                ]
-            }
-        }
-    }, {
-        '$sort': {
-            'output_order': 1,
-            '_id': 1
-        }
-    }, {
-        '$limit': 3
-    }
+        '$limit': 10
+     }
 ]
     )]
+    
+    #計算keyword match數
+    for i in top_ten_post_dict_array:
+        count = 0
+        i['matches_keyword'] = 0
+        for j in i['keyword']:
+            if j in keywords:
+                count += 1
+        i['matches_keyword'] = count
+        
+    #計算tag match數
+    for i in top_ten_post_dict_array:
+        count = 0
+        i['matches_tag'] = 0
+        for j in i['tag']:
+            if j['tag_name'] in keywords:
+                count += 1
+        i['matches_tag'] = count
+        
+    #加總match數
+    for i in top_ten_post_dict_array:
+        i['matches'] = i['matches_keyword'] + i['matches_tag']
+    
+    #根據matches, scoreTotal排名
+    sorted_top_ten_post_dict_array = sorted(top_ten_post_dict_array, key=lambda k: (k['matches'], k['scoreTotal'], k['_id']), reverse=True)
+    for count, i in enumerate(sorted_top_ten_post_dict_array):
+        i['matches_scoreTotal_order'] = count
+        
+    #根據view_count, maxTotalAnsScore排名
+    sorted_top_ten_post_dict_array = sorted(sorted_top_ten_post_dict_array, key=lambda k: (k['view_count'], k['maxTotalAnsScore'], k['_id']), reverse=True)
+    for count, i in enumerate(sorted_top_ten_post_dict_array):
+        i['view_count_maxTotalAnsScore_order'] = count
+        
+    #加權
+    for i in sorted_top_ten_post_dict_array:
+        i['output_order'] = i['matches_scoreTotal_order'] * 0.5 + i['view_count_maxTotalAnsScore_order'] * 0.2
+    sorted_top_ten_post_dict_array = sorted(sorted_top_ten_post_dict_array, key=lambda k: (k['output_order'], k['_id']))
+        
+    print(sorted_top_ten_post_dict_array)
+    return [i['_id'] for i in sorted_top_ten_post_dict_array]
 '''香的'''
