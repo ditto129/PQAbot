@@ -103,14 +103,15 @@ function start(){
             console.log("成功: 拿單篇貼文（query_inner_post）");
             console.log(response);
             
-            content += '<h5>問題</h5>';
+            content += '<div class="title">問題</div>';
             if(response.asker_id == localStorage.getItem("sessionID")){
                 // 編輯
                 content += '<button type="button" class="scoreBtn" onclick="setPage(';
                 content += "'editPostFrame'";
-                content += ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'; 
-                
-                // 刪除
+                content += ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
+            }
+            if(response.asker_id == localStorage.getItem("sessionID") || localStorage.getItem("role")=="manager"){
+               // 刪除
                 content += '<button type="button" class="scoreBtn" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
             }
             document.getElementById("header").innerHTML = content;
@@ -331,6 +332,15 @@ function start(){
             console.log("失敗: 拿單篇貼文（query_inner_post）");
         }
     });
+    
+    if(localStorage.getItem("role")=="generalUser"){
+        content = "";
+        content += ''
+        content += '<button type="button" class="scoreBtn" onclick="setPage(\'replyQuestionFrame\')">';
+            content += '<i class="fa fa-plus" aria-hidden="true"></i>';
+        content += '</button>';
+        document.getElementById("answerButton").innerHTML = content;
+    }
 }
 ///////////////  抓初始資料 END ///////////////
 

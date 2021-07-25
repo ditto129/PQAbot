@@ -33,6 +33,23 @@
   </head>
 
   <body style="background: white;">
+      <!-- Pre-loader start -->
+    <div class="theme-loader">
+        <div class="ball-scale">
+            <div class='contain'>
+                <div class="ring"><div class="frame"></div></div>
+                <div class="ring"><div class="frame"></div></div>
+                <div class="ring"><div class="frame"></div></div>
+                <div class="ring"><div class="frame"></div></div>
+                <div class="ring"><div class="frame"></div></div>
+                <div class="ring"><div class="frame"></div></div>
+                <div class="ring"><div class="frame"></div></div>
+                <div class="ring"><div class="frame"></div></div>
+                <div class="ring"><div class="frame"></div></div>
+                <div class="ring"><div class="frame"></div></div>
+            </div>
+        </div>
+    </div>
     <div id="pcoded" class="pcoded">
         <div class="pcoded-overlay-box"></div>
         <div class="pcoded-wrapper">
@@ -46,7 +63,7 @@
                                     <div class="card">
                                         <div class="card-header">
                                             <div class="card-header-left">
-                                                <h5>貼文列表</h5>
+                                                <div class="title">貼文列表</div>
                                              </div>
                                             <!-- 翻頁 start-->
                                                 <div class="pagination card-header-right" style="float: right;">
@@ -86,12 +103,13 @@
                                         <div class="card-block">
                                             <div class="row" id="post">
                                                 <!--貼文1 start-->
-                                                <div class="col-lg-4 col-xl-3 col-sm-12">
+                                                <div class="col-lg-4 col-xl-3 col-sm-12" >
                                                     <!-- 貼文連結start -->
                                                     <a href="#" onclick="setPage('444', 'mySinglePostFrame')">
                                                         <div class="badge-box">
                                                             <!-- 貼文編號與分數start -->
                                                             <div class="sub-title">
+<!--                                                                <i class="fa fa-trash-o fa-lg" aria-hidden="true" style="color: red;"></i>-->
                                                                 <span>貼文 #00001</span>
                                                                 <span style="float:right;"><i class="fa fa-trophy" aria-hidden="true"></i>5</span>
                                                             </div>
@@ -112,8 +130,11 @@
                                                                 <label class="badge purpleLabel2">2021 - 09 - 08</label>
                                                                 </div>
                                                                 <!-- 貼文日期end -->
+                                                                
                                                             </div>
+                                                            
                                                         </div>
+                                                        
                                                     </a>
                                                     <!-- 貼文連結end -->
                                                 </div>

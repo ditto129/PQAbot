@@ -129,6 +129,9 @@ function editPageNum(sum){
 }
 
 function showPost(response){
+    var role = localStorage.getItem("role");
+    console.log("這裡的response: ");
+    console.log(response);
     var content = "";
     for(var i=0; i<response.length; i++){
         var id = response[i]._id;
@@ -149,7 +152,10 @@ function showPost(response){
 
             content += '<div class="badge-box">';
                 content += '<div class="sub-title">';
-                    content += '<span>貼文 ';
+//                    if(role == "manager"){
+//                        content += '<i class="fa fa-trash-o fa-lg" aria-hidden="true" style="color: red;"></i>';
+//                    }
+                    content += '<span> 貼文 ';
                     content += id;
                     content += '</span>';
 
@@ -189,7 +195,6 @@ function start(which){
     if(which == "new"){
         pageNumber = 1;
     }
-    getLanguageTag();
     var myURL = head_url + "query_inner_post_list";
     
     var data = {page_size: 5, page_number: pageNumber, option: option};
@@ -456,7 +461,10 @@ function changeSort(){
 }
 
 function set(){
+    getLanguageTag();
+    localStorage.setItem("forwardPage", "postRowFrame");
     localStorage.setItem("postAPI", "query_inner_post_list");
+
     var searchButton = document.getElementById("searchText");
     searchButton.addEventListener('keydown', function(e){
       // enter 的 keyCode 是 13

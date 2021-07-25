@@ -261,11 +261,14 @@ function doneKeyWord(){
 
 ////////////////// 初始化 START////////////////////
 function start(){
-    // 測試用 START
-//    bot("您的關鍵字如下");
-    // 測試用 END
+    localStorage.clear();
+    //這個是管理者
+    localStorage.setItem("role", "manager");
+    localStorage.setItem("sessionID", 4444);
     
-    localStorage.setItem("sessionID", 123);
+    // 這個是一般使用者
+//    localStorage.setItem("role", "generalUser");
+//    localStorage.setItem("sessionID", 123);
     var session_id = localStorage.getItem("sessionID");
     
     // ---------- 同個頁面監聽localStorage START ---------- //
@@ -283,8 +286,9 @@ function start(){
     // ---------- 同個頁面監聽localStorage END ---------- //
     
     
-    
+    setMenuBar();
     // ---------- 個人資料 START ---------- //
+    showIdentity();
     getUserHeadshotAndName();
     getUserInterestTags();
     // ---------- 個人資料 END ---------- //
@@ -304,7 +308,6 @@ function start(){
     
     //傳session_start
     var myURL = head_url + "session_start?sender_id="+session_id;
-//    var myURL = head_url + "session_start?sender_id=123";
     console.log("myURL: "+myURL);
     $.ajax({
         url: myURL,
@@ -340,7 +343,55 @@ function start(){
         }
     });
     // ---------- PSABot聊天室 END ---------- //
+    
 }
+
+function setMenuBar(){
+    var role = localStorage.getItem("role"), start, end;
+    var leftManuBarPagesContent = "";
+    var setPage = ["home", "profileFrame", "postQuestionFrame", "postRowFrame", "home", "postRowFrame", "#", "manageDataFrame"];
+    var pageIcon = ["ti-home", "fa fa-user-o", "fa fa-file-text-o", "fa fa-eye", "ti-home", "fa fa-clipboard", "fa fa-question-circle", "fa fa-wrench"];
+    var pageName = ["首頁", "個人頁面", "發布貼文", "瀏覽貼文", "首頁", "管理內部貼文", "管理FAQs資料", "管理資料更新數據"];
+    
+    if(role == "generalUser"){
+        start = 0;
+        end = 4;
+    }
+    else if(role == "manager"){
+        start = 4;
+        end = 8;
+    }
+    
+    for(var i=start; i<end; i++){
+        leftManuBarPagesContent += '<li>';
+            leftManuBarPagesContent += '<a href="#" onclick="setPage(\'';
+            leftManuBarPagesContent += setPage[i];
+            leftManuBarPagesContent += '\')">';
+                leftManuBarPagesContent += '<span class="pcoded-micon"><i class="';
+                leftManuBarPagesContent += pageIcon[i];
+                leftManuBarPagesContent += '" aria-hidden="true"></i></span>';
+                leftManuBarPagesContent += '<span class="pcoded-mtext" data-i18n="nav.dash.main">';
+                leftManuBarPagesContent += pageName[i];
+                leftManuBarPagesContent += '</span>';
+                leftManuBarPagesContent += '<span class="pcoded-mcaret"></span>';
+            leftManuBarPagesContent += '</a>';
+        leftManuBarPagesContent += '</li>';
+    }
+    
+    // 登出Button
+    leftManuBarPagesContent += '<li style="position: fixed; bottom: 10px; display: block;">';
+        leftManuBarPagesContent += '<a href="#" onclick="logOut()">';
+            leftManuBarPagesContent += '<button class="btn btn-outline" style="width: 230px; background-color: #5D478B;">';
+                leftManuBarPagesContent += '<i class="fa fa-sign-out" aria-hidden="true" style="color: white;"></i>';
+                leftManuBarPagesContent += '<span data-i18n="nav.dash.main" style="color: white;">登出</span>';
+            leftManuBarPagesContent += '</button>';
+        leftManuBarPagesContent += '</a>';
+    leftManuBarPagesContent += '</li>';
+
+    
+    document.getElementById("leftMenuBarPages").innerHTML = leftManuBarPagesContent;
+}
+
 ////////////////// 初始化 END////////////////////
 
 function getUserInterestTags(){
@@ -443,6 +494,20 @@ function open_close(){
 //編輯個人資訊 START
 
 //////////////////照片＆姓名 START////////////////////
+
+function showIdentity(){
+    var role = localStorage.getItem("role");
+    if(role == "generalUser"){
+        document.getElementById("userRoleMenubar").innerHTML = "一般使用者";
+    }
+    else if(role == "manager"){
+        document.getElementById("userRoleMenubar").innerHTML = "管理者";
+    }
+    else{
+        document.getElementById("userRoleMenubar").innerHTML = "未知";
+    }
+}
+
 var userHeadshotURL = "";
 
 $("#headshotBtn").change(function(){
