@@ -44,6 +44,7 @@ actions:
   - fill_slot
   - outer_search
   - analyze_and_select_keyword
+  - select_keyword
 
 responses:
   utter_detect_stroy:
