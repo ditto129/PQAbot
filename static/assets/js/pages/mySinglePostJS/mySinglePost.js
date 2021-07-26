@@ -281,7 +281,6 @@ function start(){
                 
                                 // 檢查有沒有按讚 START
                                 var temp = {score: 1, user_id: userId};
-                                console.log(temp);
                                 if(objectInArrayThumb(temp, response.answer[i].score)){
                                     content += '<i id="';
                                     content += response.answer[i]._id;

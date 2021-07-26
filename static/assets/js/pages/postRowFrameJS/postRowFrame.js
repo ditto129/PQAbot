@@ -14,6 +14,10 @@ function search(which){
     localStorage.setItem("method", "text");
     if(which == "new"){
         pageNumberSearch = 1;
+        disabledButton("backwardPage");
+    }
+    else{
+        abledButton("backwardPage");
     }
     var text = $("#searchText").val();
     
@@ -47,6 +51,10 @@ function searchByTags(which){
     localStorage.setItem("method", "tags");
     if(which == "new"){
         pageNumberTag = 1;
+        disabledButton("backwardPage");
+    }
+    else{
+        abledButton("backwardPage");
     }
     var sendTags=[];
     for(var i=0; i<chosenTags.length; i++){
@@ -78,61 +86,74 @@ function searchByTags(which){
     });
 }
 
+function disabledButton(id){
+    document.getElementById(id).disabled = true;
+    document.getElementById(id).classList.add("disabledButton");
+}
+
+function abledButton(id){
+    document.getElementById(id).disabled = false;
+    document.getElementById(id).classList.remove("disabledButton");
+}
+
 function editPageNum(sum){
+    var begin = 1, end = Math.ceil((postSum/5));
+    console.log("總頁數: "+end);
+    
     var method = localStorage.getItem("method");
-    console.log("method: "+method);
     var temp;
     sum = parseInt(sum);
-    console.log("總共幾頁: "+Math.ceil((postSum/5)));
     
-    if(method == "all"){
-        temp = pageNumber;
-    }
-    else if(method == "text"){
-        temp = pageNumberSearch;
-    }
-    else if(method == "tags"){
-        temp = pageNumberTag;
-    }
-    console.log("temp: "+temp)
-    if(sum == 1 && temp<Math.ceil((postSum/5))){ // 下一頁
-        console.log("下一頁");
-        if(method == "all"){
-            pageNumber += sum;
+    switch(method){
+        case "all":
+            temp = pageNumber+sum;
+            pageNumber = temp;
             start("old");
-        }
-        else if(method == "text"){
-            pageNumberSearch += sum;
+            break;
+        case "text":
+            temp = pageNumberSearch+sum;
+            pageNumberSearch = temp;
             search("old");
-        }
-        else if(method == "tags"){
-            pageNumberTag += sum;
+            break;
+        case "tags":
+            temp = pageNumberTag+sum;
+            pageNumberTag = temp;
             searchByTags("old");
-        }
-        
+            break;
     }
-    else if(sum == -1 && temp>1){
-        console.log("上一頁");
-        if(method == "all"){
-            pageNumber += sum;
-            start("old");
-        }
-        else if(method == "text"){
-            pageNumberSearch += sum;
-            search("old");
-        }
-        else if(method == "tags"){
-            pageNumberTag += sum;
-            searchByTags("old");
-        }
+    console.log("temp: "+temp);
+    if(temp == begin){
+        disabledButton("backwardPage");
+    }
+    else{
+        abledButton("backwardPage");
+    }
+    
+    if(temp == end){
+        disabledButton("forwardPage");
+    }
+    else{
+        abledButton("forwardPage");
     }
 }
 
 function showPost(response){
+    // 處理上下頁Button START
+    if(postSum==5){
+        disabledButton("forwardPage");
+    }
+    else{
+        abledButton("forwardPage");
+    }
+    // 處理上下頁Button END
+    
     var role = localStorage.getItem("role");
     console.log("這裡的response: ");
     console.log(response);
     var content = "";
+    if(response.length==0){
+        content = '<div class="title">目前沒有符合的貼文</div>';
+    }
     for(var i=0; i<response.length; i++){
         var id = response[i]._id;
         var title = response[i].title;
@@ -191,9 +212,14 @@ function showPost(response){
 }
 
 function start(which){
+    
     localStorage.setItem("method", "all");
     if(which == "new"){
         pageNumber = 1;
+        disabledButton("backwardPage");
+    }
+    else{
+        abledButton("backwardPage");
     }
     var myURL = head_url + "query_inner_post_list";
     

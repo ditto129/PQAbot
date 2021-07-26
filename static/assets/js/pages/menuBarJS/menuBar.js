@@ -767,6 +767,11 @@ function getLanguageTag(){
 
 // 顯示「語言」tag的content
 function showLanguageTag(){
+    // 不會有上一頁的按鈕 START
+    var titleContent = "";
+    document.getElementById("forwardPage").innerHTML = titleContent;
+    // 不會有上一頁的按鈕 END
+    
     localStorage.setItem("chooseTags", 0);
     var content = "";
     for(var i=0; i<language.length; i++){
