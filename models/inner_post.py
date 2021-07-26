@@ -10,6 +10,7 @@
 from . import _db
 from . import user
 # ======================= #
+from sklearn import preprocessing
 
 # 取得所有貼文列表
 def query_post_list(page_size,page_number,option):
@@ -380,25 +381,53 @@ def query_inner_search(keywords):
                 count += 1
         i['matches_tag'] = count
         
+    a=[]
+    b=[]
+    c=[]
+    d=[]
     #加總match數
     for i in top_ten_post_dict_array:
         i['matches'] = i['matches_keyword'] + i['matches_tag']
+        a.append(i['matches'])
+        b.append(i['scoreTotal'])
+        c.append(i['view_count'])
+        d.append(i['maxTotalAnsScore'])
     
-    #根據matches, scoreTotal排名
-    sorted_top_ten_post_dict_array = sorted(top_ten_post_dict_array, key=lambda k: (k['matches'], k['scoreTotal'], k['_id']), reverse=True)
-    for count, i in enumerate(sorted_top_ten_post_dict_array):
-        i['matches_scoreTotal_order'] = count
-        
-    #根據view_count, maxTotalAnsScore排名
-    sorted_top_ten_post_dict_array = sorted(sorted_top_ten_post_dict_array, key=lambda k: (k['view_count'], k['maxTotalAnsScore'], k['_id']), reverse=True)
-    for count, i in enumerate(sorted_top_ten_post_dict_array):
-        i['view_count_maxTotalAnsScore_order'] = count
-        
-    #加權
-    for i in sorted_top_ten_post_dict_array:
-        i['output_order'] = i['matches_scoreTotal_order'] * 0.5 + i['view_count_maxTotalAnsScore_order'] * 0.2
-    sorted_top_ten_post_dict_array = sorted(sorted_top_ten_post_dict_array, key=lambda k: (k['output_order'], k['_id']))
-        
-    print(sorted_top_ten_post_dict_array)
+    normalized_matches = preprocessing.normalize([a])[0]
+    normalized_scoreTotal = preprocessing.normalize([b])[0]
+    normalized_view_count = preprocessing.normalize([c])[0]
+    normalized_maxTotalAnsScore = preprocessing.normalize([d])[0]
+    
+    for index, i in enumerate(top_ten_post_dict_array):
+        i['normalized_matches'] = normalized_matches[index]
+        i['normalized_scoreTotal'] = normalized_scoreTotal[index]
+        i['normaliznormalized_view_counted_scoreTotal'] = normalized_view_count[index]
+        i['normalized_maxTotalAnsScore'] = normalized_maxTotalAnsScore[index]
+    
+    """法一"""
+#    #根據matches, scoreTotal排名
+#    sorted_top_ten_post_dict_array = sorted(top_ten_post_dict_array, key=lambda k: (k['matches'], k['scoreTotal'], k['_id']), reverse=True)
+#    for count, i in enumerate(sorted_top_ten_post_dict_array):
+#        i['matches_scoreTotal_order'] = count
+#
+#    #根據view_count, maxTotalAnsScore排名
+#    sorted_top_ten_post_dict_array = sorted(sorted_top_ten_post_dict_array, key=lambda k: (k['view_count'], k['maxTotalAnsScore'], k['_id']), reverse=True)
+#    for count, i in enumerate(sorted_top_ten_post_dict_array):
+#        i['view_count_maxTotalAnsScore_order'] = count
+#
+#    #加權
+#    for i in sorted_top_ten_post_dict_array:
+#        i['output_order'] = i['matches_scoreTotal_order'] * 0.5 + i['view_count_maxTotalAnsScore_order'] * 0.2
+#    sorted_top_ten_post_dict_array = sorted(sorted_top_ten_post_dict_array, key=lambda k: (k['output_order'], k['_id']))
+    """   """
+    
+    """法二"""
+    #加權(5, 3, 2, 1)
+    for i in top_ten_post_dict_array:
+        i['output_order'] = i['normalized_matches'] * 5 + i['normalized_scoreTotal'] * 3 + i['normaliznormalized_view_counted_scoreTotal'] * 2 + i['normalized_maxTotalAnsScore']
+    sorted_top_ten_post_dict_array = sorted(top_ten_post_dict_array, key=lambda k: (k['output_order'], k['_id']))
+    """  """
+    
+    #print(sorted_top_ten_post_dict_array)
     return [i['_id'] for i in sorted_top_ten_post_dict_array]
 '''香的'''
