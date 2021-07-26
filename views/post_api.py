@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify
 
 # --- our models ---- #
 from models import inner_post
+from models.TextAnalyze import TextAnalyze
 from datetime import datetime
 
 post_api = Blueprint('post_api', __name__)
@@ -58,6 +59,10 @@ def insert_inner_post():
             'score' : [],
             'view_count' : 0
         }
+        # 呼叫文字分析模組進行分析
+        textAnalyzer = TextAnalyze()
+        post_dict['keyword'] = textAnalyzer.keywordExtraction(post_dict['question'])
+        
         inner_post.insert_post(post_dict)
     except Exception as e :
         post_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}
@@ -73,8 +78,12 @@ def update_inner_post():
             'asker_id':data['asker_id'],
             'title' : data['title'],
             'question' : data['question'],
+            'keyword' : [],
             'time' : datetime.fromisoformat(data['time'])
         }
+        # 呼叫文字分析模組進行分析
+        textAnalyzer = TextAnalyze()
+        post_dict['keyword'] = textAnalyzer.keywordExtraction(post_dict['question'])
         inner_post.update_post(post_dict)
     except Exception as e :
         post_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}
