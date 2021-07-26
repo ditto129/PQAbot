@@ -419,7 +419,7 @@ def query_inner_search(keywords):
     #加權(5, 3, 2, 1)
     for i in top_ten_post_dict_array:
         i['output_order'] = i['normalized_matches'] * 5 + i['normalized_scoreTotal'] * 3 + i['normaliznormalized_view_counted_scoreTotal'] * 2 + i['normalized_maxTotalAnsScore']
-    sorted_top_ten_post_dict_array = sorted(top_ten_post_dict_array, key=lambda k: (k['output_order'], k['_id']))
+    sorted_top_ten_post_dict_array = sorted(top_ten_post_dict_array, key=lambda k: (k['output_order'], k['_id']), reverse=true)
     """  """
     
     #print(sorted_top_ten_post_dict_array)
