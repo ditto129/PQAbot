@@ -290,7 +290,9 @@ function start(){
     // ---------- 個人資料 START ---------- //
     showIdentity();
     getUserHeadshotAndName();
-    getUserInterestTags();
+    if(localStorage.getItem("role")=="generalUser"){
+        getUserInterestTags();
+    }
     // ---------- 個人資料 END ---------- //
     
     
@@ -360,6 +362,7 @@ function setMenuBar(){
     else if(role == "manager"){
         start = 4;
         end = 8;
+        document.getElementById("interestingTags").innerHTML = "";
     }
     
     for(var i=start; i<end; i++){

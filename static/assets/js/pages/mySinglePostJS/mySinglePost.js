@@ -226,6 +226,9 @@ function start(){
                 return a.time < b.time ? 1 : -1;
             });
             
+            if(response.answer.length == 0){
+                content += '<div class="title">目前暫無回答</div>';
+            }
             for(var i=0; i<response.answer.length; i++){
                 var score = 0;
                 for(var j=0; j<response.answer[i].score.length; j++){

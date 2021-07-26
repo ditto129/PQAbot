@@ -176,7 +176,13 @@ function showPost(response){
 //                    if(role == "manager"){
 //                        content += '<i class="fa fa-trash-o fa-lg" aria-hidden="true" style="color: red;"></i>';
 //                    }
-                    content += '<span> 貼文 ';
+                    content += '<span> 貼文 #';
+//                    if(response.incognito == true){
+//                        content += '匿名';
+//                    }
+//                    else{
+//                        content += response[i].asker_name;
+//                    }
                     content += id;
                     content += '</span>';
 
