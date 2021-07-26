@@ -41,27 +41,24 @@ def query_post_list_by_title(post_title,page_size,page_number,option):
                                                                     {'$sort': {'score': -1}}, 
                                                                     {'$skip': page_size * (page_number - 1)}, 
                                                                     {'$limit': page_size}])]
-        post_count = [ i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
-                                                          {'$match': {'match_title': True}},
-                                                          {'$count': 'post_count'}])][0]['post_count']
+        post_count = len([ i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
+                                                          {'$match': {'match_title': True}}])])
     elif option == 'view_count': 
         post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'tag': 1, 'time': 1, 'score': {'$sum': '$score.score'}, 'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
                                                                     {'$match': {'match_title': True}},
                                                                     {'$sort': {'view_count': -1}}, 
                                                                     {'$skip': page_size * (page_number - 1)}, 
                                                                     {'$limit': page_size}])]
-        post_count = [ i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
-                                                          {'$match': {'match_title': True}},
-                                                          {'$count': 'post_count'}])][0]['post_count']
+        post_count = len([ i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
+                                                          {'$match': {'match_title': True}}])])
     else : # 預設是用時間排
         post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'tag': 1, 'time': 1, 'score': {'$sum': '$score.score'}, 'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
                                                                     {'$match': {'match_title': True}},
                                                                     {'$sort': {'time': -1}}, 
                                                                     {'$skip': page_size * (page_number - 1)}, 
                                                                     {'$limit': page_size}])]
-        post_count = [ i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
-                                                          {'$match': {'match_title': True}},
-                                                          {'$count': 'post_count'}])][0]['post_count']
+        post_count = len([ i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
+                                                          {'$match': {'match_title': True}}])])
     return {'post_count' : post_count,'post_list' : post_list}
 # 依貼文標籤篩選
 def query_post_list_by_tag(tag_list,page_size,page_number,option):
@@ -71,9 +68,8 @@ def query_post_list_by_tag(tag_list,page_size,page_number,option):
                                                                {'$sort': {'score': -1}}, 
                                                                {'$skip': page_size * (page_number - 1)}, 
                                                                {'$limit': page_size}])]
-        post_count = [ i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
-                                                                       {'$match': {'hastag': True}},
-                                                                       {'$count': 'post_count'}])][0]['post_count']
+        post_count = len([i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
+                                                                       {'$match': {'hastag': True}}])])
         
         
     elif option == 'view_count': 
@@ -82,18 +78,16 @@ def query_post_list_by_tag(tag_list,page_size,page_number,option):
                                                                {'$sort': {'view_count': -1}}, 
                                                                {'$skip': page_size * (page_number - 1)}, 
                                                                {'$limit': page_size}])]
-       post_count = [ i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
-                                                                       {'$match': {'hastag': True}},
-                                                                       {'$count': 'post_count'}])][0]['post_count']
+       post_count = len([i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
+                                                                       {'$match': {'hastag': True}}])])
     else : # 預設是用時間排
         post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}, 'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
                                                                {'$match': {'hastag': True}},
                                                                {'$sort': {'time': -1}}, 
                                                                {'$skip': page_size * (page_number - 1)}, 
                                                                {'$limit': page_size}])]
-        post_count = [ i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
-                                                                       {'$match': {'hastag': True}},
-                                                                       {'$count': 'post_count'}])][0]['post_count']
+        post_count = len([i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
+                                                                       {'$match': {'hastag': True}}])])
     return {'post_count' : post_count,'post_list' : post_list}
 # 依post_id取得特定貼文
 def query_post(post_id):
