@@ -135,6 +135,7 @@ def update_post(post_data):
                                                                     {
                                                                         'title':post_data['title'],
                                                                         'question':post_data['question'],
+                                                                        'keyword':post_data['keyword'],
                                                                         'time':post_data['time']}})
     # 使用者發文更新
     record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'asker_id': post_data['asker_id']}}, 
