@@ -210,7 +210,7 @@ function doneKeyWord(){
     
     var sendKeyWords = "keywords";
     for(var id in keyWords){
-        sendKeyWords += " ";
+        sendKeyWords += ",";
         sendKeyWords += keyWords[id];
         document.getElementById(id).setAttribute("style", "background-color: gray;");
         document.getElementById(id).removeAttribute("id");
@@ -256,7 +256,7 @@ function doneKeyWord(){
     console.log("myURL: "+myURL);
     var tempKeywords = []
     for(var id in keyWords){
-        sendKeyWords += " ";
+        sendKeyWords += ",";
         tempKeywords.push(keyWords[id]);
     }
     var data = {keywords: tempKeywords};
