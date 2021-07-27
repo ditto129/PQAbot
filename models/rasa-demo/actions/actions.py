@@ -126,7 +126,7 @@ class analyze_and_search(Action):
         # 慈 END
         
         #！！！將關鍵字及更多關鍵字存入slot
-        return [SlotSet("keywords", ' '.join(qkey))]
+        return [SlotSet("keywords", ','.join(qkey))]
             
             
             
@@ -138,7 +138,7 @@ class select_keyword(Action):
         #！！！拿到之前存的關鍵字
         qkey = tracker.get_slot("keywords")
         print(qkey)
-        qkey = qkey.split(' ')
+        qkey = qkey.split(',')
 
         reply = '新增/刪除用來搜尋的關鍵字<br><div id="keywords'
         #reply += keywordsTime
@@ -167,10 +167,10 @@ class outer_search(Action):
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
         #拿到所需訊息及最後一句使用者輸入
         keywords = tracker.latest_message.get('text')
-        keywords = keywords.split(' ',1)[1]
+        keywords = keywords.split(',',1)[1]
         print(keywords)
         
-        qkey = keywords.split(' ')
+        qkey = keywords.split(',')
         #外部搜尋結果（URL）
         resultpage = outerSearch(qkey, 10, 0)
 
