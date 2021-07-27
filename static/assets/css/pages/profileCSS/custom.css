@@ -5,6 +5,66 @@
     display: inline-block;
 }
 
+/* FAQs頁面的CSS START */
+.addAnswerButton{
+    color: #5D478B;
+}
+
+.addAnswerButton:hover{
+    cursor: pointer;
+}
+
+.addFAQsInput{
+    margin-top: 3px;
+    width: 300px;
+}
+
+.addFAQsTextarea{
+    margin-top: 3px;
+    height: 150px;
+    width: 400px;
+}
+/* FAQs頁面的CSS END */
+
+.themeButton{
+    cursor: pointer;
+    outline: none;
+/*    padding: 8px 16px;*/
+    border: 1px solid #5D478B;
+    color: #5D478B;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.themeButton:hover{
+    outline: none;
+    color: white;
+    background-color: #5D478B;
+}
+
+.themeButton.active{
+    outline: none;
+}
+
+.grayButton{
+    cursor: pointer;
+    outline: none;
+    border: 1px solid #DCDCDC;
+    color: #505458;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.grayButton:hover{
+    outline: none;
+    color: white;
+    background-color: #DCDCDC;
+}
+
+.grayButton.active{
+    outline: none;
+}
+
 .disabledButton, .disabledButton:hover, .disabledButton.active{
     background-color: #DCDCDC !important;
     color: #505458 !important;

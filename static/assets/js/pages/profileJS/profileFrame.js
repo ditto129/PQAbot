@@ -23,8 +23,6 @@ function abledButton(id){
 function editPageNum(sum, buttonId){
     var backBtn, forBtn;
     var begin = 1;
-    
-
     var temp;
     sum = parseInt(sum);
     
@@ -34,6 +32,7 @@ function editPageNum(sum, buttonId){
         backBtn = "backwardPagePost";
         forBtn = "forwardPagePost";
         end = Math.ceil((postSum/5));
+        getPostRecord("old");
     }
     else if(buttonId=="backwardPageAnswer" || buttonId=="forwardPageAnswer"){
         temp = pageNumberAnswer+sum;
@@ -41,8 +40,8 @@ function editPageNum(sum, buttonId){
         backBtn = "backwardPageAnswer";
         forBtn = "forwardPageAnswer";
         end = Math.ceil((AnswerSum/5));
+        getPostAnswer("old");
     }
-    start("old");
     console.log("temp: "+temp);
     console.log("總頁數: "+end);
     
