@@ -133,8 +133,13 @@ function start(){
             content = "";
             content += '<div class="badge-box">';
                 content += '<div class="sub-title">';
-                    content += '<span>貼文 #';
-                    content += id;
+                    content += '<span>';
+                    if(response.incognito==true){
+                        content += "匿名";
+                    }
+                    else{
+                        content += response.asker_name;
+                    }
                     content += '</span>';
                 
                     content += '<span id="';

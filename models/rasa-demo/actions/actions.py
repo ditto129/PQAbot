@@ -82,7 +82,7 @@ class analyze_and_search(Action):
 #            result_title.append(display['question']['title'])
         
         
-#        reply = "謝謝您的等待，以下為搜尋結果的資料摘要："
+        reply = "謝謝您的等待，以下為搜尋結果的資料摘要："
 #        for i in range(0, len(resultpage)):
 #            reply += ("<br>" + str(i+1) + ".<a href=\"" + resultpage[i] + "\">"+ result_title[i] + "</a>")
 #        reply += "<br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"
