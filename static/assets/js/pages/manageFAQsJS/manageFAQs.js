@@ -36,7 +36,7 @@ function addFAQAnswerNum(){
     content += '<button class="grayButton" onclick="deleteFAQsAnswerInAdd(\'';
     content += answerNum;
     content += '\')">刪除此則回覆</button>';
-    content += '<hr>';
+    content += '<br>';
     addFAQAnswerContent.appendChild(newAnswerDiv);
     document.getElementById(answerNum).innerHTML = content;
     answerNum += 1;
@@ -257,15 +257,9 @@ function cancle(id, page){
 }
 
 // 標籤 END
-///////////////// 手動新增 END /////////////////
+//-----------------------
 
-// 匯入檔案（完整FAQ） START
-function importFAQsData(){
-    
-}
-// 匯入檔案（完整FAQ） END
-
-function save(){
+function saveFAQByHand(){
     var dataURL = $("#dataURL").val();
     $("#dataURL").val("")
     var FAQTitle = $("#FAQTitle").val();
@@ -297,6 +291,17 @@ function save(){
     console.log("Data: ");
     console.log(data);
 }
+
+///////////////// 手動新增 END /////////////////
+
+// 匯入檔案（完整FAQ） START
+function importFAQsData(){
+    $('#importFAQsData').modal('show');
+    $("#code").removeClass();
+    $("#code").addClass("javascript");
+}
+// 匯入檔案（完整FAQ） END
+
 
 function start(){
     

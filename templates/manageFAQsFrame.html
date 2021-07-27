@@ -30,6 +30,11 @@
       <link rel="stylesheet" type="text/css" href="../static/assets/css/pages/profileCSS/custom.css">
       <link rel="stylesheet" type="text/css" href="../static/assets/css/pages/postRowCSS/postRowCSS.css">
       <link rel="stylesheet" type="text/css" href="../static/assets/css/font-awesome.css">
+    <!-- highlight START -->
+    <link rel="stylesheet" href="../static/assets/highlight/styles/base16/atelier-forest-light.min.css">
+    <script src="../static/assets/highlight/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <!-- highlight END -->
   </head>
 
   <body style="background: white;">
@@ -69,26 +74,8 @@
                                                 <button class="themeButton" onclick="importFAQsData()">匯入</button>
                                              </div>
                                             
-                                            <!-- 資料筆數 START -->
-                                            <div style="margin-top: 20px;">
-                                                <h6>資料筆數</h6>
-                                                <input id="dataNum" type="text" name="dataNum" placeholder="每次搜尋資料筆數">
-                                            </div>
-                                            <!-- 資料筆數 END -->
                                             
-                                            <!-- 資料週期 START -->
-                                            <div style="margin-top: 20px;">
-                                                <h6>資料更新週期</h6>
-                                                <select id="dataCycle" style="padding: 8px; border-radius: 5px; color: #505458;">
-                                                    <option value="10">10天</option>
-                                                    <option value="30">30天</option>
-                                                    <option value="50">50天</option>
-                                                    <option value="70">70天</option>
-                                                </select>
-                                            </div> 
-                                            <!-- 資料週期 END -->
-                                            
-                                            <input class="btn btn-primary purpleBtn" value="儲存" onclick="save()">
+<!--                                            <input class="btn btn-primary purpleBtn" value="儲存" onclick="save()">-->
                                 </div>
                             </div>
                         </div>
@@ -100,7 +87,7 @@
     </div>
 </div>
 
-<!-- 確認資料是否儲存成功 -->
+<!-- 手動新增FAQ START -->
 <div class="modal" id="newFAQsData" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -134,11 +121,56 @@
             </div>
             
             <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="saveFAQByHand()">儲存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 手動新增FAQ END -->
+      
+<!-- 匯入FAQ START -->
+<div class="modal" id="importFAQsData" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resultTitle">匯入FAQs資料</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                請匯入以下格式的檔案
+<pre>
+<!-- class後面接你要放的語言 -->
+<code class="json">
+{
+    "link": "FAQ文章的連結(String)",
+    "question": {
+        "title": "FAQ的標題(String)",
+        "content": "FAQ的內容(String)",
+    },
+    // answer是Array
+    "answers": [{
+        "score": 回答的分數(Int),
+        "vote": 回答的票數(Int),
+        "content": "回答的內容(String)",
+    }],
+}
+</code>
+</pre>
+            </div>
+            
+            <div class="modal-footer">
                 <button class="btn btn-secondary" data-dismiss="modal" onclick="save()">儲存</button>
             </div>
         </div>
     </div>
 </div>
+<!-- 匯入FAQ END -->
+
+
+      
         <!-- Warning Section Starts -->
         <!-- Older IE warning message -->
     <!--[if lt IE 9]>
