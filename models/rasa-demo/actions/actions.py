@@ -15,10 +15,10 @@ from rasa_sdk.executor import CollectingDispatcher
 import random
 
 #加入文字分析模組&外部搜尋模組
-from .TextAnalyze import TextAnalyze
-from .OuterSearch import outerSearch
+#from ..TextAnalyze import TextAnalyze
+#from ..OuterSearch import outerSearch
 #摘要
-from .StackData import StackData
+#from ..StackData import StackData
 
 #將整句話(問題描述、錯誤訊息)填入slot
 class fill_slot(Action):
@@ -45,6 +45,57 @@ class fill_slot(Action):
         dispatcher.utter_message(text=reply)
         return []
 
+#分析並搜尋並記下使用者輸入及相關關鍵字（第一次搜尋）
+class analyze_and_search(Action):
+    def name(self) -> Text:
+        return "analyze_and_search"
+    def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
+        print('in analyze_and_search')
+        #拿到所需訊息及最後一句使用者輸入
+        question_or_error_message = tracker.latest_message.get('text')
+        question_or_error_message = question_or_error_message.split(',',1)[1]
+        print(question_or_error_message)
+        
+        function = tracker.get_slot("function")
+        os = tracker.get_slot("os")
+        pl = tracker.get_slot("pl")
+        #宣告文字分析器
+        #textAnalyzer = TextAnalyze()
+        #擷取使用者問題的關鍵字
+        qkey = ['flask']
+        #qkey = textAnalyzer.keywordExtration(question_or_error_message)[0]
+        #加上作業系統與程式語言作為關鍵字
+        qkey.append(os)
+        qkey.append(pl)
+        
+#        #外部搜尋結果（URL）
+#        resultpage = outerSearch(qkey, 20, 0)
+#
+#        for url in resultpage:
+#            print(url)
+#
+#        stack_items = [StackData(url) for url in resultpage]
+#        result_title = []
+#        for items in stack_items:
+#            #showData回傳的資料即是傳送到前端的json格式
+#            display = items.showData()
+#            result_title.append(display['question']['title'])
+        
+        
+#        reply = "謝謝您的等待，以下為搜尋結果的資料摘要："
+#        for i in range(0, len(resultpage)):
+#            reply += ("<br>" + str(i+1) + ".<a href=\"" + resultpage[i] + "\">"+ result_title[i] + "</a>")
+#        reply += "<br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"
+#
+#        reply += "<a href=\"#\" onclick=\"summary('all')\">點我查看所有答案排名</a>"
+#        dispatcher.utter_message(text=reply)
+        
+        dispatcher.utter_message(text="是否繼續搜尋？")
+        #！！！將關鍵字及更多關鍵字存入slot
+        return [SlotSet("keywords", ' '.join(qkey))]
+            
+            
+            
 #給user選關鍵字
 class select_keyword(Action):
     def name(self) -> Text:
@@ -52,6 +103,7 @@ class select_keyword(Action):
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
         #！！！拿到之前存的關鍵字
         qkey = tracker.get_slot("keywords")
+        print(qkey)
         qkey = qkey.split(' ')
 
         reply = '新增/刪除用來搜尋的關鍵字<br><div id="keywords'
@@ -73,45 +125,45 @@ class select_keyword(Action):
         return []
         
         
-#分析並給user選關鍵字
-class analyze_and_select_keyword(Action):
-    def name(self) -> Text:
-        return "analyze_and_select_keyword"
-    def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
-        #拿到所需訊息及最後一句使用者輸入
-        question_or_error_message = tracker.latest_message.get('text')
-        question_or_error_message = question_or_error_message.split(' ',1)[1]
-        print(question_or_error_message)
-        
-        function = tracker.get_slot("function")
-        os = tracker.get_slot("os")
-        pl = tracker.get_slot("pl")
-        #宣告文字分析器
-        textAnalyzer = TextAnalyze()
-        #擷取使用者問題的關鍵字
-        qkey = textAnalyzer.keywordExtration(question_or_error_message)[0]
-        #加上作業系統與程式語言作為關鍵字
-        qkey.append(os)
-        qkey.append(pl)
-        
-        reply = '新增/刪除用來搜尋的關鍵字<br><div id="keywords'
-        reply += '">'
-        id = 0
-        for i in qkey:
-            reply += '<label id="'
-            reply += str(id)
-            reply += '" class="badge badge-default purpleLabel">'
-            reply += str(i)
-            reply += '<button class="labelXBtn" onclick="cancleKeyWords(\''
-            reply += str(id)
-            reply += '\')">x</button></label>'
-            id += 1
-        reply += '</div><br><input id="addBtn" class="btn btn-primary purpleBtnInChatroom" value="新增" onclick="wantAddKeyWord()"><input id="doneBtn"class="btn btn-primary purpleBtnInChatroom" value="完成" onclick="doneKeyWord()">'
-        
-        dispatcher.utter_message(text=reply)
-        #！！！將關鍵字存入slot
-        return [SlotSet("keywords", ' '.join(qkey))]
+##分析並給user選關鍵字
+#class analyze_and_select_keyword(Action):
+#    def name(self) -> Text:
+#        return "analyze_and_select_keyword"
+#    def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
+#        #拿到所需訊息及最後一句使用者輸入
+#        question_or_error_message = tracker.latest_message.get('text')
+#        question_or_error_message = question_or_error_message.split(' ',1)[1]
+#        print(question_or_error_message)
+#
+#        function = tracker.get_slot("function")
+#        os = tracker.get_slot("os")
+#        pl = tracker.get_slot("pl")
+#        #宣告文字分析器
+#        textAnalyzer = TextAnalyze()
+#        #擷取使用者問題的關鍵字
+#        qkey = textAnalyzer.keywordExtration(question_or_error_message)[0]
+#        #加上作業系統與程式語言作為關鍵字
+#        qkey.append(os)
+#        qkey.append(pl)
+#
+#        reply = '新增/刪除用來搜尋的關鍵字<br><div id="keywords'
+#        reply += '">'
+#        id = 0
+#        for i in qkey:
+#            reply += '<label id="'
+#            reply += str(id)
+#            reply += '" class="badge badge-default purpleLabel">'
+#            reply += str(i)
+#            reply += '<button class="labelXBtn" onclick="cancleKeyWords(\''
+#            reply += str(id)
+#            reply += '\')">x</button></label>'
+#            id += 1
+#        reply += '</div><br><input id="addBtn" class="btn btn-primary purpleBtnInChatroom" value="新增" onclick="wantAddKeyWord()"><input id="doneBtn"class="btn btn-primary purpleBtnInChatroom" value="完成" onclick="doneKeyWord()">'
+#
+#        dispatcher.utter_message(text=reply)
+#        return []
 
+#拿選好的關鍵字搜尋(繼續搜尋)
 class outer_search(Action):
     def name(self) -> Text:
         return "outer_search"
@@ -123,7 +175,7 @@ class outer_search(Action):
         
         qkey = keywords.split(' ')
         #外部搜尋結果（URL）
-        resultpage = outerSearch(qkey, 10, 1)
+        resultpage = outerSearch(qkey, 20, 0)
 
         for url in resultpage:
             print(url)
@@ -143,4 +195,5 @@ class outer_search(Action):
         
         reply += "<a href=\"#\" onclick=\"summary('all')\">點我查看所有答案排名</a>"
         dispatcher.utter_message(text=reply)
+       
         return []
