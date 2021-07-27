@@ -15,10 +15,10 @@ from rasa_sdk.executor import CollectingDispatcher
 import random
 
 #加入文字分析模組&外部搜尋模組
-from .TextAnalyze import TextAnalyze
-from .OuterSearch import outerSearch
+#from .TextAnalyze import TextAnalyze
+#from .OuterSearch import outerSearch
 #摘要
-from .StackData import StackData
+#from .StackData import StackData
 
 #將整句話(問題描述、錯誤訊息)填入slot
 class fill_slot(Action):
@@ -87,12 +87,12 @@ class analyze_and_select_keyword(Action):
         os = tracker.get_slot("os")
         pl = tracker.get_slot("pl")
         #宣告文字分析器
-        textAnalyzer = TextAnalyze()
+        #textAnalyzer = TextAnalyze()
         #擷取使用者問題的關鍵字
-        qkey = textAnalyzer.keywordExtration(question_or_error_message)[0]
+        #qkey = textAnalyzer.keywordExtration(question_or_error_message)[0]
         #加上作業系統與程式語言作為關鍵字
-        qkey.append(os)
-        qkey.append(pl)
+        #qkey.append(os)
+        #qkey.append(pl)
         
         reply = '新增/刪除用來搜尋的關鍵字<br><div id="keywords'
         reply += '">'
@@ -121,19 +121,20 @@ class outer_search(Action):
         keywords = keywords.split(' ',1)[1]
         print(keywords)
         
-        qkey = keywords.split(' ')
-        #外部搜尋結果（URL）
-        resultpage = outerSearch(qkey, 10, 1)
-
-        for url in resultpage:
-            print(url)
-
-        stack_items = [StackData(url) for url in resultpage]
-        result_title = []
-        for items in stack_items:
-            #showData回傳的資料即是傳送到前端的json格式
-            display = items.showData()
-            result_title.append(display['question']['title'])
+        
+#        qkey = keywords.split(' ')
+#        #外部搜尋結果（URL）
+#        resultpage = outerSearch(qkey, 10, 1)
+#
+#        for url in resultpage:
+#            print(url)
+#
+#        stack_items = [StackData(url) for url in resultpage]
+#        result_title = []
+#        for items in stack_items:
+#            #showData回傳的資料即是傳送到前端的json格式
+#            display = items.showData()
+#            result_title.append(display['question']['title'])
         
         
         reply = "謝謝您的等待，以下為搜尋結果的資料摘要："
