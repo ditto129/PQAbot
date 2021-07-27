@@ -9,7 +9,7 @@ function changePage(){
     var content = "";
     content += '<iframe MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 frameborder=0 scrolling=auto src="';
     content += page;
-    content += '.html';
+//    content += '.html';
     content += '" height="100%" width="100%"></iframe>';
     console.log("content: "+content);
     document.getElementById("main_page").innerHTML = content;
@@ -18,14 +18,35 @@ function changePage(){
 ////////////////// 聊天室 START ////////////////////
 
 var keyWords = {};
+var needToClearBotMessage = false;
 
 function bot(string){
     console.log("bot送訊息");
+    console.log("needToClearBotMessage: "+needToClearBotMessage);
     keyWords = {};
+    
+    if(needToClearBotMessage){
+        console.log("有進來清");
+        var obj = document.getElementById("willBeClear");
+        obj.innerHTML = "";
+        var objParent = obj.parentNode;
+        objParent.removeChild(obj);
+        needToClearBotMessage = false;
+        console.log("object: ");
+        console.log(obj);
+    }
     
     var history = document.getElementById("history_message");
     var content = history.innerHTML;
-    content += '<div class="d-flex justify-content-start mb-4">';
+    
+    
+    content += '<div ';
+    if(string == "正在輸入訊息..."){
+        needToClearBotMessage = true;
+        content += 'id="willBeClear" ';
+        console.log("下一次要清掉");
+    }
+    content += 'class="d-flex justify-content-start mb-4">';
     content += '<div class="img_cont_msg">';
     content += '<img src="../static/images/baymaxChat.png" class="chatImg">';
     content += '</div>';
@@ -99,6 +120,8 @@ function user(string){
     
     history.innerHTML = content;
     history.scrollTop = history.scrollHeight;
+    
+    bot("正在輸入訊息...");
 }
 
 // 關鍵字們 START
@@ -304,12 +327,12 @@ function clickChatroomInnerSearch(postId){
 function start(){
     localStorage.clear();
     //這個是管理者
-    localStorage.setItem("role", "manager");
-    localStorage.setItem("sessionID", 4444);
+//    localStorage.setItem("role", "manager");
+//    localStorage.setItem("sessionID", 4444);
     
     // 這個是一般使用者
-//    localStorage.setItem("role", "generalUser");
-//    localStorage.setItem("sessionID", 123);
+    localStorage.setItem("role", "generalUser");
+    localStorage.setItem("sessionID", 123);
     var session_id = localStorage.getItem("sessionID");
     
     // ---------- 同個頁面監聽localStorage START ---------- //

@@ -31,7 +31,7 @@
       <link rel="stylesheet" type="text/css" href="../static/assets/css/pages/postRowCSS/postRowCSS.css">
       <link rel="stylesheet" type="text/css" href="../static/assets/css/font-awesome.css">
     <!-- highlight START -->
-    <link rel="stylesheet" href="../static/assets/highlight/styles/base16/atelier-forest-light.min.css">
+    <link rel="stylesheet" href="../static/assets/highlight/styles/color-brewer.min.css">
     <script src="../static/assets/highlight/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
     <!-- highlight END -->
@@ -113,11 +113,13 @@
                 <br>
                 <div id="addFAQAnswerContent"></div>
                 
+<!--
                 <br><hr><br>
                 
                 <div class="title" id="addFAQTags">選擇相關標籤</div>
                 <div id="chose_tag" style="margin-top: 5px;"></div>    
                 <div id="chosen_tag_in_modal" style="margin-top: 15px;"></div>
+-->
             </div>
             
             <div class="modal-footer">
@@ -140,6 +142,9 @@
             </div>
             
             <div class="modal-body">
+                <input id="importFile" type="file" accept=".json,.txt" onchange="getFile(this.files)"> 
+                
+                <br><br>
                 請匯入以下格式的檔案
 <pre>
 <!-- class後面接你要放的語言 -->
@@ -153,7 +158,6 @@
     // answer是Array
     "answers": [{
         "score": 回答的分數(Int),
-        "vote": 回答的票數(Int),
         "content": "回答的內容(String)",
     }],
 }

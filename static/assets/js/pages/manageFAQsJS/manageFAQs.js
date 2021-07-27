@@ -7,11 +7,11 @@ function addFAQsData(){
     // 初始化 START
     answerNum = 0;
     document.getElementById("addFAQAnswerContent").innerHTML = "";
-    language = [];
-    children = [];
-    chosenTags = [];
-    allTags = {};
-    getLanguageTag();
+//    language = [];
+//    children = [];
+//    chosenTags = [];
+//    allTags = {};
+//    getLanguageTag();
     // 初始化 END
     $('#newFAQsData').modal('show');
 }
@@ -25,9 +25,6 @@ function addFAQAnswerNum(){
     var content = "";
     content += '<br>';
     content += '回覆的分數：<input id="FAQAnswerScore';
-    content += answerNum;
-    content += '" class="addFAQsInput"><br>';
-    content += '回覆的讚數：<input id="FAQAnswerVote';
     content += answerNum;
     content += '" class="addFAQsInput"><br>';
     content += '回覆的內容：<br><textarea id="FAQAnswerContent';
@@ -272,22 +269,22 @@ function saveFAQByHand(){
     for(var i=0; i<children.length; i++){
         console.log(children[i].id);
         var score = $("#FAQAnswerScore"+children[i].id).val();
-        var vote = $("#FAQAnswerVote"+children[i].id).val();
         var content = $("#FAQAnswerContent"+children[i].id).val();
         
-        FAQAnswers.push({score: score, vote: vote, content: content});
+        FAQAnswers.push({score: score, content: content});
     }
     
-    var tag = [];
-    for(var i=0; i<chosenTags.length; i++){
-        var temp = {"tag_id": chosenTags[i], "tag_name": allTags[chosenTags[i]]};
-        tag.push(temp);
-    }
+//    var tag = [];
+//    for(var i=0; i<chosenTags.length; i++){
+//        var temp = {"tag_id": chosenTags[i], "tag_name": allTags[chosenTags[i]]};
+//        tag.push(temp);
+//    }
     
     var time = new Date().toJSON();
     time = time.slice(0, 23);
     
-    var data = {link: dataURL, title: FAQTitle, content: FAQContent, answers: FAQAnswers, tags: tag, time: time};
+    var data = {link: dataURL, title: FAQTitle, content: FAQContent, answers: FAQAnswers, time: time};
+//    var data = {link: dataURL, title: FAQTitle, content: FAQContent, answers: FAQAnswers, tags: tag, time: time};
     console.log("Data: ");
     console.log(data);
 }
@@ -298,7 +295,11 @@ function saveFAQByHand(){
 function importFAQsData(){
     $('#importFAQsData').modal('show');
     $("#code").removeClass();
-    $("#code").addClass("javascript");
+    $("#code").addClass("json");
+}
+
+function getFile(fileList){
+    
 }
 // 匯入檔案（完整FAQ） END
 
