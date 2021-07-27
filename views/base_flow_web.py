@@ -67,3 +67,7 @@ def editPostFrame():
 @base_flow_web.route("/editReplyFrame")
 def editReplyFrame():
     return render_template("editReplyFrame.html")
+    
+@base_flow_web.route("/testNode")
+def testNode():
+    return render_template("testNode.html")

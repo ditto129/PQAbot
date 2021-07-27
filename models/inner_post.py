@@ -249,6 +249,7 @@ def remove_post(post_id):
 '''湘的'''
 #內部搜尋
 def query_inner_search(keywords):
+    #case isnsitive處理
     tag=[]
     keyword=[]
     for i in keywords:
@@ -408,9 +409,9 @@ def query_inner_search(keywords):
         sorted_top_ten_post_dict_array = sorted(top_ten_post_dict_array, key=lambda k: (k['output_order'], k['_id']), reverse=True)
         """  """
         
-        print(sorted_top_ten_post_dict_array)
+        #print(sorted_top_ten_post_dict_array)
         return [i['_id'] for i in sorted_top_ten_post_dict_array]
     else:
-        print([])
+        #print([])
         return []
 '''香的'''

@@ -4,7 +4,7 @@ from flask import Blueprint, request, jsonify
 
 # --- our models ---- #
 from models import inner_post
-from models.TextAnalyze import TextAnalyze
+#from models.TextAnalyze import TextAnalyze
 from datetime import datetime
 
 post_api = Blueprint('post_api', __name__)
@@ -184,7 +184,8 @@ def delete_inner_post():
 def query_inner_search():
     data = request.get_json()
     print("keyword陣列:")
-    print(data['keywords'])
+    print(data)
+    #print(data['keywords'])
     #try:
     inner_search_result=inner_post.query_inner_search(data['keywords'])
     inner_search_result_dict = {

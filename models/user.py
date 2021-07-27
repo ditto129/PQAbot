@@ -7,7 +7,7 @@
 * ========================================'''
 
 from . import _db
-
+from datetime import datetime
 
 # 新增 user
 def insert_user(user_dict):
@@ -81,3 +81,91 @@ def update_response_list(replier_id):
     response_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'answer.replier_id': replier_id}}, 
                                                                        {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1,'asker_id': 1,'icognito': 1, 'score': {'$sum': '$score.score'}}}])]
     _db.USER_COLLECTION.update_one({'_id':replier_id},{'$set':{'record.responses':response_list}})   
+
+"""緗"""
+#新增貼文回覆通知
+def update_notification_add(user_id, replier_name, post_id):
+    count = [i['count'] for i in _db.USER_COLLECTION.aggregate([
+    {
+        '$match': {
+            '_id': 'testSkillTree'
+        }
+    }, {
+        '$project': {
+            'count': {
+                '$size': '$notification'
+            }
+        }
+    }
+])][0]
+    
+    print("count: "+str(count))
+    
+    _db.USER_COLLECTION.update_one({'_id':user_id}, {'$push':{'notification':{
+                        'id':count+1,
+                        'time':datetime.now(),
+                        'detail':{
+                            'post_id': post_id,
+                            'replier_name': replier_name
+                       },
+                       'new': True,
+                       'check': False,
+                       'type': "post"
+                    },
+                },
+            })
+                    
+#檢查是否有新通知
+def query_notification(user_id):
+    return _db.USER_COLLECTION.find_one({'_id':user_id})
+    
+#new全設false
+def update_notification_new(user_id):
+    _db.USER_COLLECTION.update_one({'_id':user_id}, {'$set': {'notification.$[].new':False}})
+
+#依頁數查看通知
+def query_notification_by_page(user_id, page):
+    return [{'id':i['notification']['id'], 'time':i['notification']['time'], 'detail':i['notification']['detail'], 'new':i['notification']['new'], 'check':i['notification']['check'], 'type':i['notification']['type']} for i in _db.USER_COLLECTION.aggregate([
+    {
+        '$match': {
+            '_id': user_id
+        }
+    }, {
+        '$unwind': {
+            'path': '$notification'
+        }
+    }, {
+        '$sort': {
+            'notification.time': -1,
+            'id': -1
+        }
+    }, {
+        '$skip': page * 5
+    }, {
+        '$limit': 5
+    }
+])]
+    
+#更新check
+def update_notification_check(user_id, id):
+    _db.USER_COLLECTION.update_one({'_id':user_id}, {})
+#    _db.USER_COLLECTION.aggregate([
+#    {
+#        '$match': {
+#            '_id': user_id
+#        }
+#    }, {
+#        '$unwind': {
+#            'path': '$notification'
+#        }
+#    }, {
+#        '$match': {
+#            'notification.id': id
+#        }
+#    }, {
+#        '$set': {
+#            'notification.check': True
+#        }
+#    }
+#])
+""" """
