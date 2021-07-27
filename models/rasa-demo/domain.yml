@@ -42,9 +42,9 @@ slots:
 
 actions:
   - fill_slot
-  - outer_search
-  - analyze_and_select_keyword
+  - analyze_and_search
   - select_keyword
+  - outer_search
 
 responses:
   utter_detect_stroy:

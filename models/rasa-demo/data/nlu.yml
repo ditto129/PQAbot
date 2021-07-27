@@ -39,7 +39,7 @@ nlu:
    
 - regex: question_or_error_message
   examples: |
-   - question_or_error_message .*
+   - question_or_error_message.*
 
 - intent: start
   examples: |
@@ -71,7 +71,7 @@ nlu:
     
 - intent: say_question_or_error_message
   examples: |
-    - [my error message is: ...](question_or_error_message)
+    - [question_or_error_message](question_or_error_message)
     
 - intent: say_keywords
   examples: |

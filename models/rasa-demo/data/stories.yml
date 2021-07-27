@@ -47,9 +47,9 @@ stories:
 #    entities:
 #    - question_or_error_message
 #  - action: utter_check_message
-  - action: analyze_and_select_keyword
-  - intent: say_keywords
-  - action: outer_search
+  - action: analyze_and_search
+#  - intent: say_keywords
+#  - action: outer_search
   - checkpoint: check_continue_search
 
 # 修改作業系統
