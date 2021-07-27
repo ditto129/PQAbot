@@ -14,6 +14,7 @@ from rasa_sdk.events import SlotSet
 from rasa_sdk.executor import CollectingDispatcher
 import random
 import requests
+import json
 #加入文字分析模組&外部搜尋模組
 #from .TextAnalyze import TextAnalyze
 #from .OuterSearch import outerSearch
@@ -70,7 +71,30 @@ class analyze_and_search(Action):
         
         #內部搜尋
         response = requests.post('http://0.0.0.0:55001/query_inner_search', json={'keywords':qkey})
-        print(response.text)
+        print("內部搜尋的結果: ", response.text)
+        
+        
+        # 慈 START
+        postNumber = 1
+        reply = "謝謝您的等待，以下為搜尋結果：<br>"
+        
+        objectAllPost = json.loads(response.text)
+        for i in range(0, len(objectAllPost["inner_search_result"])):
+            postId = objectAllPost["inner_search_result"][i]
+            singlePostResponse = requests.post('http://0.0.0.0:55001/query_inner_post', json={'_id':postId})
+            # 轉成object
+            objectSinglePost = json.loads(singlePostResponse.text)
+            print("單篇文章結果: ", objectSinglePost)
+            reply += str(postNumber)
+            reply += '. <a href="#" onclick="clickChatroomInnerSearch(\''
+            reply += objectSinglePost["_id"]
+            reply += '\')">'
+            reply += objectSinglePost["title"]
+            reply += '</a><br>'
+            postNumber += 1
+        
+        print("reply的結果: "+reply);
+        # 慈 END
         
 #        #外部搜尋結果（URL）
 #        resultpage = outerSearch(qkey, 10, 0)
@@ -94,7 +118,13 @@ class analyze_and_search(Action):
 #        reply += "<a href=\"#\" onclick=\"summary('all')\">點我查看所有答案排名</a>"
 #        dispatcher.utter_message(text=reply)
         
-        dispatcher.utter_message(text="是否繼續搜尋？")
+#        dispatcher.utter_message(text="是否繼續搜尋？")
+        
+        # 慈 START
+        reply += "<br><br>是否繼續搜尋？"
+        dispatcher.utter_message(text=reply)
+        # 慈 END
+        
         #！！！將關鍵字及更多關鍵字存入slot
         return [SlotSet("keywords", ' '.join(qkey))]
             
