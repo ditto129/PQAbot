@@ -16,10 +16,10 @@ import random
 import requests
 import json
 #加入文字分析模組&外部搜尋模組
-#from .TextAnalyze import TextAnalyze
-#from .OuterSearch import outerSearch
+from .TextAnalyze import TextAnalyze
+from .OuterSearch import outerSearch
 #摘要
-#from .StackData import StackData
+from .StackData import StackData
 
 #將整句話(問題描述、錯誤訊息)填入slot
 class fill_slot(Action):
@@ -61,17 +61,17 @@ class analyze_and_search(Action):
         os = tracker.get_slot("os")
         pl = tracker.get_slot("pl")
         #宣告文字分析器
-#        textAnalyzer = TextAnalyze()
+        textAnalyzer = TextAnalyze()
         #擷取使用者問題的關鍵字
-        qkey = ['flask']
-#        qkey = textAnalyzer.keywordExtration(question_or_error_message)[0]
+#        qkey = ['flask']
+        qkey = textAnalyzer.keywordExtration(question_or_error_message)[0]
         #加上作業系統與程式語言作為關鍵字
         qkey.append(os)
         qkey.append(pl)
         
         #內部搜尋
-        response = requests.post('http://0.0.0.0:55001/query_inner_search', json={'keywords':qkey})
-        print("內部搜尋的結果: ", response.text)
+        response = requests.post('http://140.121.197.130:55001/query_inner_search', json={'keywords':qkey})
+#        print("內部搜尋的結果: ", response.text)
         
         
         # 慈 START
@@ -81,10 +81,10 @@ class analyze_and_search(Action):
         objectAllPost = json.loads(response.text)
         for i in range(0, len(objectAllPost["inner_search_result"])):
             postId = objectAllPost["inner_search_result"][i]
-            singlePostResponse = requests.post('http://0.0.0.0:55001/query_inner_post', json={'_id':postId})
+            singlePostResponse = requests.post('http://140.121.197.130:55001/query_inner_post', json={'_id':postId})
             # 轉成object
             objectSinglePost = json.loads(singlePostResponse.text)
-            print("單篇文章結果: ", objectSinglePost)
+#            print("單篇文章結果: ", objectSinglePost)
             reply += str(postNumber)
             reply += '. <a href="#" onclick="clickChatroomInnerSearch(\''
             reply += objectSinglePost["_id"]
@@ -93,35 +93,35 @@ class analyze_and_search(Action):
             reply += '</a><br>'
             postNumber += 1
         
-        print("reply的結果: "+reply);
+#        print("reply的結果: "+reply);
         # 慈 END
         
-#        #外部搜尋結果（URL）
-#        resultpage = outerSearch(qkey, 10, 0)
-#
-#        for url in resultpage:
-#            print(url)
-#
-#        stack_items = [StackData(url) for url in resultpage]
-#        result_title = []
-#        for items in stack_items:
-#            #showData回傳的資料即是傳送到前端的json格式
-#            display = items.showData()
-#            result_title.append(display['question']['title'])
-#
-#
-#        reply = "謝謝您的等待，以下為搜尋結果的資料摘要："
-#        for i in range(0, len(resultpage)):
-#            reply += ("<br>" + str(i+1) + ".<a href=\"" + resultpage[i] + "\">"+ result_title[i] + "</a>")
-#        reply += "<br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"
-#
-#        reply += "<a href=\"#\" onclick=\"summary('all')\">點我查看所有答案排名</a>"
+        #外部搜尋結果（URL）
+        resultpage = outerSearch(qkey, 10, 0)
+
+        for url in resultpage:
+            print(url)
+
+        stack_items = [StackData(url) for url in resultpage]
+        result_title = []
+        for items in stack_items:
+            #showData回傳的資料即是傳送到前端的json格式
+            display = items.showData()
+            result_title.append(display['question']['title'])
+
+
+#        reply += "謝謝您的等待，以下為搜尋結果的資料摘要："
+        for i in range(0, len(resultpage)):
+            reply += ("<br>" + str(i+1) + ".<a href=\"" + resultpage[i] + "\">"+ result_title[i] + "</a>")
+        reply += "<br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"
+
+        reply += "<a href=\"#\" onclick=\"summary('all')\">點我查看所有答案排名</a>"
 #        dispatcher.utter_message(text=reply)
         
 #        dispatcher.utter_message(text="是否繼續搜尋？")
         
         # 慈 START
-        reply += "<br><br>是否繼續搜尋？"
+#        reply += "<br><br>是否繼續搜尋？"
         dispatcher.utter_message(text=reply)
         # 慈 END
         
@@ -136,6 +136,7 @@ class select_keyword(Action):
         return "select_keyword"
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
         #！！！拿到之前存的關鍵字
+        print("給使用者選關鍵字了！")
         qkey = tracker.get_slot("keywords")
         print(qkey)
         qkey = qkey.split(',')
@@ -166,6 +167,7 @@ class outer_search(Action):
         return "outer_search"
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
         #拿到所需訊息及最後一句使用者輸入
+        print("去外部搜尋了！")
         keywords = tracker.latest_message.get('text')
         keywords = keywords.split(',',1)[1]
         print(keywords)
