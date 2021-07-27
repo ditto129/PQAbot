@@ -232,7 +232,7 @@ function start(){
             });
             
             if(response.answer.length == 0){
-                content += '<div class="title">目前暫無回答</div>';
+                content += '<div class="title card-header">目前暫無回答</div>';
             }
             for(var i=0; i<response.answer.length; i++){
                 var score = 0;
