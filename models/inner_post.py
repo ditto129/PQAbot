@@ -15,19 +15,19 @@ from sklearn import preprocessing
 # 取得所有貼文列表
 def query_post_list(page_size,page_number,option):
     if option == 'score': 
-        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}, 
+        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1,'asker_id': 1,'icognito': 1, 'score': {'$sum': '$score.score'}}}, 
                                                                  {'$sort': {'score': -1}}, 
                                                                  {'$skip': page_size * (page_number - 1)}, 
                                                                  {'$limit': page_size}])]
         post_count = [i for i in _db.INNER_POST_COLLECTION.aggregate([{'$count': 'post_count'}])][0]['post_count']
     elif option == 'view_count': 
-        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}, 
+        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1,'asker_id': 1,'icognito': 1, 'score': {'$sum': '$score.score'}}}, 
                                                                  {'$sort': {'view_count': -1}}, 
                                                                  {'$skip': page_size * (page_number - 1)}, 
                                                                  {'$limit': page_size}])]
         post_count = [i for i in _db.INNER_POST_COLLECTION.aggregate([{'$count': 'post_count'}])][0]['post_count']
     else : # 預設是用時間排
-        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}, 
+        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1,'asker_id': 1,'icognito': 1, 'score': {'$sum': '$score.score'}}}, 
                                                                  {'$sort': {'time': -1}}, 
                                                                  {'$skip': page_size * (page_number - 1)}, 
                                                                  {'$limit': page_size}])]
@@ -37,7 +37,7 @@ def query_post_list(page_size,page_number,option):
 # 依貼文名稱頁數及筆數搜尋
 def query_post_list_by_title(post_title,page_size,page_number,option):
     if option == 'score': 
-        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'tag': 1, 'time': 1, 'score': {'$sum': '$score.score'}, 'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
+        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'tag': 1, 'time': 1,'asker_id': 1,'icognito': 1, 'score': {'$sum': '$score.score'}, 'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
                                                                     {'$match': {'match_title': True}},
                                                                     {'$sort': {'score': -1}}, 
                                                                     {'$skip': page_size * (page_number - 1)}, 
@@ -45,7 +45,7 @@ def query_post_list_by_title(post_title,page_size,page_number,option):
         post_count = len([ i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
                                                           {'$match': {'match_title': True}}])])
     elif option == 'view_count': 
-        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'tag': 1, 'time': 1, 'score': {'$sum': '$score.score'}, 'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
+        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'tag': 1, 'time': 1,'asker_id': 1,'icognito': 1, 'score': {'$sum': '$score.score'}, 'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
                                                                     {'$match': {'match_title': True}},
                                                                     {'$sort': {'view_count': -1}}, 
                                                                     {'$skip': page_size * (page_number - 1)}, 
@@ -53,7 +53,7 @@ def query_post_list_by_title(post_title,page_size,page_number,option):
         post_count = len([ i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
                                                           {'$match': {'match_title': True}}])])
     else : # 預設是用時間排
-        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'tag': 1, 'time': 1, 'score': {'$sum': '$score.score'}, 'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
+        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'tag': 1, 'time': 1,'asker_id': 1,'icognito': 1, 'score': {'$sum': '$score.score'}, 'match_title': {'$regexMatch': {'input': '$title', 'regex': '.*' + post_title + '.*'}}}}, 
                                                                     {'$match': {'match_title': True}},
                                                                     {'$sort': {'time': -1}}, 
                                                                     {'$skip': page_size * (page_number - 1)}, 
@@ -64,7 +64,7 @@ def query_post_list_by_title(post_title,page_size,page_number,option):
 # 依貼文標籤篩選
 def query_post_list_by_tag(tag_list,page_size,page_number,option):
     if option == 'score': 
-        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}, 'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
+        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1,'asker_id': 1,'icognito': 1, 'score': {'$sum': '$score.score'}, 'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
                                                                {'$match': {'hastag': True}},
                                                                {'$sort': {'score': -1}}, 
                                                                {'$skip': page_size * (page_number - 1)}, 
@@ -74,7 +74,7 @@ def query_post_list_by_tag(tag_list,page_size,page_number,option):
         
         
     elif option == 'view_count': 
-       post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}, 'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
+       post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1,'asker_id': 1,'icognito': 1, 'score': {'$sum': '$score.score'}, 'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
                                                                {'$match': {'hastag': True}},
                                                                {'$sort': {'view_count': -1}}, 
                                                                {'$skip': page_size * (page_number - 1)}, 
@@ -82,7 +82,7 @@ def query_post_list_by_tag(tag_list,page_size,page_number,option):
        post_count = len([i for i in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
                                                                        {'$match': {'hastag': True}}])])
     else : # 預設是用時間排
-        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}, 'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
+        post_list = [ doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1,'asker_id': 1,'icognito': 1, 'score': {'$sum': '$score.score'}, 'hastag': {'$setIsSubset': [tag_list, '$tag']}}}, 
                                                                {'$match': {'hastag': True}},
                                                                {'$sort': {'time': -1}}, 
                                                                {'$skip': page_size * (page_number - 1)}, 
@@ -115,9 +115,7 @@ def insert_post(post_dict):
     # 將貼文新增至資料庫
     _db.INNER_POST_COLLECTION.insert_one(post_dict)
     # 更新使用者發文紀錄
-    record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'asker_id': post_dict['asker_id']}}, 
-                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
-    _db.USER_COLLECTION.update_one({'_id':post_dict['asker_id']},{'$set':{'record.posts':record_list}})
+    user.update_post_list(post_dict['asker_id'])
     # 更新每個tag 的 usage_counter,recent_use
     for tag in post_dict['tag']:
         target_tag = _db.TAG_COLLECTION.find_one({'_id':tag['tag_id']})
@@ -138,16 +136,12 @@ def update_post(post_data):
                                                                         'keyword':post_data['keyword'],
                                                                         'time':post_data['time']}})
     # 使用者發文更新
-    record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'asker_id': post_data['asker_id']}}, 
-                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
-    _db.USER_COLLECTION.update_one({'_id':post_data['asker_id']},{'$set':{'record.posts':record_list}})
+    user.update_post_list(post_data['asker_id'])
     
     # 使用者回覆紀錄更新
     post = _db.INNER_POST_COLLECTION.find_one({'_id':post_data['_id']})
     for response in post['answer']:
-        record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'answer.replier_id': response['replier_id']}}, 
-                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
-        _db.USER_COLLECTION.update_one({'_id':response['replier_id']},{'$set':{'record.responses':record_list}})
+        user.update_response_list(response['replier_id'])
         
 
 # 新增貼文回覆
@@ -164,9 +158,7 @@ def insert_response(response_dict):
     response_dict.pop('post_id')
     _db.INNER_POST_COLLECTION.update_one({'_id':target_post['_id']},{'$push':{'answer':response_dict}})
     # 更新使用者回覆紀錄
-    record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'answer.replier_id': response_dict['replier_id']}}, 
-                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
-    _db.USER_COLLECTION.update_one({'_id':response_dict['replier_id']},{'$set':{'record.responses':record_list}})
+    user.update_response_list(response_dict['replier_id'])
     # 更新每個tag 的 usage_counter,recent_use
     for tag in target_post['tag']:
         target_tag = _db.TAG_COLLECTION.find_one({'_id':tag['tag_id']})
@@ -207,15 +199,11 @@ def update_score(score_dict):
             # 更新被讚的人的技能分數
             for tag in target_post['tag']:
                 user.update_user_score(target_post['asker_id'],tag['tag_id'],tag['tag_name'],new_score_record['score'])
-        # 使用者發文紀錄更新
-        record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'asker_id': target_post['asker_id']}}, 
-                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
-        _db.USER_COLLECTION.update_one({'_id':target_post['asker_id']},{'$set':{'record.posts':record_list}})
-        # 使用者回覆紀錄更新
+        # 更新使用者發文紀錄
+        user.update_post_list(target_post['asker_id'])
+        # 更新使用者回覆紀錄
         for response in target_post['answer']:
-            record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'answer.replier_id': response['replier_id']}}, 
-                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
-        _db.USER_COLLECTION.update_one({'_id':response['replier_id']},{'$set':{'record.responses':record_list}})
+            user.update_response_list(response['replier_id'])
     
     # response_id不為空表示更新回覆評分
     else :
@@ -250,15 +238,11 @@ def remove_post(post_id):
         _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$inc':{'usage_counter': -tag_usage}})
     # 從collection移除post
     _db.INNER_POST_COLLECTION.delete_one({'_id':post_id})
-    # 使用者發文紀錄更新
-    record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'asker_id': post_dict['asker_id']}}, 
-                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
-    _db.USER_COLLECTION.update_one({'_id':post_dict['asker_id']},{'$set':{'record.posts':record_list}})
-    # 使用者回覆紀錄更新
+    # 更新使用者發文紀錄
+    user.update_post_list(post_dict['asker_id'])
+    # 更新使用者回覆紀錄
     for response in response_list:
-        record_list = [doc for doc in _db.INNER_POST_COLLECTION.aggregate([{'$match': {'answer.replier_id': response['replier_id']}}, 
-                                                                       {'$project': {'_id': 1, 'title': 1, 'time': 1, 'tag': 1, 'score': {'$sum': '$score.score'}}}])]
-        _db.USER_COLLECTION.update_one({'_id':response['replier_id']},{'$set':{'record.responses':record_list}})
+        user.update_response_list(response['replier_id'])
     
     
 
