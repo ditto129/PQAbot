@@ -252,13 +252,13 @@ def query_inner_search(keywords):
     #case isnsitive處理
     tag=[]
     keyword=[]
+    lower_keywords=[]
     for i in keywords:
+        lower_keywords.append(i.lower())
         keyword.append({'keyword':{'$regex':i, '$options':'i'}})
         tag.append({'tag.tag_name':{'$regex':i, '$options':'i'}})
     tag.extend(keyword)
-#    print(keyword)
-#    print(tag)
-#    print(tag)
+    #print(lower_keywords)
     #第一階篩選數(相關貼文)，對資料做前處理（算好問題積分、最高答案積分）
     top_ten_post_dict_array = [{'_id':i['_id'], 'maxTotalAnsScore':i['maxTotalAnsScore'], 'keyword':i['keyword'], 'tag':i['tag'], 'scoreTotal':i['scoreTotal'], 'view_count':i['view_count']} for i in _db.INNER_POST_COLLECTION.aggregate(
     [
@@ -347,7 +347,7 @@ def query_inner_search(keywords):
             count = 0
             i['matches_keyword'] = 0
             for j in i['keyword']:
-                if j in keywords:
+                if j.lower() in lower_keywords:
                     count += 1
             i['matches_keyword'] = count
             
@@ -356,28 +356,30 @@ def query_inner_search(keywords):
             count = 0
             i['matches_tag'] = 0
             for j in i['tag']:
-                if j['tag_name'] in keywords:
+                if j['tag_name'].lower() in lower_keywords:
                     count += 1
             i['matches_tag'] = count
             
+        #加總match數
+        for i in top_ten_post_dict_array:
+            i['matches'] = i['matches_keyword'] + i['matches_tag']
+            
+        top_ten_post_dict_array = sorted(top_ten_post_dict_array, key=lambda k: (k['matches'], k['scoreTotal'], k['_id']), reverse=True)[0:10]
+        
+        #print(top_ten_post_dict_array)
         a=[]
         b=[]
         c=[]
         d=[]
-        #加總match數
         for i in top_ten_post_dict_array:
-            i['matches'] = i['matches_keyword'] + i['matches_tag']
             a.append(i['matches'])
             b.append(i['scoreTotal'])
             c.append(i['view_count'])
             d.append(i['maxTotalAnsScore'])
-            
-        top_ten_post_dict_array = sorted(top_ten_post_dict_array, key=lambda k: (k['matches'], k['scoreTotal'], k['_id']), reverse=True)[0:10]
-        
-        normalized_matches = preprocessing.normalize([a])[0][0:10]
-        normalized_scoreTotal = preprocessing.normalize([b])[0][0:10]
-        normalized_view_count = preprocessing.normalize([c])[0][0:10]
-        normalized_maxTotalAnsScore = preprocessing.normalize([d])[0][0:10]
+        normalized_matches = preprocessing.normalize([a])[0]
+        normalized_scoreTotal = preprocessing.normalize([b])[0]
+        normalized_view_count = preprocessing.normalize([c])[0]
+        normalized_maxTotalAnsScore = preprocessing.normalize([d])[0]
         
         for index, i in enumerate(top_ten_post_dict_array):
             i['normalized_matches'] = normalized_matches[index]
