@@ -21,3 +21,20 @@ def adjust_faq_update():
         setting_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}
         print("錯誤訊息: ", e)
     return jsonify(setting_dict)
+
+# 查看更新週期
+@faq_api.route('/query_faq_update', methods=['POST'])
+def query_faq_update():
+    try:
+        update_data = faq_data.query_update_cycle()
+        update_data.pop('_id')
+    except Exception as e :
+        update_data = {"error" : e.__class__.__name__ + ":" +e.args[0]}
+        print("錯誤訊息: ", e)
+    return jsonify(update_data)
+
+# 取得FAQ列表
+# 依標籤取得FAQ列表
+# 依字串取得FAQ列表
+# 新增單篇FAQ
+# 匯入FAQ
