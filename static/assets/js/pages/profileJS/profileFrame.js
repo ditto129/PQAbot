@@ -85,7 +85,7 @@ function showPostRecord(response){
 
             content += '<div class="badge-box">';
                 content += '<div class="sub-title">';
-                    content += '<span>貼文 ';
+                    content += '<span>貼文ID ';
                     content += postId;
                     content += '</span>';
 
@@ -145,7 +145,7 @@ function showAnswerRecord(response){
 
             content += '<div class="badge-box">';
                 content += '<div class="sub-title">';
-                    content += '<span>貼文 #';
+                    content += '<span>貼文ID ';
                     content += postId;
                     content += '</span>';
 

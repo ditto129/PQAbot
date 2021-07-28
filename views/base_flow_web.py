@@ -58,7 +58,7 @@ def summaryFrame():
 #可以用相對路徑嗎？好像不行
 @base_flow_web.route("/skillTreeFrame")
 def skillTreeFrame():
-    return render_template("example.html")
+    return render_template("skillTreeFrame.html")
 
 @base_flow_web.route("/editPostFrame")
 def editPostFrame():

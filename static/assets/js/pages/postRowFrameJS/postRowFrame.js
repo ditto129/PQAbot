@@ -129,6 +129,8 @@ function editPageNum(sum){
         abledButton("backwardPage");
     }
     
+    console.log("temp: "+temp);
+    console.log("end: "+end);
     if(temp == end){
         disabledButton("forwardPage");
     }
@@ -139,7 +141,7 @@ function editPageNum(sum){
 
 function showPost(response){
     // 處理上下頁Button START
-    if(postSum==5){
+    if(postSum<=5){
         disabledButton("forwardPage");
     }
     else{
@@ -176,7 +178,7 @@ function showPost(response){
 //                    if(role == "manager"){
 //                        content += '<i class="fa fa-trash-o fa-lg" aria-hidden="true" style="color: red;"></i>';
 //                    }
-                    content += '<span> 貼文 #';
+                    content += '<span> 貼文ID ';
 //                    if(response.incognito == true){
 //                        content += '匿名';
 //                    }

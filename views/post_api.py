@@ -4,7 +4,7 @@ from flask import Blueprint, request, jsonify
 
 # --- our models ---- #
 from models import inner_post
-#from models.TextAnalyze import TextAnalyze
+from models.TextAnalyze import TextAnalyze
 from datetime import datetime
 
 post_api = Blueprint('post_api', __name__)
