@@ -267,8 +267,6 @@ def query_inner_search(keywords):
             '$or': tag
         }
     }, {
-        '$limit': 10
-     }, {
         '$project': {
             'keyword': 1,
             'tag': 1,
@@ -373,11 +371,13 @@ def query_inner_search(keywords):
             b.append(i['scoreTotal'])
             c.append(i['view_count'])
             d.append(i['maxTotalAnsScore'])
+            
+        top_ten_post_dict_array = sorted(top_ten_post_dict_array, key=lambda k: (k['matches'], k['scoreTotal'], k['_id']), reverse=True)[0:10]
         
-        normalized_matches = preprocessing.normalize([a])[0]
-        normalized_scoreTotal = preprocessing.normalize([b])[0]
-        normalized_view_count = preprocessing.normalize([c])[0]
-        normalized_maxTotalAnsScore = preprocessing.normalize([d])[0]
+        normalized_matches = preprocessing.normalize([a])[0][0:10]
+        normalized_scoreTotal = preprocessing.normalize([b])[0][0:10]
+        normalized_view_count = preprocessing.normalize([c])[0][0:10]
+        normalized_maxTotalAnsScore = preprocessing.normalize([d])[0][0:10]
         
         for index, i in enumerate(top_ten_post_dict_array):
             i['normalized_matches'] = normalized_matches[index]
