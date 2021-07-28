@@ -108,6 +108,19 @@ def update_user_interest():
         data = {"error" : e.__class__.__name__ + ":" +e.args[0]}
         print(e)
     return jsonify(data)
+
+# 取得使用者通知
+@user_api.route('/query_user_notification', methods=['POST'])
+def query_user_notification():
+    data = request.get_json()
+    user_dict = user.query_user(data['_id'])
+    try:
+        user_notification = user_dict['notification']
+    except Exception as e :
+        user_notification = {"error" : e.__class__.__name__ + ":" +e.args[0]}
+        print(e)
+    return jsonify(user_notification)
+
     
 ''' 湘的 start '''
 #UPLOAD_FOLDER = '/Users/linxiangling/Documents/GitHub/PQAbot/static/images/user_img'
