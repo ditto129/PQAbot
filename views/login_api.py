@@ -40,7 +40,8 @@ def google_sign_in():
             "record" : {
                 "posts" : [],
                 "responses" : []
-            }
+            },
+            "notification":[]
         }
         user.insert_user(user_dict)
         user_dict = user.query_user(id_info['sub'])
@@ -60,7 +61,8 @@ def facebook_sign_in():
             "record" : {
                 "posts" : [],
                 "responses" : []
-            }
+            },
+            "notification":[]
         }
         user.insert_user(user_dict)
         user_dict = user.query_user(data['id'])
