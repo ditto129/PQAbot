@@ -94,7 +94,7 @@ def insert_faq_post():
                         "time" : datetime.fromisoformat(data['time']),
                         "view_count" : 0
         }
-        faq_data.insert_faq(faq_dict)
+        faq_data.insert_faq(faq_dict,'inner_faq')
     except Exception as e :
         faq_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
     return jsonify(faq_dict)
@@ -131,7 +131,7 @@ def import_faq_post():
                         "view_count" : 0
             } for faq in data['faq_list']
         ]
-        faq_data.insert_faq(faq_list)
+        faq_data.insert_faq(faq_list,'inner_faq')
     except Exception as e :
         faq_list = {"error" : e.__class__.__name__ + " : " +e.args[0]}
     return jsonify(faq_list)

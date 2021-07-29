@@ -79,7 +79,7 @@ def query_list_by_string(search_string,page_size,page_number,option):
                                                                        {'$limit': page_size}])]
     return {'faq_count' : faq_count,'faq_list' : faq_list} 
 # 新增單篇FAQ
-def insert_faq(data_dict):
+def insert_faq(data_dict,data_type):
     all_faq = _db.FAQ_DATA_COLLECTION.find().skip(1)
     if len(all_faq) == 0:
         data_dict['_id'] = '000001'
@@ -87,16 +87,22 @@ def insert_faq(data_dict):
         # sort _id,將最大的+1當作新的_id
         biggest_id = int(all_faq.skip(1).sort('_id',-1).limit(1)[0]['_id'])
         data_dict['_id'] = str(biggest_id + 1).zfill(6)
-    # 加入資料庫
-    _db.FAQ_DATA_COLLECTION.insert_one(data_dict)
-    # 如果有tag，更新tag資訊
-    if len(data_dict['tags']) != 0:
-        for tag in data_dict['tags']:
-            target_tag = _db.TAG_COLLECTION.find_one({'_id':tag['tag_id']})
+    # 管理員新增faq處理answer_id和資料庫tag
+    if data_type == 'inner_faq':
+        answer_id = 0
+        for ans in data_dict['answers']:
+            ans['id'] = str(answer_id + 1).zfill(6)
+            answer_id += 1
+        # 如果有tag，更新tag的紀錄
+        if len(data_dict['tags']) != 0:
+            for tag in data_dict['tags']:
+                target_tag = _db.TAG_COLLECTION.find_one({'_id':tag['tag_id']})
             _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$set':{'recent_use':data_dict['time'],
                                                                          'usage_counter':target_tag['usage_counter'] + 1}})
+    # FAQ加入資料庫
+    _db.FAQ_DATA_COLLECTION.insert_one(data_dict)
 # 匯入FAQ
-def import_faq(data_list):
+def import_faq(data_list,data_type):
     all_faq = _db.FAQ_DATA_COLLECTION.find().skip(1)
     if len(all_faq) == 0:
         current_id = '000000'
@@ -106,14 +112,19 @@ def import_faq(data_list):
         current_id = str(biggest_id + 1).zfill(6)
     for data_dict in data_list:  
         data_dict['_id'] = str(int(current_id) + 1).zfill(6)
-        # 加入資料庫
-        # 如果有tag，更新tag資訊
-        if len(data_dict['tags']) != 0:
-            for tag in data_dict['tags']:
-                target_tag = _db.TAG_COLLECTION.find_one({'_id':tag['tag_id']})
+        # 處理內部內部貼文 answer_id,tag
+        if data_type == 'inner_faq':
+            answer_id = 0
+            for ans in data_dict['answers']:
+                ans['id'] = str(answer_id + 1).zfill(6)
+                answer_id += 1
+            # 如果有tag，更新tag的紀錄
+            if len(data_dict['tags']) != 0:
+                for tag in data_dict['tags']:
+                    target_tag = _db.TAG_COLLECTION.find_one({'_id':tag['tag_id']})
                 _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$set':{'recent_use':data_dict['time'],
                                                                              'usage_counter':target_tag['usage_counter'] + 1}})
-    # 插入多筆資料
+    # 加入多筆資料
     _db.FAQ_DATA_COLLECTION.insert_many(data_list)
     
 # 查看單篇FAQ
@@ -149,4 +160,4 @@ def transform_faq(faq_list):
             "view_count" : 0
         } for faq in faq_list
     ]
-    import_faq(transformed_list)
+    import_faq(transformed_list,'outer_faq')
