@@ -161,3 +161,47 @@ def transform_faq(faq_list):
         } for faq in faq_list
     ]
     import_faq(transformed_list,'outer_faq')
+
+# 編輯貼文評分
+def update_score(score_dict):
+    target_faq = _db.FAQ_DATA_COLLECTION.find_one({'_id':score_dict['faq_id']})
+    new_score_record = {
+                'user_id': score_dict['user'],
+                'score' : score_dict['score']
+    }
+    # response_id為空表示更新貼文評分
+    if len(score_dict['answer_id']) == 0 :
+        # 若使用者按過讚/倒讚，使用set
+        if any(s['user_id'] == score_dict['user'] for s in target_faq['score']):
+            _db.FAQ_DATA_COLLECTION.update_one({'_id':score_dict['faq_id'],'question.score.user_id': score_dict['user']},{'$set':{'question.score.$':new_score_record}})
+        else:
+            # FAQ本身push一個使用者評分
+            _db.FAQ_DATA_COLLECTION.update_one({'_id':score_dict['faq_id']},{'$push':{'question.score':new_score_record}})
+    # response_id不為空表示更新回覆評分
+    else :
+        target_answer = next(answer for answer in target_faq['answers'] if answer['_id'] == score_dict['answer_id'])
+        # 若使用者按過讚/倒讚，使用set
+        if any(s['user_id'] == score_dict['user'] for s in target_answer['score']):
+            _db.FAQ_DATA_COLLECTION.update_one({'_id':score_dict['faq_id'],
+                                                'answers.id':score_dict['answer_id'],
+                                                'answers.score.user_id':score_dict['user']},
+                                               {'$set':{'answers.$.score':new_score_record}})
+        # 否則直接push一個評分
+        else:
+             _db.FAQ_DATA_COLLECTION.update_one({'_id':score_dict['faq_id'],
+                                                'answers.id':score_dict['answer_id']},
+                                               {'$push':{'answers.$.score':new_score_record}})
+def update_faq(data_dict):
+    target_faq = _db.FAQ_DATA_COLLECTION.find_one({'_id':data_dict['_id']})
+    if data_dict['link'] != target_faq['link']:
+        target_faq['link'] = data_dict['link']
+    if data_dict['question']['title'] != target_faq['question']['title']:
+        target_faq['title'] = data_dict['question']['title']
+    if data_dict['question']['content'] != target_faq['question']['content']:
+        target_faq['question']['content'] = data_dict['question']['content']
+        # ------------------ 接文字分析模組 ----------------------- #
+        target_faq['keywords'] = [] 
+    target_faq['vote'] = data_dict['dict']
+    target_faq['time'] = data_dict['time']
+    # 更新answers
+    # 更新tags
