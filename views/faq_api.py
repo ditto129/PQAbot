@@ -1,5 +1,6 @@
 # --- flask --- #
 from flask import Blueprint, request, jsonify
+from datetime import datetime
 #from flask_security import logout_user, login_required
 
 # --- our models ---- #
@@ -90,7 +91,7 @@ def insert_faq_post():
                         ],
                         "keywords" : [],     
                         "tags" : data['tags'],
-                        "time" : data['time'],
+                        "time" : datetime.fromisoformat(data['time']),
                         "view_count" : 0
         }
         faq_data.insert_faq(faq_dict)
@@ -126,7 +127,7 @@ def import_faq_post():
                         ],
                         "keywords" : [],     
                         "tags" : faq['tags'],
-                        "time" : faq['time'],
+                        "time" : datetime.fromisoformat(faq['time']),
                         "view_count" : 0
             } for faq in data['faq_list']
         ]
