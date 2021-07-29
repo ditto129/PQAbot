@@ -145,7 +145,7 @@ def transform_faq(faq_list):
             ],
             "keywords" : faq['kewords'],     
             "tags" : [],
-            "time" : datetime.fromisoformat(faq['time']),
+            "time" : datetime.now().replace(microsecond=0).isoformat(),
             "view_count" : 0
         } for faq in faq_list
     ]
