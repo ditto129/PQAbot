@@ -81,7 +81,7 @@ def query_list_by_string(search_string,page_size,page_number,option):
 # 新增單篇FAQ
 def insert_faq(data_dict,data_type):
     all_faq = _db.FAQ_DATA_COLLECTION.find().skip(1)
-    if len(all_faq) == 0:
+    if all_faq.count() == 0:
         data_dict['_id'] = '000001'
     else:
         # sort _id,將最大的+1當作新的_id
@@ -105,7 +105,7 @@ def insert_faq(data_dict,data_type):
 # 匯入FAQ
 def import_faq(data_list,data_type):
     all_faq = _db.FAQ_DATA_COLLECTION.find().skip(1)
-    if len(all_faq) == 0:
+    if all_faq.count() == 0:
         current_id = '000000'
     else:
         # sort _id,將最大的+1當作新的_id
@@ -128,6 +128,11 @@ def import_faq(data_list,data_type):
                                                                          '$inc':{'usage_counter':1}})
     # 加入多筆資料
     _db.FAQ_DATA_COLLECTION.insert_many(data_list)
+    
+# def insert_answer(data_dict):
+#     target_faq = _db.FAQ_DATA_COLLECTION.find_one({'_id':data_dict['faq_id']})
+#     if len(target_faq['answers']) == 0:
+        
     
 # 查看單篇FAQ
 def query_faq_post(faq_id):
@@ -204,8 +209,6 @@ def update_faq(data_dict):
     target_faq['title'] = data_dict['question']['title']
     target_faq['vote'] = data_dict['vote']
     target_faq['time'] = data_dict['time']
-    # 更新answers
-    target_faq['answers'] = data_dict['answers']
     # 更新tags，扣除舊tag計數
     target_faq['tags'] = data_dict['tags']
     for tag in target_faq['tags']:
