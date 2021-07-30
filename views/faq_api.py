@@ -175,3 +175,24 @@ def dislike_faq_post():
     except Exception as e :
         score_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}
     return jsonify(score_dict)
+
+# 編輯單篇FAQ
+@faq_api.route('/update_faq_post', methods=['POST'])
+def update_faq_post():
+    data = request.get_json()
+    try: 
+        data['time'] = datetime.fromisoformat(data['time'])
+        faq_data.update_faq(data)
+    except Exception as e :
+        data = {"error" : e.__class__.__name__ + " : " +e.args[0]}
+    return jsonify(data)
+
+# 刪除單篇FAQ
+@faq_api.route('delete_faq_post', methods=['POST'])
+def delete_faq_post():
+    data = request.get_json()
+    try: 
+        faq_data.remove_faq(data['_id'])
+    except Exception as e :
+        data = {"error" : e.__class__.__name__ + " : " +e.args[0]}
+    return jsonify(data)

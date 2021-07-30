@@ -84,7 +84,6 @@ def update_response_list(replier_id):
                                                                        {'$sort': {'time': -1}}])]
     _db.USER_COLLECTION.update_one({'_id':replier_id},{'$set':{'record.responses':response_list}})   
 
-
 """緗"""
 #新增貼文回覆通知
 def update_notification_add(user_id, replier_name, post_id):
