@@ -285,7 +285,7 @@ function saveFAQByHand(){
     time = time.slice(0, 23);
     
 //    var data = {link: dataURL, question: {title: FAQTitle, content: FAQContent}, answers: FAQAnswers, time: time};
-    var data = {link: dataURL, question: {title: FAQTitle, content: FAQContent}, answers: FAQAnswers, tags: tag};
+    var data = {link: dataURL, question: {title: FAQTitle, content: FAQContent}, answers: FAQAnswers, tags: tag, time: time};
     console.log("Data: ");
     console.log(data);
 
@@ -322,10 +322,249 @@ function getFile(fileList){
 }
 // 匯入檔案（完整FAQ） END
 
+///////////////// 各種搜尋 START /////////////////
+var faqPageNumberAll = 1;
+var faqPageNumberString = 1;
+var faqPageNumberTag = 1;
+var faqOption = "score";
+var faqSum;
 
-function start(){
+// 透過字搜尋
+function searchByString(which){
+    localStorage.setItem("method", "text");
+    if(which == "new"){
+        pageNumberSearch = 1;
+        disabledButton("backwardPage");
+    }
+    else{
+        abledButton("backwardPage");
+    }
+    var text = $("#searchText").val();
     
-    //拿目前的FAQs資料
+    var data = {title: text, page_size: 5, page_number: pageNumberSearch, option: option};
+    console.log(data);
+
+    var myURL = head_url + "query_inner_post_list_by_title";
+    console.log("搜尋: "+myURL);
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 透過字搜尋貼文（query_inner_post_list_by_title）");
+            console.log(response);
+            postSum = response.post_count;
+            showPost(response.post_list);
+        },
+        error: function(response){
+            console.log("失敗: 透過字搜尋貼文（query_inner_post_list_by_title）");
+            console.log(response);
+        }
+    });
 }
 
-window.addEventListener("load", start, false);
+function disabledButton(id){
+    document.getElementById(id).disabled = true;
+    document.getElementById(id).classList.add("disabledButton");
+}
+
+function abledButton(id){
+    document.getElementById(id).disabled = false;
+    document.getElementById(id).classList.remove("disabledButton");
+}
+
+function editPageNum(sum){
+    var begin = 1, end = Math.ceil((postSum/5));
+    console.log("總頁數: "+end);
+    
+    var method = localStorage.getItem("method");
+    var temp;
+    sum = parseInt(sum);
+    
+    switch(method){
+        case "all":
+            temp = pageNumber+sum;
+            pageNumber = temp;
+            start("old");
+            break;
+        case "text":
+            temp = pageNumberSearch+sum;
+            pageNumberSearch = temp;
+            search("old");
+            break;
+        case "tags":
+            temp = pageNumberTag+sum;
+            pageNumberTag = temp;
+            searchByTags("old");
+            break;
+    }
+    console.log("temp: "+temp);
+    if(temp == begin){
+        disabledButton("backwardPage");
+    }
+    else{
+        abledButton("backwardPage");
+    }
+    
+    console.log("temp: "+temp);
+    console.log("end: "+end);
+    if(temp == end){
+        disabledButton("forwardPage");
+    }
+    else{
+        abledButton("forwardPage");
+    }
+}
+
+function showFaq(faqList){
+    // 處理上下頁Button START
+    if(faqSum<=5){
+        disabledButton("forwardPage");
+    }
+    else{
+        abledButton("forwardPage");
+    }
+    // 處理上下頁Button END
+    
+    var role = localStorage.getItem("role");
+    console.log("faqList: ");
+    console.log(faqList);
+    var content = "";
+    if(faqList.length==0){
+        content = '<div class="title">目前沒有符合的FAQ</div>';
+    }
+    for(var i=0; i<faqList.length; i++){
+        var id = faqList[i]._id;
+        var title = faqList[i].question.title;
+        var tags = faqList[i].tags;
+        var time = new Date(faqList[i].time);
+        time = time.toISOString();
+        time = time.slice(0, 10);
+        var score = faqList[i].score;
+
+        content += '<div class="col-lg-4 col-xl-3 col-sm-12">';
+        content += '<a href="#" onclick="setLocalStorage(';
+        content += "'";
+        content += id;
+        content += "')";
+        content += '">';
+
+            content += '<div class="badge-box">';
+                content += '<div class="sub-title">';
+                    content += '<span> FAQ的ID #';
+                    content += id;
+                    content += '</span>';
+
+                    content += '<span style="float:right;"><i class="fa fa-trophy" aria-hidden="true"></i>';
+                    content += score;
+                    content += '</span>';
+                content += '</div>';
+
+                content += '<div>';
+                    content += title;
+                content += '</div>';
+
+                content += '<div style="margin-top: 20px;">';
+                    for(var j=0; j<tags.length; j++){
+                        content += '<label class="badge badge-default purpleLabel">';
+                            content += tags[j].tag_name;
+                        content += '</label>';
+                    }
+
+                    content += '<div>';
+                        content += '<label class="badge purpleLabel2">';
+                            content += time;
+                        content += '</label>';
+                    content += '</div>';
+
+                content += '</div>';
+
+            content += '</div>';
+        content += '</a>';
+        content += '</div>';
+    }
+    document.getElementById("faq").innerHTML = content;
+}
+
+// 顯示全部的FAQ
+function searchAll(which){
+    
+    localStorage.setItem("method", "all");
+    if(which == "new"){
+        pageNumber = 1;
+        disabledButton("backwardPage");
+    }
+    else{
+        abledButton("backwardPage");
+    }
+    var myURL = head_url + "query_faq_list";
+    
+    var data = {page_size: 5, page_number: faqPageNumberAll, option: faqOption};
+    console.log(data);
+    var content = "";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+//            console.log("成功: 拿所有FAQs（query_faq_list）");
+            console.log(response);
+            faqSum = response.faq_count;
+            showFaq(response.faq_list);
+        },
+        error: function(){
+//            console.log("失敗: 拿所有FAQs（query_faq_list）");
+        }
+    });
+}
+
+// 透過TAG搜尋FAQ
+function searchByTags(which){
+    localStorage.setItem("method", "tags");
+    if(which == "new"){
+        faqPageNumberTag = 1;
+        disabledButton("backwardPage");
+    }
+    else{
+        abledButton("backwardPage");
+    }
+    var sendTags=[];
+    for(var i=0; i<chosenTags.length; i++){
+        var temp = {tag_id: chosenTags[i], tag_name: allTags[chosenTags[i]]};
+        sendTags.push(temp);
+    }
+    
+    var data = {tag: sendTags, page_size: 5, page_number: faqPageNumberTag, option: faqOption};
+    console.log(data);
+    
+    var myURL = head_url + "query_faq_list_by_tag";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功: 透過tag搜尋FAQ（query_faq_list_by_tag）");
+            console.log(response);
+            faqSum = response.faq_count;
+            showFaq(response.faq_list);
+        },
+        error: function(response){
+            console.log("失敗: 透過tag搜尋FAQ（query_faq_list_by_tag）");
+            console.log(response);
+        }
+    });
+}
+///////////////// 各種搜尋 END /////////////////
+
+window.addEventListener("load", function(){
+    searchAll("new");
+}, false);

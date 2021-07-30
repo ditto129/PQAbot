@@ -74,8 +74,47 @@
                                                 <button class="themeButton" onclick="importFAQsData()">匯入</button>
                                              </div>
                                             
+                                            <!-- 翻頁 start-->
+                                            <div class="pagination card-header-right" style="float: right;">
+                                                <button id="backwardPage" onclick="editPageNum('-1')">❮</button>
+                                                <button id="forwardPage" onclick="editPageNum('1')">❯</button>
+                                            </div>
+                                            <!-- 翻頁 end-->
                                             
-<!--                                            <input class="btn btn-primary purpleBtn" value="儲存" onclick="save()">-->
+                                            <div class="card-header-right">
+                                                <i class="icofont icofont-spinner-alt-5"></i>
+                                            </div>
+                                            
+                                            <div style="margin-top: 20px;">
+                                                <input id="searchText" type="text" name="search" placeholder="Search..">
+                                            </div>
+                                            
+                                            <!--tags篩選貼文start-->
+                                            <div>
+                                            <i type="button" class="fa fa-tags fa-lg scoreBtn" aria-hidden="true" data-toggle="modal" data-target="#searchByTags" style="margin-top: 20px; display: inline-block;"></i>
+                                            <span style="display: inline-block;">選擇相關標籤</span>
+                                            </div> 
+                                            <!--tags篩選貼文end-->
+                                            
+                                            
+                                            <!--已選標籤-->
+                                            <div id="chosen_tag"></div>
+                                            
+                                            <!-- 貼文排序 START -->
+                                            <div>
+<!--                                            <div data-toggle="tooltip" data-placement="top" data-original-title="點我篩選標籤" style="display: inline;">-->
+                                            <i type="button" class="fa fa-filter fa-lg scoreBtn" aria-hidden="true" data-toggle="modal" data-target="#exampleModal2" style="margin-top: 20px; display: inline-block;"></i>
+                                            <span style="display: inline-block;" id="optionText">貼文排序 | 依分數高低</span>
+                                            </div>
+                                            <!-- 貼文排序 END -->
+                                        
+                                </div>
+                                    
+                                        <div class="card-block">
+                                            <div class="row" id="faq">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -84,8 +123,6 @@
             </div>
         </div>
       </div>
-    </div>
-</div>
 
 <!-- 手動新增FAQ START -->
 <div class="modal" id="newFAQsData" tabindex="-1" role="dialog">
@@ -170,6 +207,34 @@
     </div>
 </div>
 <!-- 匯入FAQ END -->
+      
+<!-- 選標籤視窗 START-->
+<div class="modal fade" id="searchByTags" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content"> 
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">選擇相關標籤</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>    
+      <div class="modal-body">     
+          <div id="forwardPageInModal">
+          </div>
+          <div id="chose_tag" style="margin-top: 5px;">
+          </div>
+          
+          <div id="chosen_tag_in_modal" style="margin-top: 15px;">
+          </div>
+          <!-- 興趣標籤 END -->
+      </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="searchByTags('new')" data-dismiss="modal">搜尋</button>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- 選標籤視窗 END-->
 
 
       
