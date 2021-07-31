@@ -76,8 +76,8 @@ def insert_faq_post():
                         {
                             "_id" : "",       
                             "title" : data['question']['title'],    
-                            "content": data['question']['title'],   
-                            "vote" : 0,      
+                            "content": data['question']['content'],   
+                            "vote" : data['question']['vote'],      
                             "score" : [],
                         },
                         "answers" : 
@@ -85,7 +85,7 @@ def insert_faq_post():
                             {       
                                 "_id" : "",       
                                 "content" : a['content'],
-                                "vote" : 0,     
+                                "vote" : a['vote'],     
                                 "score" : [],
                             } for a in data['answers']
                         ],
@@ -112,8 +112,8 @@ def import_faq_post():
                         {
                             "id" : "",       
                             "title" : faq['question']['title'],    
-                            "content": faq['question']['title'],   
-                            "vote" : 0,      
+                            "content": faq['question']['content'],   
+                            "vote" : faq['question']['vote'],      
                             "score" : [],
                         },
                         "answers" : 
@@ -121,7 +121,7 @@ def import_faq_post():
                             {       
                                 "id" : "",       
                                 "content" : a['content'],
-                                "vote" : 0,     
+                                "vote" : a['vote'],     
                                 "score" : [],
                             } for a in faq['answers']
                         ],
@@ -176,49 +176,49 @@ def dislike_faq_post():
         score_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}
     return jsonify(score_dict)
 # 新增answer
-# @faq_api.route('/insert_faq_answer', methods=['POST'])
-# def insert_faq_answer():
-#     data = request.get_json()
-#     try: 
-#         answer_dict = {
-#             'faq_id':data['faq_id'],
-#             'id':"",
-#             'content':data['content'],
-#             'vote':data['vote'],
-#             'score':[]
-#         }
-#         faq_data.insert_answer(answer_dict)
-#     except Exception as e :
-#         answer_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
-#     return jsonify(answer_dict)
-# # 編輯answer
-# @faq_api.route('/update_faq_answer', methods=['POST'])
-# def update_faq_answer():
-#     data = request.get_json()
-#     try: 
-#         answer_dict = {
-#             'faq_id':data['faq_id'],
-#             'id':data['id'],
-#             'content':data['content'],
-#             'vote':data['vote'],
-#         }
-#         faq_data.insert_answer(answer_dict)
-#     except Exception as e :
-#         answer_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
-#     return jsonify(answer_dict)
-# # 
-# @faq_api.route('/delete_faq_answer', methods=['POST'])
-# def delete_faq_answer():
-#     data = request.get_json()
-#     try: 
-#         answer_dict = {
-#             'faq_id':data['faq_id'],
-#             'id':data['id']
-#         }
-#         faq_data.insert_answer(answer_dict)
-#     except Exception as e :
-#         answer_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
-#     return jsonify(answer_dict)
+@faq_api.route('/insert_faq_answer', methods=['POST'])
+def insert_faq_answer():
+    data = request.get_json()
+    try: 
+        answer_dict = {
+            'faq_id':data['faq_id'],
+            'id':"",
+            'content':data['content'],
+            'vote':data['vote'],
+            'score':[]
+        }
+        faq_data.insert_answer(answer_dict)
+    except Exception as e :
+        answer_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
+    return jsonify(answer_dict)
+# 編輯單個answer
+@faq_api.route('/update_faq_answer', methods=['POST'])
+def update_faq_answer():
+    data = request.get_json()
+    try: 
+        answer_dict = {
+            'faq_id':data['faq_id'],
+            'id':data['id'],
+            'content':data['content'],
+            'vote':data['vote'],
+        }
+        faq_data.insert_answer(answer_dict)
+    except Exception as e :
+        answer_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
+    return jsonify(answer_dict)
+# 刪除單個answer
+@faq_api.route('/delete_faq_answer', methods=['POST'])
+def delete_faq_answer():
+    data = request.get_json()
+    try: 
+        answer_dict = {
+            'faq_id':data['faq_id'],
+            'id':data['id']
+        }
+        faq_data.insert_answer(answer_dict)
+    except Exception as e :
+        answer_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
+    return jsonify(answer_dict)
 # 編輯單篇FAQ
 @faq_api.route('/update_faq_post', methods=['POST'])
 def update_faq_post():

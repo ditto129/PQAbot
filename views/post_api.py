@@ -60,8 +60,8 @@ def insert_inner_post():
             'view_count' : 0
         }
         # 呼叫文字分析模組進行分析
-        textAnalyzer = TextAnalyze()
-        post_dict['keyword'] = textAnalyzer.keywordExtration(post_dict['question'])
+        # textAnalyzer = TextAnalyze()
+        # post_dict['keyword'] = textAnalyzer.keywordExtration(post_dict['question'])
         
         inner_post.insert_post(post_dict)
     except Exception as e :
@@ -82,8 +82,8 @@ def update_inner_post():
             'time' : datetime.fromisoformat(data['time'])
         }
         # 呼叫文字分析模組進行分析
-        textAnalyzer = TextAnalyze()
-        post_dict['keyword'] = textAnalyzer.keywordExtration(post_dict['question'])
+        # textAnalyzer = TextAnalyze()
+        # post_dict['keyword'] = textAnalyzer.keywordExtration(post_dict['question'])
         inner_post.update_post(post_dict)
     except Exception as e :
         post_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}
@@ -132,6 +132,22 @@ def update_inner_post_response():
             "time" : datetime.fromisoformat(data['time'])
         }
         inner_post.update_response(response_dict)
+    except Exception as e :
+        response_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}  
+    return jsonify(response_dict)
+
+# 刪除貼文回覆
+@post_api.route('/delete_inner_post_response',methods=['POST'])
+def delete_inner_post_response():
+    data = request.get_json()
+    try:
+        response_dict = {
+            'post_id' : data['post_id'],
+            '_id' : data['_id'],
+            "replier_id" : data['replier_id'],
+            "score":data['score']
+        }
+        inner_post.remove_response(response_dict)
     except Exception as e :
         response_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}  
     return jsonify(response_dict)
