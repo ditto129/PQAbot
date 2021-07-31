@@ -136,6 +136,22 @@ def update_inner_post_response():
         response_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}  
     return jsonify(response_dict)
 
+# 刪除貼文回覆
+@post_api.route('/delete_inner_post_response',methods=['POST'])
+def delete_inner_post_response():
+    data = request.get_json()
+    try:
+        response_dict = {
+            'post_id' : data['post_id'],
+            '_id' : data['_id'],
+            "replier_id" : data['replier_id'],
+            "score":data['score']
+        }
+        inner_post.remove_response(response_dict)
+    except Exception as e :
+        response_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}  
+    return jsonify(response_dict)
+
 # 對貼文按讚
 @post_api.route('/like_inner_post',methods=['POST'])
 def like_inner_post():

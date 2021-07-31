@@ -152,6 +152,17 @@ def update_response(response_dict):
     _db.INNER_POST_COLLECTION.update_one({'_id':post_id,'answer._id':response_dict['_id']},
                                          {'$set':{'answer.$.response':response_dict['response'],
                                                   'answer.$.time':response_dict['time']}})
+# 刪除貼文回覆
+def remove_response(response_dict):
+    tags = _db.INNER_POST_COLLECTION.find_one({'_id':response_dict['post_id']})['tag']
+    _db.INNER_POST_COLLECTION.update_one({'_id':response_dict['post_id']},
+                                         {'$pull':{'answer':{'_id':response_dict['_id']}}})
+    user.update_response_list(response_dict['replier_id'])
+    # 扣掉回覆者所得分數
+    for tag in tags:
+        user.update_user_score(response_dict['replier_id'],tag['tag_id'],tag['tag_name'],-(1 + sum(score['score'] for score in response_dict['score'])))
+        # 扣掉tag count
+        _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$inc':{'usage_counter': -1}})
 
 # 編輯貼文評分
 def update_score(score_dict):
@@ -199,17 +210,14 @@ def update_score(score_dict):
 def remove_post(post_id):
     post_dict = _db.INNER_POST_COLLECTION.find_one({'_id':post_id})
     response_list = post_dict['answer']
-    tag_usage = len(post_dict['answer']) + 1
     # 依標籤扣除使用者分數
     tag_usage = len(post_dict['answer']) + 1
     for tag in post_dict['tag']:
         # 扣除發文時的分數
-        user.update_user_score(post_dict['asker_id'],tag['tag_id'],tag['tag_name'],-2)
-        user.update_user_score(post_dict['asker_id'],tag['tag_id'],tag['tag_name'],-sum(score['score'] for score in post_dict['score']))
+        user.update_user_score(post_dict['asker_id'],tag['tag_id'],tag['tag_name'],-(2 + sum(score['score'] for score in post_dict['score'])))
         # 扣除每則回應的分數
         for response in post_dict['answer']:
-            user.update_user_score(response['replier_id'],tag['tag_id'],tag['tag_name'],-1)
-            user.update_user_score(response['replier_id'],tag['tag_id'],tag['tag_name'],-sum(score['score'] for score in response['score']))
+            user.update_user_score(response['replier_id'],tag['tag_id'],tag['tag_name'],-(1 + sum(score['score'] for score in response['score'])))
         # 扣除tag usage_count(發文(1)+回應數)
         _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$inc':{'usage_counter': -tag_usage}})
     # 從collection移除post
