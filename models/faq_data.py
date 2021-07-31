@@ -131,10 +131,30 @@ def import_faq(data_list,data_type):
     # 加入多筆資料
     _db.FAQ_DATA_COLLECTION.insert_many(data_list)
     
-# def insert_answer(data_dict):
-#     target_faq = _db.FAQ_DATA_COLLECTION.find_one({'_id':data_dict['faq_id']})
-#     if len(target_faq['answers']) == 0:
-        
+def insert_answer(data_dict):
+    faq_id = data_dict.pop('faq_id')
+    target_faq = _db.FAQ_DATA_COLLECTION.find_one({'_id':faq_id})
+    if len(target_faq['answers']) == 0:
+        data_dict['id'] = '000001'
+    else:
+        biggest_id = int(sorted(target_faq['answers'], key = lambda k: k['id'],reverse=True)[0]['id'])
+        data_dict['id'] = str(biggest_id + 1).zfill(6)
+    _db.FAQ_DATA_COLLECTION.update({'_id':faq_id},{'$push':{'answers':data_dict}})
+    # 更新tag count
+    for tag in target_faq['tags']:
+        _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$inc':{'usage_counter':1}})
+
+def update_answer(data_dict):
+    _db.FAQ_DATA_COLLECTION.update({'_id':data_dict['faq_id'],'answers.id':data_dict['id']},
+                                   {'$set':{'answers.$.content':data_dict['content'],'answers.$.vote':data_dict['vote']}})
+
+def remove_answer(data_dict):
+    tags = _db.FAQ_DATA_COLLECTION.find_one({'_id':data_dict['faq_id']})
+    _db.FAQ_COLLECTION.update_one({'_id':data_dict['faq_id']},
+                                  {'$pull':{'answers':{'id':data_dict['id']}}})
+    # 扣掉tag count
+    for tag in tags:
+        _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$inc':{'usage_counter': -1}})
     
 # 查看單篇FAQ
 def query_faq_post(faq_id):
