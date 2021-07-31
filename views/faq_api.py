@@ -76,8 +76,8 @@ def insert_faq_post():
                         {
                             "_id" : "",       
                             "title" : data['question']['title'],    
-                            "content": data['question']['title'],   
-                            "vote" : 0,      
+                            "content": data['question']['content'],   
+                            "vote" : data['question']['vote'],      
                             "score" : [],
                         },
                         "answers" : 
@@ -85,7 +85,7 @@ def insert_faq_post():
                             {       
                                 "_id" : "",       
                                 "content" : a['content'],
-                                "vote" : 0,     
+                                "vote" : a['vote'],     
                                 "score" : [],
                             } for a in data['answers']
                         ],
@@ -112,8 +112,8 @@ def import_faq_post():
                         {
                             "id" : "",       
                             "title" : faq['question']['title'],    
-                            "content": faq['question']['title'],   
-                            "vote" : 0,      
+                            "content": faq['question']['content'],   
+                            "vote" : faq['question']['vote'],      
                             "score" : [],
                         },
                         "answers" : 
@@ -121,7 +121,7 @@ def import_faq_post():
                             {       
                                 "id" : "",       
                                 "content" : a['content'],
-                                "vote" : 0,     
+                                "vote" : a['vote'],     
                                 "score" : [],
                             } for a in faq['answers']
                         ],

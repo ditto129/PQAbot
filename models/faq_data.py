@@ -42,12 +42,14 @@ def query_list_by_tag(tag_list,page_size,page_number,option):
     if option == '': # 預設是用時間排
         faq_list = [ doc for doc in _db.FAQ_DATA_COLLECTION.aggregate([{'$skip': 1}, 
                                                                        {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords':1, 'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1, 'hastag': {'$setIsSubset': [tag_list, '$tags']}}}, 
+                                                                       {'$match': {'hastag': True}},
                                                                        {'$sort': {'time': -1}}, 
                                                                        {'$skip': page_size * (page_number - 1)}, 
                                                                        {'$limit': page_size}])]
     else : 
         faq_list = [ doc for doc in _db.FAQ_DATA_COLLECTION.aggregate([{'$skip': 1}, 
                                                                        {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords':1, 'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1, 'hastag': {'$setIsSubset': [tag_list, '$tags']}}}, 
+                                                                       {'$match': {'hastag': True}},
                                                                        {'$sort': {option : -1}}, 
                                                                        {'$skip': page_size * (page_number - 1)}, 
                                                                        {'$limit': page_size}])]
@@ -206,8 +208,8 @@ def update_faq(data_dict):
         # ------------------ 接文字分析模組 ----------------------- #
         target_faq['keywords'] = [] 
     target_faq['link'] = data_dict['link']
-    target_faq['title'] = data_dict['question']['title']
-    target_faq['vote'] = data_dict['vote']
+    target_faq['question']['title'] = data_dict['question']['title']
+    target_faq['question']['vote'] = data_dict['question']['vote']
     target_faq['time'] = data_dict['time']
     # 更新tags，扣除舊tag計數
     target_faq['tags'] = data_dict['tags']
