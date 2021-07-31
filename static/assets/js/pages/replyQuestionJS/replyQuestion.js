@@ -25,7 +25,6 @@ function save(){
         success: function(response){
             console.log(response);
             postOwnerId = response.asker_id;
-            
         },
         error: function(response){
             console.log("error:");
@@ -34,8 +33,8 @@ function save(){
     });
     
     //----- 為了處理通知 更新資料庫 -----//
-    myURL = head_url + "add_post_notification?user_id="+postOwnerId"&replier_name="+replierName+"&post_id="+postId;
-    console.log("myURL: "+myURL);
+//    myURL = head_url + "add_post_notification?user_id="+postOwnerId"&replier_name="+replierName+"&post_id="+postId;
+//    console.log("myURL: "+myURL);
 //    $.ajax({
 //        url: myURL,
 //        type: "GET",

@@ -11,6 +11,7 @@ function addFAQsData(){
     children = [];
     chosenTags = [];
     allTags = {};
+    whoUseTags = "addFaq";
     getLanguageTag();
     // 初始化 END
     $('#newFAQsData').modal('show');
@@ -55,25 +56,40 @@ var language = [];
 var children = [];
 var chosenTags = [];
 var allTags = {};
+var whoUseTags;
 
 //根據chosenTags的內容 顯示已選擇的tags
 function showChosenTags(page){
-    console.log("showChosenTags");
+//    console.log("showChosenTags");
     var chosen_tag_content = "<hr>";
+    var showTagsButNotCancleContent = "<br>";
     
     for(var i=0; i<chosenTags.length; i++){
         chosen_tag_content += '<label class="badge purpleLabel" style="margin-right: 5px;">';
             chosen_tag_content += allTags[chosenTags[i]];
         chosen_tag_content += '<button type="button" class="labelXBtn" onclick="cancle(';
-        chosen_tag_content += "'";
-        chosen_tag_content += chosenTags[i];
-        chosen_tag_content += "','";
-        chosen_tag_content += page;
-        chosen_tag_content += "'";
-        chosen_tag_content += ')">x</button></label>';
+            chosen_tag_content += "'";
+            chosen_tag_content += chosenTags[i];
+            chosen_tag_content += "','";
+            chosen_tag_content += page;
+            chosen_tag_content += "'";
+            chosen_tag_content += ')">x</button></label>';
+        
+        
+            showTagsButNotCancleContent += '<label class="badge purpleLabel" style="margin-right: 5px;">';
+            showTagsButNotCancleContent += allTags[chosenTags[i]];
+            showTagsButNotCancleContent += '</label>';
+        
     }
 
-    document.getElementById("chosen_tag_in_modal").innerHTML = chosen_tag_content;
+    if(whoUseTags=="addFaq"){
+        document.getElementById("chosen_tag_in_modal").innerHTML = chosen_tag_content;
+    }
+    else if(whoUseTags=="searchFaq"){
+        document.getElementById("chosenTagInModalForSearch").innerHTML = chosen_tag_content;
+        
+        document.getElementById("chosenTags").innerHTML = showTagsButNotCancleContent;
+    }
 }
 
 // 顯示可選擇的語言「子」標籤
@@ -87,16 +103,16 @@ function click_tag(id, page){
     
     // card的最下面顯示已選擇的tags
     if(!chosenTags.includes(id)){ //如果還沒選過
-        console.log("顯示起來～");
+//        console.log("顯示起來～");
         chosenTags.push(id);
         document.getElementById(id).setAttribute("style", "margin-right: 5px; background-color: #E6E6FA;");
         if(language.indexOf(id)==-1){
             showChosenTags(1);
-            console.log("page1");
+//            console.log("page1");
         }
         else{
             showChosenTags(0);
-            console.log("page0");
+//            console.log("page0");
         }
     }
     // 已選擇的tag END
@@ -141,10 +157,18 @@ function showChildrenAndSetColor(){
     // 需加上上一頁的按鈕
     var titleContent = "";
     
-    titleContent += "選擇相關標籤<br>";
-    titleContent += '<i class="fa fa-angle-left scoreBtn" aria-hidden="true" onclick="showLanguageTag()" style="color: gray; margin-right: 5px; font-size: 15px;"></i><span style="color: gray; font-size: 13px; font-weight: lighter;">上一頁<span>';
+    if(whoUseTags == "addFaq"){
+        titleContent += "選擇相關標籤<br>";
+        titleContent += '<i class="fa fa-angle-left scoreBtn" aria-hidden="true" onclick="showLanguageTag()" style="color: gray; margin-right: 5px; font-size: 15px;"></i><span style="color: gray; font-size: 13px; font-weight: lighter;">上一頁<span>';
+
+        document.getElementById("addFAQTags").innerHTML = titleContent;
+    }
+    else if(whoUseTags == "searchFaq"){
+        titleContent += '<i class="fa fa-angle-left scoreBtn" aria-hidden="true" onclick="showLanguageTag()" style="color: gray; margin-right: 5px; font-size: 15px;"></i><span style="color: gray; font-size: 13px; font-weight: lighter;">上一頁<span>';
+        document.getElementById("forwardPageInModal").innerHTML = titleContent;
+    }
     
-    document.getElementById("addFAQTags").innerHTML = titleContent;
+    
     // 標題 END
     
     var content = "";
@@ -163,9 +187,7 @@ function showChildrenAndSetColor(){
             content += allTags[children[i]];
         content += "</label>";
     }
-    
-//    console.log("innerHTML: "+content);
-    document.getElementById("chose_tag").innerHTML = content;
+    document.getElementById("choseTagForSearch").innerHTML = content;
 }
  
 // 顯示可選擇的語言標籤
@@ -221,8 +243,13 @@ function showLanguageTag(){
             content += allTags[language[i]];
         content += '</label>';
     }
-
-    document.getElementById("chose_tag").innerHTML = content;
+    if(whoUseTags=="addFaq"){
+        document.getElementById("chose_tag").innerHTML = content;
+    }
+    else if(whoUseTags=="searchFaq"){
+        document.getElementById("choseTagForSearch").innerHTML = content;
+    }
+    
 }
 
 // 取消選擇tag後的處理
@@ -286,7 +313,7 @@ function saveFAQByHand(){
     
 //    var data = {link: dataURL, question: {title: FAQTitle, content: FAQContent}, answers: FAQAnswers, time: time};
     var data = {link: dataURL, question: {title: FAQTitle, content: FAQContent}, answers: FAQAnswers, tags: tag, time: time};
-    console.log("Data: ");
+    console.log("傳出去的Data");
     console.log(data);
 
     var myURL = head_url + "insert_faq_post";
@@ -298,14 +325,19 @@ function saveFAQByHand(){
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-            console.log("成功: 編輯貼文（insert_faq_post）");
-            console.log(response);
+//            console.log("成功: 編輯貼文（insert_faq_post）");
+//            console.log(response);
+            faqPageNumberAll = 1;
+            faqOption = "time";
+            document.getElementById("optionText").innerHTML = "貼文排序 | 依時間先後";
+            searchAll("new");
         },
         error: function(response){
-            console.log("失敗: 編輯貼文（insert_faq_post）");
-            console.log(response);
+//            console.log("失敗: 編輯貼文（insert_faq_post）");
+//            console.log(response);
         }
     });
+    
 }
 
 ///////////////// 手動新增 END /////////////////
@@ -329,11 +361,16 @@ var faqPageNumberTag = 1;
 var faqOption = "score";
 var faqSum;
 
-// 透過字搜尋
+function setLocalStorage(id){
+    localStorage.setItem("singlePostId", id);
+    setPage('mySinglePostFrame');
+}
+
+// 透過字串搜尋
 function searchByString(which){
     localStorage.setItem("method", "text");
     if(which == "new"){
-        pageNumberSearch = 1;
+        faqPageNumberString = 1;
         disabledButton("backwardPage");
     }
     else{
@@ -341,11 +378,11 @@ function searchByString(which){
     }
     var text = $("#searchText").val();
     
-    var data = {title: text, page_size: 5, page_number: pageNumberSearch, option: option};
-    console.log(data);
+    var data = {search_string: text, page_size: 5, page_number: faqPageNumberString, option: faqOption};
+//    console.log(data);
 
-    var myURL = head_url + "query_inner_post_list_by_title";
-    console.log("搜尋: "+myURL);
+    var myURL = head_url + "query_faq_list_by_string";
+//    console.log("搜尋byString: "+myURL);
     $.ajax({
         url: myURL,
         type: "POST",
@@ -354,14 +391,14 @@ function searchByString(which){
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-            console.log("成功: 透過字搜尋貼文（query_inner_post_list_by_title）");
-            console.log(response);
-            postSum = response.post_count;
-            showPost(response.post_list);
+//            console.log("成功: 透過字搜尋faq（query_faq_list_by_string）");
+//            console.log(response);
+            faqSum = response.faq_count;
+            showFaq(response.faq_list);
         },
         error: function(response){
-            console.log("失敗: 透過字搜尋貼文（query_inner_post_list_by_title）");
-            console.log(response);
+//            console.log("失敗: 透過字搜尋faq（query_faq_list_by_string）");
+//            console.log(response);
         }
     });
 }
@@ -377,8 +414,7 @@ function abledButton(id){
 }
 
 function editPageNum(sum){
-    var begin = 1, end = Math.ceil((postSum/5));
-    console.log("總頁數: "+end);
+    var begin = 1, end = Math.ceil((faqSum/5));
     
     var method = localStorage.getItem("method");
     var temp;
@@ -386,18 +422,18 @@ function editPageNum(sum){
     
     switch(method){
         case "all":
-            temp = pageNumber+sum;
-            pageNumber = temp;
-            start("old");
+            temp = faqPageNumberAll+sum;
+            faqPageNumberAll = temp;
+            searchAll("old");
             break;
         case "text":
-            temp = pageNumberSearch+sum;
-            pageNumberSearch = temp;
-            search("old");
+            temp = faqPageNumberString+sum;
+            faqPageNumberString = temp;
+            searchByString("old");
             break;
         case "tags":
-            temp = pageNumberTag+sum;
-            pageNumberTag = temp;
+            temp = faqPageNumberTag+sum;
+            faqPageNumberTag = temp;
             searchByTags("old");
             break;
     }
@@ -438,6 +474,7 @@ function showFaq(faqList){
     }
     for(var i=0; i<faqList.length; i++){
         var id = faqList[i]._id;
+        console.log("faq的ID: "+id);
         var title = faqList[i].question.title;
         var tags = faqList[i].tags;
         var time = new Date(faqList[i].time);
@@ -524,6 +561,18 @@ function searchAll(which){
     });
 }
 
+// 貼文排序方式、新增FAQ用的是同一個modal
+// 為了選擇標籤那邊的方便
+function useTagsInSearch(){
+    language = [];
+    children = [];
+    chosenTags = [];
+    allTags = {};
+    whoUseTags = "searchFaq";
+    getLanguageTag();
+    $("#searchByTags").modal('show');
+}
+
 // 透過TAG搜尋FAQ
 function searchByTags(which){
     localStorage.setItem("method", "tags");
@@ -565,6 +614,21 @@ function searchByTags(which){
 }
 ///////////////// 各種搜尋 END /////////////////
 
+function set(){
+    getLanguageTag();
+    localStorage.setItem("forwardPage", "manageFAQsFrame");
+    localStorage.setItem("postAPI", "query_faq_list");
+
+    var searchButton = document.getElementById("searchText");
+    searchButton.addEventListener('keydown', function(e){
+      // enter 的 keyCode 是 13
+      if( e.keyCode === 13 ){
+          searchByString("new");
+      }
+    }, false);
+}
+
 window.addEventListener("load", function(){
+    set();
     searchAll("new");
 }, false);

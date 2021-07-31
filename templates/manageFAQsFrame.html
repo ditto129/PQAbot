@@ -91,14 +91,14 @@
                                             
                                             <!--tags篩選貼文start-->
                                             <div>
-                                            <i type="button" class="fa fa-tags fa-lg scoreBtn" aria-hidden="true" data-toggle="modal" data-target="#searchByTags" style="margin-top: 20px; display: inline-block;"></i>
+                                            <i type="button" class="fa fa-tags fa-lg scoreBtn" aria-hidden="true" onclick="useTagsInSearch()" style="margin-top: 20px; display: inline-block;"></i>
                                             <span style="display: inline-block;">選擇相關標籤</span>
                                             </div> 
                                             <!--tags篩選貼文end-->
                                             
                                             
                                             <!--已選標籤-->
-                                            <div id="chosen_tag"></div>
+                                            <div id="chosenTags"></div>
                                             
                                             <!-- 貼文排序 START -->
                                             <div>
@@ -221,10 +221,10 @@
       <div class="modal-body">     
           <div id="forwardPageInModal">
           </div>
-          <div id="chose_tag" style="margin-top: 5px;">
+          <div id="choseTagForSearch" style="margin-top: 5px;">
           </div>
           
-          <div id="chosen_tag_in_modal" style="margin-top: 15px;">
+          <div id="chosenTagInModalForSearch" style="margin-top: 15px;">
           </div>
           <!-- 興趣標籤 END -->
       </div>
