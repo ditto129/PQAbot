@@ -37,8 +37,8 @@ function start(){
                 delete data["view_count"];
                 questionTitle = data.question.title;
                 questionContent = data.question.content;
-                console.log("拿到的data: ");
-                console.log(data);
+//                console.log("拿到的data: ");
+//                console.log(data);
             }
             else{
                 keyword = response.keyword;
@@ -77,13 +77,16 @@ function save(){
             var time = new Date().toJSON();
             time = time.slice(0, 23);
             data["time"] = time;
+            data["question"].title = title;
+            data["question"].content = question;
             break;
         default:
             afterURL = "update_inner_post";
             data = {asker_id: userId, _id: postId, title: title, question: question, time: time};
             break;
     }
-    console.log(data);
+//    console.log("傳出去的");
+//    console.log(data);
     
     myURL = head_url + afterURL;
     $.ajax({
@@ -94,13 +97,13 @@ function save(){
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-            console.log("成功: 編輯貼文（update_inner_post）");
-            console.log(response);
-//            setPage('mySinglePostFrame');
+//            console.log("成功: 編輯貼文");
+//            console.log(response);
+            setPage('mySinglePostFrame');
         },
         error: function(response){
-            console.log("失敗: 編輯貼文（update_inner_post）");
-            console.log(response);
+//            console.log("失敗: 編輯");
+//            console.log(response);
             window.alert("編輯失敗！\n請再試一次");
         }
     });

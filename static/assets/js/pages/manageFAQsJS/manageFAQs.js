@@ -286,16 +286,18 @@ function cancle(id, page){
 
 function saveFAQByHand(){
     var dataURL = $("#dataURL").val();
-    $("#dataURL").val("")
+    $("#dataURL").val("");
+    var FAQScore = $("#FAQScore").val();
+    $("#FAQScore").val("");
     var FAQTitle = $("#FAQTitle").val();
-    $("#FAQTitle").val("")
+    $("#FAQTitle").val("");
     var FAQContent = $("#FAQContent").val();
-    $("#FAQContent").val("")
+    $("#FAQContent").val("");
     
     var FAQAnswers = [];
     var children = $("#addFAQAnswerContent").children();
     for(var i=0; i<children.length; i++){
-        console.log(children[i].id);
+//        console.log(children[i].id);
 //        var score = $("#FAQAnswerScore"+children[i].id).val();
         var content = $("#FAQAnswerContent"+children[i].id).val();
         
@@ -312,9 +314,9 @@ function saveFAQByHand(){
     time = time.slice(0, 23);
     
 //    var data = {link: dataURL, question: {title: FAQTitle, content: FAQContent}, answers: FAQAnswers, time: time};
-    var data = {link: dataURL, question: {title: FAQTitle, content: FAQContent}, answers: FAQAnswers, tags: tag, time: time};
-    console.log("傳出去的Data");
-    console.log(data);
+    var data = {link: dataURL, question: {title: FAQTitle, content: FAQContent, vote: FAQScore}, answers: FAQAnswers, tags: tag, time: time};
+//    console.log("傳出去的Data");
+//    console.log(data);
 
     var myURL = head_url + "insert_faq_post";
     $.ajax({
@@ -466,15 +468,12 @@ function showFaq(faqList){
     // 處理上下頁Button END
     
     var role = localStorage.getItem("role");
-    console.log("faqList: ");
-    console.log(faqList);
     var content = "";
     if(faqList.length==0){
         content = '<div class="title">目前沒有符合的FAQ</div>';
     }
     for(var i=0; i<faqList.length; i++){
         var id = faqList[i]._id;
-        console.log("faq的ID: "+id);
         var title = faqList[i].question.title;
         var tags = faqList[i].tags;
         var time = new Date(faqList[i].time);
