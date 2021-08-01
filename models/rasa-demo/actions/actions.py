@@ -21,6 +21,8 @@ from .OuterSearch import outerSearch
 ##摘要
 from .StackData import StackData
 
+head_url='http://localhost:55001/api/'
+
 #將整句話(問題描述、錯誤訊息)填入slot
 class fill_slot(Action):
     def name(self) -> Text:
@@ -70,7 +72,7 @@ class analyze_and_search(Action):
         qkey.append(pl)
         
         #內部搜尋
-        response = requests.post('http://140.121.197.130:55001/query_inner_search', json={'keywords':qkey})
+        response = requests.post(head_url+'query_inner_search', json={'keywords':qkey})
 #        print("內部搜尋的結果: ", response.text)
         
         
@@ -81,7 +83,7 @@ class analyze_and_search(Action):
         objectAllPost = json.loads(response.text)
         for i in range(0, len(objectAllPost["inner_search_result"])):
             postId = objectAllPost["inner_search_result"][i]
-            singlePostResponse = requests.post('http://140.121.197.130:55001/query_inner_post', json={'_id':postId})
+            singlePostResponse = requests.post(head_url+'query_inner_post', json={'_id':postId})
             # 轉成object
             objectSinglePost = json.loads(singlePostResponse.text)
 #            print("單篇文章結果: ", objectSinglePost)

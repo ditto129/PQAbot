@@ -40,7 +40,7 @@ function checkLoginState() {
             // 取得使用者資料丟到後端
             $.ajax({
                 type: "POST",
-                url: '/facebook_sign_in',
+                url: 'api/facebook_sign_in',
                 data: JSON.stringify(response),
                 success: function () {
                 console.log('Facebook login success')
