@@ -122,9 +122,14 @@ def query_notification(user_id):
     return _db.USER_COLLECTION.find_one({'_id':user_id})
     
 #new全設false
-def update_notification_new(user_id):
-    _db.USER_COLLECTION.update_one({'_id':user_id}, {'$set': {'notification.$[].new':False}})
-
+def update_notification_new(user_id, id):
+    _db.USER_COLLECTION.update_one(
+        {'_id':user_id},
+        { '$set': { "notification.$[element].new" : False } },
+        upsert=True,
+        array_filters=[ { "element.id": { '$in': id } } ]
+    )
+    
 #依頁數查看通知
 def query_notification_by_page(user_id, page):
     return [{'id':i['notification']['id'], 'time':i['notification']['time'], 'detail':i['notification']['detail'], 'new':i['notification']['new'], 'check':i['notification']['check'], 'type':i['notification']['type']} for i in _db.USER_COLLECTION.aggregate([
