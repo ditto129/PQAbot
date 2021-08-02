@@ -1,6 +1,7 @@
 /* ================ Facebook Login ================= */
 // 設定 Facebook JavaScript SDK
-var head_url = "https://soselab.asuscomm.com:55002/api/"
+//var head_url = "https://soselab.asuscomm.com:55002/api/"
+var head_url = "https://5645a731eeda.ngrok.io/api/"
 window.fbAsyncInit = function () {
     FB.init({
       appId: '1018939978932508',
