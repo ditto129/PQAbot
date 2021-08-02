@@ -35,6 +35,20 @@
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <!-- 匿名的bootstrap END -->
     
+    <!-- 程式碼區塊 START -->
+    <link rel="stylesheet" href="../static/assets/css/pages/codeCSS/style.css" />
+    <link rel="stylesheet" href="../static/assets/css/pages/codeCSS/editormd.css" />
+    <style>
+        #codes textarea {display: none;}
+    </style>
+    <!-- 程式碼區塊 END -->
+    
+    <!-- highlight START -->
+    <link rel="stylesheet" href="../static/assets/highlight/styles/color-brewer.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <!-- highlight END -->
+    
     <!-- font-awesome.css -->
     <link rel="stylesheet" type="text/css" href="../static/assets/css/font-awesome.css">
     <script src="../static/assets/js/pages/replyQuestionJS/replyQuestion.js"></script>
@@ -69,9 +83,42 @@
                                                     <!-- 回覆內容 row start -->
                                                     <div class="form-group row">
                                                         <label class="col-sm-2 col-form-label">回覆內容</label>
-                                                        <div class="col-sm-10">
+                                                        
+                                                        <p>語言 : 
+                                                            <select id="language">
+                                                                <option value="python">python</option>
+                                                                <option value="html">html</option>
+                                                                <option value="CSS">CSS</option>
+                                                                <option value="javascript">javascript</option>
+                                                                <option value="java">Java</option>
+                                                            </select>
+                                                            </p>
+                                                        
+                                                            <button type="button" style="margin-left: 5px;" class="themeButton" onclick="addCodeArea()">新增程式碼區塊</button>
+                                                        
+                                                            <button type="button" style="margin-left: 5px;" class="themeButton" onclick="setCodeColor()">程式碼變色</button>
+                                                        
+<!--
+                                                        <div class="col-sm-10 form-control" style="border:2px #545058 solid;" contenteditable="true" id="replyContent">
+
+                                                        </div>
+-->
+                                                        
+                                                        <div class="col-sm-10" contenteditable="true" style="border:2px #545058 solid;" contenteditable="true" id="replyContent">
+<!--
+<pre>
+<code class="python">
+print("OMG")
+</code>
+</pre>
+-->
+  
+<!--
                                                             <textarea id="answerContent" rows="5" cols="5" class="form-control"
-                                                            placeholder="輸入回覆內容"></textarea>
+                                                            placeholder="輸入回覆內容">
+
+                                                            </textarea>
+-->
                                                         </div>
                                                     </div>
                                                     <!-- 回覆內容 row end -->
@@ -175,6 +222,7 @@
 <script src="../static/assets/js/demo-12.js"></script>
 <script src="../static/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="../static/assets/js/common.js"></script>
+    <script src="../static/assets/js/pages/codeJS/editormd.js"></script>
 </body>
 
 </html>

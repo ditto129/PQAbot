@@ -44,16 +44,16 @@
                                     <!-- 貼文 start -->
                                     <div class="card">
                                         <div class="card-header">
-                                            <div class="card-header-left" id="header">
-                                                
-                                             </div>
+                                            <!-- 問題title START -->
+                                            <div class="card-header-left" id="questionTitle"></div>
+                                            <!-- 問題title START -->
+                                            
                                               <div class="card-header-right">
                                                   <i class="icofont icofont-spinner-alt-5"></i>
                                               </div>
                                         </div>
                                         <div class="card-block">
                                             <div class="row">
-                                                <!-- 問題 start-->
                                                 <div class="col-12" id="question">
                                                     <div class="badge-box">
                                                         <!-- 貼文編號與分數start -->
@@ -82,10 +82,9 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!-- 問題 end-->
                                                 
                                                 <div class="card-header">
-                                                    <div class="card-header-left">
+                                                    <div class="card-header-left" id="answerTitle">
                                                         <div class="title" style="display: inline-block">回答</div>
                                                         <div id="answerButton" style="display: inline-block;"></div>
                                                     </div>
@@ -175,7 +174,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"></h5>
+                <h5 class="modal-title" id="deleteTitleInModal"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>

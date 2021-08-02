@@ -551,7 +551,7 @@ function showPost(response){
 
 function set(){
     getLanguageTag();
-    localStorage.setItem("forwardPage", "postRowFrame");
+    localStorage.setItem("postType", "innerPost");
     localStorage.setItem("postAPI", "query_inner_post_list");
     
     $("#searchTextContent").hide(); // 隱藏別人的

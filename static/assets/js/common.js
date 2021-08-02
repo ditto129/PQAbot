@@ -4,3 +4,9 @@ var head_url = "http://0.0.0.0:55001/api/";
 function setPage(page){
     localStorage.setItem("page", page);
 }
+
+//////////////// 可插入程式碼 START ////////////////
+
+
+
+//////////////// 可插入程式碼 END ////////////////

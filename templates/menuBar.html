@@ -94,14 +94,14 @@
                         
                         <!-- 通知＆個人頭像 -->
                         <ul class="nav-right">
-                            <li class="header-notification">
+                            <li class="header-notification" id="headerNotification">
                                 <a href="#">
                                     <i id="bell" class="ti-bell"></i>
 <!--                                     新通知粉色的那個 -->
                                         <span id="newNotification"></span>
                                 </a>
                                 <!-- 通知內容 START -->
-                                <ul class="show-notification" id="showNotification" style="height: 506px; overflow: scroll;"></ul>
+                                <ul class="show-notification" id="showNotification" style="width: 250px; height: 390px; overflow: scroll;"></ul>
                                 <!-- 通知內容 END -->
                             </li>
                             <li class="user-profile header-notification">
@@ -178,7 +178,7 @@
                                         
                                         <!-- 聊天室列表 START -->
                                         <div class="col-3">
-                                            <div class="card">
+                                            <div class="card" id="chatList">
                                                 <div class="card-header">
                                                     <h5 class="card-header-text">聊天室列表</h5>
                                                 </div>
@@ -275,7 +275,7 @@
                             
                                         
                                         <!-- 正在聊天的頭像 START -->
-                                        <div>
+                                        <div id="chatImage">
                                             <img src="../static/images/baymaxChat.png" class="rounded-circle scaled_img chatIng" onclick="open_close()">
                                         </div>
                                         <!-- 正在聊天的頭像 END -->

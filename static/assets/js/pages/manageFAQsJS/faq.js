@@ -692,6 +692,7 @@ function set(){
     getLanguageTag();
     localStorage.setItem("forwardPage", "FaqFrame");
     localStorage.setItem("postAPI", "query_faq_list");
+    localStorage.setItem("postType", "faq");
     
     $("#searchTextContent").hide();
     $("#searchTagContent").hide();

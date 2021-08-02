@@ -1,12 +1,30 @@
-var forwardPage;
+var postType;
+ 
+function setCodeColor(){
+    hljs.highlightAll();
+}
+
+function addCodeArea(){
+    console.log("lan: "+$("#language").val());
+    var language = $("#language").val();
+    var content = document.getElementById("replyContent").innerHTML;
+    content += '<pre><code class="';
+    content += language;
+    content += '">';
+//    content += 'print("hello world")\n';
+//    content += 't = input()';
+    content += '</code></pre>';
+    
+    document.getElementById("replyContent").innerHTML = content;
+    setCodeColor();
+}
 
 function save(){
-    switch(forwardPage){
-        case "FaqFrame":
+    switch(postType){
+        case "faq":
             addFaqAnswer();
             break;
-        case "postRowFrame":
-        case "profileFrame":
+        case "innerPost":
             addInnerPostAnswer();
             break;
     }
@@ -31,8 +49,8 @@ function addFaqAnswer(){
     }
     else{
         var data = {faq_id: faqId, vote: vote, content: content};
-        console.log("data: ");
-        console.log(data);
+//        console.log("data: ");
+//        console.log(data);
         //--- 取得表單資料 END ---//
 
         //--- 呼叫API START ---//
@@ -93,7 +111,7 @@ function addInnerPostAnswer(){
     
     //----- 為了處理通知 更新資料庫 -----//
     myURL = head_url + "add_post_notification?user_id="+postOwnerId+"&replier_name="+replierName+"&post_id="+postId;
-    console.log("myURL: "+myURL);
+//    console.log("myURL: "+myURL);
     $.ajax({
         url: myURL,
         type: "GET",
@@ -134,20 +152,21 @@ function addInnerPostAnswer(){
 }
 
 function start(){
-    console.log("有載入這個檔案");
-    forwardPage = localStorage.getItem("forwardPage");
-    console.log("forward: "+forwardPage);
+    postType = localStorage.getItem("postType");
     var content = "";
-    switch(forwardPage){
-        case "FaqFrame":
+    switch(postType){
+        case "faq":
             content += '<label class="col-sm-2 col-form-label">回覆的分數</label><input class="addFAQsInput col-sm-10" id="answerScore"><br>';
             break;
-        case "postRowFrame":
-        case "profileFrame":
+        case "innerPost":
             content += '<label class="col-sm-2 col-form-label">是否匿名<input id="anonymous" type="checkbox"  data-toggle="toggle" data-size="xs" data-onstyle="secondary" data-width="60" data-height="35" data-on="是" data-off="否"></label>';
             break;
     }
     document.getElementById("replyFirst").innerHTML = content;
 }
 
-window.addEventListener("load", start, false);
+
+
+window.addEventListener("load", function(){
+    start();
+}, false);

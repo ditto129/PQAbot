@@ -740,8 +740,9 @@
             {
                 this.codeMirror.find(".CodeMirror-gutters").css("border-right", "none");
             }
-
+            console.log(this);
             return this;
+            
         },
         
         /**

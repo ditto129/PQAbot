@@ -331,13 +331,14 @@ function clickChatroomInnerSearch(postId){
 function start(){
     localStorage.clear();
     //這個是管理者
-//    localStorage.setItem("role", "manager");
-//    localStorage.setItem("sessionID", 4444);
+    localStorage.setItem("role", "manager");
+    localStorage.setItem("sessionID", 4444);
     
     // 這個是一般使用者
-    localStorage.setItem("role", "generalUser");
-    localStorage.setItem("sessionID", 123);
+//    localStorage.setItem("role", "generalUser");
+//    localStorage.setItem("sessionID", 123);
     var session_id = localStorage.getItem("sessionID");
+    var role = localStorage.getItem("role");
     
     // ---------- 同個頁面監聽localStorage START ---------- //
     var orignalSetItem = localStorage.setItem;
@@ -358,7 +359,7 @@ function start(){
     // ---------- 個人資料 START ---------- //
     showIdentity();
     getUserHeadshotAndName();
-    if(localStorage.getItem("role")=="generalUser"){
+    if(role=="generalUser"){
         getUserInterestTags();
     }
     // ---------- 個人資料 END ---------- //
@@ -374,44 +375,44 @@ function start(){
 
     
     // ---------- PSABot聊天室 START ---------- //
-    //到時候要用session_id
+    if(role=="generalUser"){
+        //到時候要用session_id
     
-    //傳session_start
-    var myURL = head_url + "session_start?sender_id="+session_id;
-//    console.log("myURL: "+myURL);
-    $.ajax({
-        url: myURL,
-        type: "GET",
-        dataType: "json",
-        async:false,
-        contentType: 'application/json; charset=utf-8',
-        success: function(response){
-            console.log("response: "+response);
-            console.log(response);
-        },
-        error: function(){
-            console.log("error");
-        }
-    });
-    
-    
-    var myURL = head_url + "welcome?sender_id="+session_id;
-//    console.log("myURL: "+myURL);
-    $.ajax({
-        url: myURL,
-        type: "GET",
-        dataType: "json",
-        async:false,
-        contentType: 'application/json; charset=utf-8',
-        success: function(response){
-            console.log("");
-            console.log(response);
-            bot(response.text)
-        },
-        error: function(){
-            console.log("error");
-        }
-    });
+        //傳session_start
+        var myURL = head_url + "session_start?sender_id="+session_id;
+        $.ajax({
+            url: myURL,
+            type: "GET",
+            dataType: "json",
+            async:false,
+            contentType: 'application/json; charset=utf-8',
+            success: function(response){
+//                console.log("response: "+response);
+//                console.log(response);
+            },
+            error: function(){
+//                console.log("error");
+            }
+        });
+
+
+        var myURL = head_url + "welcome?sender_id="+session_id;
+        $.ajax({
+            url: myURL,
+            type: "GET",
+            dataType: "json",
+            async:false,
+            contentType: 'application/json; charset=utf-8',
+            success: function(response){
+//                console.log("");
+//                console.log(response);
+                bot(response.text)
+            },
+            error: function(){
+//                console.log("error");
+            }
+        });
+    }
     // ---------- PSABot聊天室 END ---------- //
     
 }
@@ -1024,12 +1025,20 @@ function setNotification(){
     
     // 點擊小鈴鐺（要call API）
     var bell = document.getElementById("bell");
-    bell.addEventListener("click", notNewAnymore, false);
-    bell.addEventListener("mouseover", notNewAnymore, false);
-//    bell.addEventListener("mouseout", clearNotification, false);
+    bell.addEventListener("click", function(){
+        notNewAnymore();
+    }, false);
+    bell.addEventListener("mouseover", function(){
+        notNewAnymore();
+    }, false);
+    var showNotificationScope = document.getElementById("showNotification");
+    showNotificationScope.addEventListener("mouseleave", function(){
+        showNotificationScope.scrollTop = 0;
+    }, false);
     
     // 初始化（先抓5筆資料）
     notificationPage = 0;
+    notificationEnd = false;
     getNotification();
     
     // 開始監聽是否有滑動
@@ -1050,16 +1059,17 @@ function listenNotification(){
             contentType: 'application/json; charset=utf-8',
             success: function(response){
                 if(response.new==true){
-                    console.log("有新的通知");
+//                    console.log("有新的通知");
                     $("#newNotification").addClass("badge bg-c-pink");
+                    notificationPage = 0;
                     getNotification();
                 }
                 else{
-                    console.log("沒有");
+//                    console.log("沒有");
                 }
             },
             error: function(){
-                console.log("error");
+//                console.log("error");
             }
         });
     }, 60000);
@@ -1068,10 +1078,10 @@ function listenNotification(){
 // 滑到底之後載入更多通知
 function moreNotification(){
     var showNotificationScope = document.getElementById("showNotification");
-    console.log("可視高度: "+showNotificationScope.clientHeight);
-    console.log("總高度: "+showNotificationScope.scrollHeight);
-    console.log("捲進去的高度: "+showNotificationScope.scrollTop);
-    if(showNotificationScope.scrollTop+showNotificationScope.clientHeight > showNotificationScope.scrollHeight){
+//    console.log("可視高度: "+showNotificationScope.clientHeight);
+//    console.log("總高度: "+showNotificationScope.scrollHeight);
+//    console.log("捲進去的高度: "+showNotificationScope.scrollTop);
+    if(showNotificationScope.scrollTop+showNotificationScope.clientHeight >= showNotificationScope.scrollHeight){
         if(notificationEnd==false){
             notificationPage += 1;
             getNotification();
@@ -1082,11 +1092,12 @@ function moreNotification(){
 // 顯示通知
 function showNotification(response){
     notificationIndex = [];
-    console.log("通知顯示: ");
-    console.log(response);
-    var content = document.getElementById("showNotification").innerHTML;
-    if(content == ""){ //第一次
-        content += "<li><h6>通知</h6></li>";
+    var content;
+    if(notificationPage==0){
+        content = "<li><h6>通知</h6></li>";
+    }
+    else{
+        content = document.getElementById("showNotification").innerHTML;
     }
     if(response.result.length==0){
         if(notificationEnd==false && notificationPage==0){// 如果是第一次抓就沒資料，才要顯示
@@ -1103,29 +1114,40 @@ function showNotification(response){
         time = time.toISOString();
         time = time.slice(0, 10);
         
-        content += '<li>';
+        content += '<li id="background';
+        content += response.result[i].id;
+        content += '" style="background: ';
+        // 是否看過 START
+        if(response.result[i].check==false){
+//            content += '<label id="notification';
+//            content += response.result[i].id;
+//            content += '" class="label label-danger align-self-center">是新的</label>';
+            content += '#E6E6FA;">';
+        }
+        else{
+//            content += '<label id="notification';
+//            content += response.result[i].id;
+//            content += '" class="label label-danger align-self-center" style="background: #505458;">已看過</label>';
+            content += '#FFFFFF;">';
+        }
+                // 是否看過 END
+        
             content += '<div class="media" onclick="checkNotification(\'';
             content += response.result[i].detail.post_id;
             content += '\', \'';
             content += response.result[i].id;
             content += '\')">';
-                // 是否看過 START
-                if(response.result[i].check==false){
-                    content += '<label class="label label-danger">是新的</label>';
-                }
-                else{
-                    content += '<label class="label label-danger" style="background: #505458;">已看過</label>';
-                }
-                // 是否看過 END
-                
+
                 // 拿照片 STRAT
-                content += '<img class="d-flex align-self-center" src="../static/images/person_4.jpg" alt="Generic placeholder image">';
+//                content += '<img class="d-flex align-self-center" src="../static/images/person_4.jpg" alt="Generic placeholder image">';
+                content += '<i class="d-flex align-self-center fa-lg fa fa-reply-all" aria-hidden="true" style="margin: 10px;"></i>';
+//                content += '<i class="d-flex align-self-center fa-lg fa fa-comments-o" aria-hidden="true" style="margin: 10px;"></i>';
                 // 拿照片 END
         
                 content += '<div class="media-body">';
-                    content += '<h5 class="notification-user">';
-                        content += response.result[i].detail.replier_name;
-                    content += '</h5>';
+//                    content += '<h5 class="notification-user">';
+//                        content += response.result[i].detail.replier_name;
+//                    content += '</h5>';
                     content += '<p class="notification-msg">';
                         content += response.result[i].detail.replier_name;
                     content += '回覆了您的貼文</p>';
@@ -1149,46 +1171,44 @@ function getNotification(){
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-            console.log("通知列表: ");
-            console.log(response);
+//            console.log("通知列表: ");
+//            console.log(response);
             showNotification(response);
         },
         error: function(){
-            console.log("error");
+//            console.log("error");
         }
     });
 }
 
 // call API，代表通知已經不是新的了～
-// 同時把視窗移到最上面
 function notNewAnymore(){
-    var showNotificationScope = document.getElementById("showNotification");
-    showNotificationScope.scrollTop = 0;
-    
-    var myURL = head_url + "set_notification_new?user_id="+localStorage.getItem("sessionID");
+    $("#newNotification").removeClass("badge bg-c-pink");
+    var myURL = head_url + "set_notification_new";
     var data = {user_id: localStorage.getItem("sessionID"), id: notificationIndex};
-    console.log("data: ");
-    console.log(data);
-//    $.ajax({
-//        url: myURL,
-//        type: "GET",
-//        async: false, 
-//        dataType: "json",
-//        contentType: 'application/json; charset=utf-8',
-//        success: function(response){
-////            console.log(response);
-//            $("#newNotification").removeClass("badge bg-c-pink");
-//        },
-//        error: function(){
-////            console.log("error");
-//        }
-//    });
+    
+    $.ajax({
+    url: myURL,
+    type: "POST",
+    data: JSON.stringify(data),
+    async: false,
+    dataType: "json",
+    contentType: 'application/json; charset=utf-8',
+    success: function(response){
+//        console.log("成功set_notification_new");
+//        console.log(response);
+    },
+    error: function(response){
+        
+    }
+});
 }
 
 // call API，代表已經查看過～
 function alreadyChecked(index){
+    $("#background"+index).css("background-color", "#FFFFF");
     var myURL = head_url + "set_notification_check?user_id="+localStorage.getItem("sessionID")+"&id="+index;
-    console.log("已經查看過了～: "+myURL);
+//    console.log("已經查看過了～: "+myURL);
     $.ajax({
         url: myURL,
         type: "GET",
@@ -1197,11 +1217,12 @@ function alreadyChecked(index){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("成功回傳");
-            console.log(response);
+//            console.log(response);
+            notificationPage = 0;
             getNotification();
         },
         error: function(){
-            console.log("error");
+//            console.log("error");
         }
     });
 }
@@ -1213,10 +1234,17 @@ function checkNotification(postId, index){
     setPage("mySinglePostFrame");
 }
 
-
 ////////////////// 處理通知 END //////////////////
 
 window.addEventListener("load", function(){
     start();
-    setNotification();
+    if(localStorage.getItem("role")=="generalUser"){
+        setNotification();
+    }
+    else{
+        document.getElementById("chatImage").innerHTML = "";//聊天圖像
+        document.getElementById("chatroom").innerHTML = "";//聊天視窗
+        document.getElementById("chatList").innerHTML = "";//聊天列表
+        document.getElementById("headerNotification").innerHTML = "";//上方通知
+    }
 }, false);
