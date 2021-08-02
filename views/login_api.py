@@ -28,7 +28,7 @@ def google_sign_in():
             
     except ValueError:
         # Invalid token
-        raise ValueError('Invalid token')
+        return jsonify({'error':'Invalid token'})
     # 取得使用者資料，若使用者不存在就建立一份
     user_dict = user.query_user(id_info['sub'])
     if user_dict == None:
