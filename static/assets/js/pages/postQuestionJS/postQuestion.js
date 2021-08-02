@@ -15,11 +15,11 @@ function start(){
 //        element: document.getElementById("postContent") 
 //    });
     
-    var editor = new Editor({
-        element: document.getElementById("postContent")
-    });
-
-    editor.render();
+//    var editor = new Editor({
+//        element: document.getElementById("postContent")
+//    });
+//
+//    editor.render();
 }
 
 // 目前不需要
