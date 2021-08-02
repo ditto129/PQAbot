@@ -6,11 +6,20 @@ var chosenTags = [];
 var allTags = {};
 
 function start(){
-    console.log("開始postQuestion.html");
     $("#tag_content").hide();
     
     //先去準備Tag的內容
     getLanguageTag();
+    
+//    var simplemde = new SimpleMDE({ 
+//        element: document.getElementById("postContent") 
+//    });
+    
+    var editor = new Editor({
+        element: document.getElementById("postContent")
+    });
+
+    editor.render();
 }
 
 // 目前不需要

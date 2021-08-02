@@ -59,92 +59,39 @@
                         <div class="page-body">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <!-- 貼文列表 start -->
+                                    
                                     <div class="card">
                                         <div class="card-header">
                                             <div class="card-header-left">
                                                 <div class="title">貼文列表</div>
                                              </div>
                                             <!-- 翻頁 start-->
-                                                <div class="pagination card-header-right" style="float: right;">
-                                                    <button href="#" id="backwardPage" onclick="editPageNum('-1')">❮</button>
-                                                    <button href="#" id="forwardPage" onclick="editPageNum('1')">❯</button>
-                                                </div>
-                                                <!-- 翻頁 end-->
+                                            <div class="pagination card-header-right" style="float: right;">
+                                                <button href="#" id="backwardPage" onclick="editPageNum('-1')">❮</button>
+                                                <button href="#" id="forwardPage" onclick="editPageNum('1')">❯</button>
+                                            </div>
+                                            <!-- 翻頁 end-->
                                             
                                             <div class="card-header-right">
                                                 <i class="icofont icofont-spinner-alt-5"></i>
                                             </div>
                                             
-                                            <div style="margin-top: 20px;">
-                                                <input id="searchText" type="text" name="search" placeholder="Search..">
-<!--                                                <button style="margin-top: 5px; display: inline-block;" class="btn btn-outline-secondary btn-sm" onclick="search('new')">搜尋</button>-->
-                                            </div>
-                                            <!--tags篩選貼文start-->
+                                            <!-- 貼文排序 START -->
                                             <div>
-<!--                                            <div data-toggle="tooltip" data-placement="top" data-original-title="點我篩選標籤" style="display: inline;">-->
-                                            <i type="button" class="fa fa-tags fa-lg scoreBtn" aria-hidden="true" data-toggle="modal" data-target="#exampleModal" style="margin-top: 20px; display: inline-block;"></i>
-                                            <span style="display: inline-block;">選擇相關標籤</span>
-                                            </div> 
-                                            <!--tags篩選貼文end-->
-                                            
+                                            <i type="button" class="fa fa-filter fa-lg scoreBtn" aria-hidden="true" onclick="filter()" style="margin-top: 20px; display: inline-block;"></i>
+                                            <span style="display: inline-block;" id="optionText">篩選條件 | 顯示全部 | 依分數排序</span>
+                                            </div>
+                                            <!-- 貼文排序 END -->
                                             
                                             <!--已選標籤-->
                                             <div id="chosen_tag"></div>
-                                            
-                                            <!-- 貼文排序 START -->
-                                            <div>
-<!--                                            <div data-toggle="tooltip" data-placement="top" data-original-title="點我篩選標籤" style="display: inline;">-->
-                                            <i type="button" class="fa fa-filter fa-lg scoreBtn" aria-hidden="true" data-toggle="modal" data-target="#exampleModal2" style="margin-top: 20px; display: inline-block;"></i>
-                                            <span style="display: inline-block;" id="optionText">貼文排序 | 依分數高低</span>
-                                            </div>
-                                            <!-- 貼文排序 END -->
                                         </div>
+                                        <!-- 貼文列表 start -->
                                         <div class="card-block">
                                             <div class="row" id="post">
-                                                <!--貼文1 start-->
-                                                <div class="col-lg-4 col-xl-3 col-sm-12" >
-                                                    <!-- 貼文連結start -->
-                                                    <a href="#" onclick="setPage('444', 'mySinglePostFrame')">
-                                                        <div class="badge-box">
-                                                            <!-- 貼文編號與分數start -->
-                                                            <div class="sub-title">
-<!--                                                                <i class="fa fa-trash-o fa-lg" aria-hidden="true" style="color: red;"></i>-->
-                                                                <span>貼文 #00001</span>
-                                                                <span style="float:right;"><i class="fa fa-trophy" aria-hidden="true"></i>5</span>
-                                                            </div>
-                                                            <!-- 貼文編號與分數end -->
-                                                            <!-- 貼文標題start -->
-                                                            <div>
-                                                            <span>連不上 server</span>
-                                                            </div>
-                                                            <!-- 貼文標題end -->
-                                                            <div style="margin-top: 20px;">
-                                                                <!-- tag start-->
-                                                                <label class="badge badge-default purpleLabel">html</label>
-                                                                <label class="badge badge-default purpleLabel">javascript</label>
-                                                                <label class="badge badge-default purpleLabel">css</label>
-                                                                <!-- tag end-->
-                                                                <!-- 貼文日期start -->
-                                                                <div>
-                                                                <label class="badge purpleLabel2">2021 - 09 - 08</label>
-                                                                </div>
-                                                                <!-- 貼文日期end -->
-                                                                
-                                                            </div>
-                                                            
-                                                        </div>
-                                                        
-                                                    </a>
-                                                    <!-- 貼文連結end -->
-                                                </div>
-                                                <!--貼文1 end-->
-                                                
-                                                
-                                                
                                             </div>
                                         </div>
-                                    <!-- 貼文列表 end -->
+                                        <!-- 貼文列表 end -->
                                     </div>
                                 </div>
                             </div>
@@ -155,79 +102,72 @@
             </div>
         </div>
       </div>
-<!-- 選標籤視窗 START-->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+<!-- 篩選各種東西 START -->
+<div class="modal fade" id="aboutSearch" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content"> 
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">選擇相關標籤</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>    
-      <div class="modal-body">     
-          <!-- 興趣標籤 START -->
-<!--
-          <div style="margin-top: 15px;" id="interestingTags">
-              <i class="fa fa-certificate" aria-hidden="true" style="color: #5D478B;"></i>
-              <span style="font-size: 20px;">興趣標籤</span>
-          </div>
--->
-          <div id="forwardPage">
-          </div>
-          <div id="chose_tag" style="margin-top: 5px;">
-          </div>
-          
-          <div id="chosen_tag_in_modal" style="margin-top: 15px;">
-          </div>
-          <!-- 興趣標籤 END -->
-      </div>
+        
+        <!-- 篩選方式 START -->
+        <div class="modal-header">
+            <h5 class="modal-title">篩選貼文方式</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">     
+            <div style="margin: 15px;">
+                <input type="radio" name="searchType" id="searchAll" value="searchAll" checked>
+                <label class="form-check-label" for="searchAll">顯示全部</label>
+            </div>
+            <div style="margin: 15px;">
+                <input type="radio" name="searchType" id="searchText" value="searchText">
+                <label class="form-check-label" for="searchText">透過字串搜尋</label>
+                <div style="padding-left: 32.22px;">
+                    <input id="searchTextContent" type="text" name="search" placeholder="輸入相關文字...">
+                </div>
+            </div>
+            <div style="margin: 15px;">
+                <input type="radio" name="searchType" id="searchTag" value="searchTag">
+                <label class="form-check-label" for="searchTag">透過標籤搜尋</label>
+                <div style="padding-left: 32.22px; border-color: #505458;" id="searchTagContent">
+                    <div id="forwardPageInModal">
+                    </div>
+                    <div id="choseTagForSearch">
+                    </div>
+                    <div id="chosenTagInModalForSearch" style="margin-top: 5px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 篩選方式 END -->
+        
+        <!-- 貼文排序方式 START -->
+        <div class="modal-header">
+            <h5 class="modal-title">貼文排序方式</h5>
+        </div>    
+        <div class="modal-body">
+            <div>
+                <input type="radio" name="sortType" id="sortScore" value="sortScore" checked>
+                <label class="form-check-label" for="sortScore">依分數排序</label>
+            </div>
+            <div>
+                <input type="radio" name="sortType" id="sortView" value="sortView">
+                <label class="form-check-label" for="sortView">依觀看次數排序</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" name="sortType" id="sortDate" value="sortDate">
+                <label class="form-check-label" for="sortDate">依日期排序</label>
+            </div>
+        </div>
+        <!-- 貼文排序方式 END -->
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="searchByTags('new')" data-dismiss="modal">搜尋</button>
+            <button type="button" class="btn btn-secondary" onclick="searchInnerPost()" data-dismiss="modal">搜尋</button>
         </div>
     </div>
   </div>
 </div>
-<!-- 選標籤視窗 END-->
-      
-<!-- 選擇貼文排序視窗 START -->
-      <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-              <div class="modal-content"> 
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel2">選擇貼文如何排序</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-                  </div>    
-                  <div class="modal-body">     
-                      <div>
-                          <input type="radio" name="postSort" id="radioScore" checked>
-                          <label class="form-check-label" for="radioScore">
-                              依分數排序
-                          </label>
-                      </div>
-                      <div>
-                          <input type="radio" name="postSort" id="radioViews">
-                          <label class="form-check-label" for="radioViews">
-                              依觀看次數排序
-                          </label>
-                      </div>
-                      <div class="form-check">
-                          <input type="radio" name="postSort" id="radioTime">
-                          <label class="form-check-label" for="radioTime">
-                              依日期排序
-                          </label>
-                      </div>
-                  </div>
-                  
-                  <div class="modal-footer">
-                      <button class="btn btn-secondary" onclick="changeSort()" data-dismiss="modal">確認</button>
-                  </div>
-              </div>
-          </div>
-      </div>
-<!-- 選擇貼文排序視窗 END -->
+<!-- 篩選各種東西 END -->
         <!-- Warning Section Starts -->
         <!-- Older IE warning message -->
     <!--[if lt IE 9]>
