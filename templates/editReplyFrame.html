@@ -55,11 +55,13 @@
                                         <div class="card">
                                             <div class="card-block">
                                                 <form>
+                                                    <div class="form-group row" id="editReplyVote"></div>
+                                                    <br>
                                                     <!-- 回覆內容 row start -->
                                                     <div class="form-group row">
                                                         <label class="col-sm-2 col-form-label">回覆內容</label>
                                                         <div class="col-sm-10">
-                                                            <textarea id="response" rows="5" cols="5" class="form-control" placeholder="請引用相關css, js檔"></textarea>
+                                                            <textarea id="response" rows="5" cols="5" class="form-control" placeholder="請輸入回覆內容"></textarea>
                                                         </div>
                                                     </div>
                                                     <!-- 回覆內容 row end -->
@@ -79,6 +81,26 @@
             </div>                                    
         </div>
 
+<!-- 不得為空 START -->
+<div class="modal fade" id="note" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">不得為空</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+          <div class="modal-body" id="modalContent">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">好的</button>
+          </div>
+        </div>
+      </div>
+</div>
+<!-- 不得為空 END -->
                                         <!-- Warning Section Starts -->
                                         <!-- Older IE warning message -->
 <!--[if lt IE 9]>

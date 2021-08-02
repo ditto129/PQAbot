@@ -70,8 +70,7 @@
                                             <div class="card-header-left">
                                                 <div class="title">FAQs紀錄</div>
                                                 <br><br>
-                                                <button class="themeButton" onclick="addFAQsData()">新增</button>
-                                                <button class="themeButton" onclick="importFAQsData()">匯入</button>
+                                                <div id="newFaqData"></div>
                                              </div>
                                             
                                             <!-- 翻頁 start-->
@@ -81,32 +80,24 @@
                                             </div>
                                             <!-- 翻頁 end-->
                                             
+<!--
                                             <div class="card-header-right">
                                                 <i class="icofont icofont-spinner-alt-5"></i>
                                             </div>
+-->
                                             
-                                            <div style="margin-top: 20px;">
-                                                <input id="searchText" type="text" name="search" placeholder="Search..">
-                                            </div>
-                                            
-                                            <!--tags篩選貼文start-->
-                                            <div>
-                                            <i type="button" class="fa fa-tags fa-lg scoreBtn" aria-hidden="true" onclick="useTagsInSearch()" style="margin-top: 20px; display: inline-block;"></i>
-                                            <span style="display: inline-block;">選擇相關標籤</span>
-                                            </div> 
-                                            <!--tags篩選貼文end-->
-                                            
-                                            
-                                            <!--已選標籤-->
-                                            <div id="chosenTags"></div>
+
                                             
                                             <!-- 貼文排序 START -->
                                             <div>
-<!--                                            <div data-toggle="tooltip" data-placement="top" data-original-title="點我篩選標籤" style="display: inline;">-->
-                                            <i type="button" class="fa fa-filter fa-lg scoreBtn" aria-hidden="true" data-toggle="modal" data-target="#exampleModal2" style="margin-top: 20px; display: inline-block;"></i>
-                                            <span style="display: inline-block;" id="optionText">貼文排序 | 依分數高低</span>
+                                            <i type="button" class="fa fa-filter fa-lg scoreBtn" aria-hidden="true" onclick="filter()" style="margin-top: 20px; display: inline-block;"></i>
+                                            <span style="display: inline-block;" id="optionText">篩選條件 | 顯示全部 | 依分數排序</span>
                                             </div>
                                             <!-- 貼文排序 END -->
+                                            
+                                            <!-- 已選標籤 START-->
+                                            <div id="chosenTags"></div>
+                                            <!-- 已選標籤 END-->
                                         
                                 </div>
                                     
@@ -209,35 +200,71 @@
 </div>
 <!-- 匯入FAQ END -->
       
-<!-- 選標籤視窗 START-->
-<div class="modal fade" id="searchByTags" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- 篩選各種東西 START -->
+<div class="modal fade" id="aboutSearch" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content"> 
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">選擇相關標籤</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>    
-      <div class="modal-body">     
-          <div id="forwardPageInModal">
-          </div>
-          <div id="choseTagForSearch" style="margin-top: 5px;">
-          </div>
-          
-          <div id="chosenTagInModalForSearch" style="margin-top: 15px;">
-          </div>
-          <!-- 興趣標籤 END -->
-      </div>
+        
+        <!-- 篩選方式 START -->
+        <div class="modal-header">
+            <h5 class="modal-title">篩選貼文方式</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">     
+            <div style="margin: 15px;">
+                <input type="radio" name="searchType" id="searchAll" value="searchAll" checked>
+                <label class="form-check-label" for="searchAll">顯示全部</label>
+            </div>
+            <div style="margin: 15px;">
+                <input type="radio" name="searchType" id="searchText" value="searchText">
+                <label class="form-check-label" for="searchText">透過字串搜尋</label>
+                <div style="padding-left: 32.22px;">
+                    <input id="searchTextContent" type="text" name="search" placeholder="輸入相關文字...">
+                </div>
+            </div>
+            <div style="margin: 15px;">
+                <input type="radio" name="searchType" id="searchTag" value="searchTag">
+                <label class="form-check-label" for="searchTag">透過標籤搜尋</label>
+                <div style="padding-left: 32.22px; border-color: #505458;" id="searchTagContent">
+                    <div id="forwardPageInModal">
+                    </div>
+                    <div id="choseTagForSearch">
+                    </div>
+                    <div id="chosenTagInModalForSearch" style="margin-top: 5px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 篩選方式 END -->
+        
+        <!-- 貼文排序方式 START -->
+        <div class="modal-header">
+            <h5 class="modal-title">貼文排序方式</h5>
+        </div>    
+        <div class="modal-body">
+            <div>
+                <input type="radio" name="sortType" id="sortScore" value="sortScore" checked>
+                <label class="form-check-label" for="sortScore">依分數排序</label>
+            </div>
+            <div>
+                <input type="radio" name="sortType" id="sortView" value="sortView">
+                <label class="form-check-label" for="sortView">依觀看次數排序</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" name="sortType" id="sortDate" value="sortDate">
+                <label class="form-check-label" for="sortDate">依日期排序</label>
+            </div>
+        </div>
+        <!-- 貼文排序方式 END -->
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="searchByTags('new')" data-dismiss="modal">搜尋</button>
+            <button type="button" class="btn btn-secondary" onclick="searchFaqPost()" data-dismiss="modal">搜尋</button>
         </div>
     </div>
   </div>
 </div>
-<!-- 選標籤視窗 END-->
-
-
+<!-- 篩選各種東西 END -->
       
         <!-- Warning Section Starts -->
         <!-- Older IE warning message -->
@@ -304,7 +331,7 @@
 <script src="../static/assets/js/demo-12.js"></script>
 <script src="../static/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="../static/assets/js/common.js"></script>
-      <script src="../static/assets/js/pages/manageFAQsJS/manageFAQs.js"></script>
+<script src="../static/assets/js/pages/manageFAQsJS/faq.js"></script>
 </body>
 
 </html>

@@ -331,12 +331,12 @@ function clickChatroomInnerSearch(postId){
 function start(){
     localStorage.clear();
     //這個是管理者
-//    localStorage.setItem("role", "manager");
-//    localStorage.setItem("sessionID", 4444);
+    localStorage.setItem("role", "manager");
+    localStorage.setItem("sessionID", 4444);
     
     // 這個是一般使用者
-    localStorage.setItem("role", "generalUser");
-    localStorage.setItem("sessionID", 123);
+//    localStorage.setItem("role", "generalUser");
+//    localStorage.setItem("sessionID", 123);
     var session_id = localStorage.getItem("sessionID");
     
     // ---------- 同個頁面監聽localStorage START ---------- //
@@ -378,7 +378,7 @@ function start(){
     
     //傳session_start
     var myURL = head_url + "session_start?sender_id="+session_id;
-    console.log("myURL: "+myURL);
+//    console.log("myURL: "+myURL);
     $.ajax({
         url: myURL,
         type: "GET",
@@ -396,7 +396,7 @@ function start(){
     
     
     var myURL = head_url + "welcome?sender_id="+session_id;
-    console.log("myURL: "+myURL);
+//    console.log("myURL: "+myURL);
     $.ajax({
         url: myURL,
         type: "GET",
@@ -419,17 +419,17 @@ function start(){
 function setMenuBar(){
     var role = localStorage.getItem("role"), start, end;
     var leftManuBarPagesContent = "";
-    var setPage = ["home", "profileFrame", "postQuestionFrame", "postRowFrame", "home", "postRowFrame", "manageFAQsFrame", "manageDataFrame"];
-    var pageIcon = ["ti-home", "fa fa-user-o", "fa fa-file-text-o", "fa fa-eye", "ti-home", "fa fa-clipboard", "fa fa-cogs", "fa fa-wrench"];
-    var pageName = ["首頁", "個人頁面", "發布貼文", "瀏覽貼文", "首頁", "管理內部貼文", "管理FAQs資料", "管理資料更新數據"];
+    var setPage = ["home", "profileFrame", "postQuestionFrame", "postRowFrame", "FaqFrame", "home", "postRowFrame", "FaqFrame", "manageDataFrame"];
+    var pageIcon = ["ti-home", "fa fa-user-o", "fa fa-file-text-o", "fa fa-eye", "fa fa-cogs", "ti-home", "fa fa-clipboard", "fa fa-cogs", "fa fa-wrench"];
+    var pageName = ["首頁", "個人頁面", "發布貼文", "瀏覽貼文", "FAQ", "首頁", "管理內部貼文", "管理FAQs資料", "管理資料更新數據"];
     
     if(role == "generalUser"){
         start = 0;
-        end = 4;
+        end = 5;
     }
     else if(role == "manager"){
-        start = 4;
-        end = 8;
+        start = 5;
+        end = 9;
         document.getElementById("interestingTags").innerHTML = "";
     }
     
@@ -1003,11 +1003,11 @@ function logOut(){
 ////////////////// 不同頁面監聽localStorage START //////////////////
 window.addEventListener("storage", function(e){
     if(e.key == "page"){//判斷page是否改變
-        console.log("page有改變");
+//        console.log("page有改變");
         changePage();
     }
     else{
-        console.log("是其他的有變～"+e.key);
+//        console.log("是其他的有變～"+e.key);
     }
 });
 ////////////////// 不同頁面監聽localStorage END ////////////////////
