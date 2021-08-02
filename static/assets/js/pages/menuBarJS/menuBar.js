@@ -1015,18 +1015,26 @@ window.addEventListener("storage", function(e){
 
 ////////////////// 處理通知 START //////////////////
 var notificationPage;
+var notificationIndex = [];
+var notificationEnd = false;
 
 function setNotification(){
-    // 開始監聽
+    // 開始監聽是否有新通知
     listenNotification();
     
     // 點擊小鈴鐺（要call API）
     var bell = document.getElementById("bell");
     bell.addEventListener("click", notNewAnymore, false);
+    bell.addEventListener("mouseover", notNewAnymore, false);
+//    bell.addEventListener("mouseout", clearNotification, false);
     
     // 初始化（先抓5筆資料）
     notificationPage = 0;
     getNotification();
+    
+    // 開始監聽是否有滑動
+    var showNotificationScope = document.getElementById("showNotification");
+    showNotificationScope.addEventListener("scroll", moreNotification, false);
 }
 
 // 監聽是否有新通知（60秒一次）
@@ -1054,15 +1062,43 @@ function listenNotification(){
                 console.log("error");
             }
         });
-    }, 5000);
+    }, 60000);
+}
+
+// 滑到底之後載入更多通知
+function moreNotification(){
+    var showNotificationScope = document.getElementById("showNotification");
+    console.log("可視高度: "+showNotificationScope.clientHeight);
+    console.log("總高度: "+showNotificationScope.scrollHeight);
+    console.log("捲進去的高度: "+showNotificationScope.scrollTop);
+    if(showNotificationScope.scrollTop+showNotificationScope.clientHeight > showNotificationScope.scrollHeight){
+        if(notificationEnd==false){
+            notificationPage += 1;
+            getNotification();
+        }
+    }
 }
 
 // 顯示通知
 function showNotification(response){
+    notificationIndex = [];
     console.log("通知顯示: ");
     console.log(response);
-    var content = "<li><h6>通知</h6></li>";
+    var content = document.getElementById("showNotification").innerHTML;
+    if(content == ""){ //第一次
+        content += "<li><h6>通知</h6></li>";
+    }
+    if(response.result.length==0){
+        if(notificationEnd==false && notificationPage==0){// 如果是第一次抓就沒資料，才要顯示
+            content += '<li><div class="media"><div class="media-body">目前尚無通知</div></div></li>';
+        }
+        else{// 如果是滑到底以後沒資料 顯示「已經沒有更多通知了～」
+            content += '<li><div class="media"><div class="media-body">已經沒有更多通知了～</div></div></li>';
+        }
+        notificationEnd = true;
+    }
     for(var i=0; i<response.result.length; i++){
+        notificationIndex.push(response.result[i].id);
         var time = new Date(response.result[i].time);
         time = time.toISOString();
         time = time.slice(0, 10);
@@ -1124,22 +1160,29 @@ function getNotification(){
 }
 
 // call API，代表通知已經不是新的了～
+// 同時把視窗移到最上面
 function notNewAnymore(){
+    var showNotificationScope = document.getElementById("showNotification");
+    showNotificationScope.scrollTop = 0;
+    
     var myURL = head_url + "set_notification_new?user_id="+localStorage.getItem("sessionID");
-    $.ajax({
-        url: myURL,
-        type: "GET",
-        async: false, 
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        success: function(response){
-//            console.log(response);
-            $("#newNotification").removeClass("badge bg-c-pink");
-        },
-        error: function(){
-//            console.log("error");
-        }
-    });
+    var data = {user_id: localStorage.getItem("sessionID"), id: notificationIndex};
+    console.log("data: ");
+    console.log(data);
+//    $.ajax({
+//        url: myURL,
+//        type: "GET",
+//        async: false, 
+//        dataType: "json",
+//        contentType: 'application/json; charset=utf-8',
+//        success: function(response){
+////            console.log(response);
+//            $("#newNotification").removeClass("badge bg-c-pink");
+//        },
+//        error: function(){
+////            console.log("error");
+//        }
+//    });
 }
 
 // call API，代表已經查看過～
@@ -1154,6 +1197,7 @@ function alreadyChecked(index){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
             console.log("成功回傳");
+            console.log(response);
             getNotification();
         },
         error: function(){
