@@ -90,7 +90,7 @@ def update_notification_add(user_id, replier_name, post_id):
     count = [i['count'] for i in _db.USER_COLLECTION.aggregate([
     {
         '$match': {
-            '_id': 'testSkillTree'
+            '_id': user_id
         }
     }, {
         '$project': {
