@@ -202,7 +202,7 @@ def update_faq_answer():
             'content':data['content'],
             'vote':data['vote'],
         }
-        faq_data.insert_answer(answer_dict)
+        faq_data.update_answer(answer_dict)
     except Exception as e :
         answer_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
     return jsonify(answer_dict)
@@ -215,7 +215,7 @@ def delete_faq_answer():
             'faq_id':data['faq_id'],
             'id':data['id']
         }
-        faq_data.insert_answer(answer_dict)
+        faq_data.remove_answer(answer_dict)
     except Exception as e :
         answer_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
     return jsonify(answer_dict)
