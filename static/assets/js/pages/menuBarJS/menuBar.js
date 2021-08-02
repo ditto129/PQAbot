@@ -331,12 +331,12 @@ function clickChatroomInnerSearch(postId){
 function start(){
     localStorage.clear();
     //這個是管理者
-    localStorage.setItem("role", "manager");
-    localStorage.setItem("sessionID", 4444);
+//    localStorage.setItem("role", "manager");
+//    localStorage.setItem("sessionID", 4444);
     
     // 這個是一般使用者
-//    localStorage.setItem("role", "generalUser");
-//    localStorage.setItem("sessionID", 123);
+    localStorage.setItem("role", "generalUser");
+    localStorage.setItem("sessionID", 123);
     var session_id = localStorage.getItem("sessionID");
     
     // ---------- 同個頁面監聽localStorage START ---------- //
@@ -1012,4 +1012,167 @@ window.addEventListener("storage", function(e){
 });
 ////////////////// 不同頁面監聽localStorage END ////////////////////
 
-window.addEventListener("load", start, false);
+
+////////////////// 處理通知 START //////////////////
+var notificationPage;
+
+function setNotification(){
+    // 開始監聽
+    listenNotification();
+    
+    // 點擊小鈴鐺（要call API）
+    var bell = document.getElementById("bell");
+    bell.addEventListener("click", notNewAnymore, false);
+    
+    // 初始化（先抓5筆資料）
+    notificationPage = 0;
+    getNotification();
+}
+
+// 監聽是否有新通知（60秒一次）
+function listenNotification(){
+    // 每5秒去檢查一次
+    setInterval(function(){
+        var myURL = head_url+"check_new_notification?user_id="+localStorage.getItem("sessionID");
+        $.ajax({
+            url: myURL,
+            type: "GET",
+            async: false, 
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function(response){
+                if(response.new==true){
+                    console.log("有新的通知");
+                    $("#newNotification").addClass("badge bg-c-pink");
+                    getNotification();
+                }
+                else{
+                    console.log("沒有");
+                }
+            },
+            error: function(){
+                console.log("error");
+            }
+        });
+    }, 5000);
+}
+
+// 顯示通知
+function showNotification(response){
+    console.log("通知顯示: ");
+    console.log(response);
+    var content = "<li><h6>通知</h6></li>";
+    for(var i=0; i<response.result.length; i++){
+        var time = new Date(response.result[i].time);
+        time = time.toISOString();
+        time = time.slice(0, 10);
+        
+        content += '<li>';
+            content += '<div class="media" onclick="checkNotification(\'';
+            content += response.result[i].detail.post_id;
+            content += '\', \'';
+            content += response.result[i].id;
+            content += '\')">';
+                // 是否看過 START
+                if(response.result[i].check==false){
+                    content += '<label class="label label-danger">是新的</label>';
+                }
+                else{
+                    content += '<label class="label label-danger" style="background: #505458;">已看過</label>';
+                }
+                // 是否看過 END
+                
+                // 拿照片 STRAT
+                content += '<img class="d-flex align-self-center" src="../static/images/person_4.jpg" alt="Generic placeholder image">';
+                // 拿照片 END
+        
+                content += '<div class="media-body">';
+                    content += '<h5 class="notification-user">';
+                        content += response.result[i].detail.replier_name;
+                    content += '</h5>';
+                    content += '<p class="notification-msg">';
+                        content += response.result[i].detail.replier_name;
+                    content += '回覆了您的貼文</p>';
+                    content += '<span class="notification-time">';
+                        content += time;
+                    content += '</span>';
+                content += '</div>';
+            content += '</div>';
+        content += '</li>';
+    }
+    document.getElementById("showNotification").innerHTML = content;
+}
+
+// 拿通知
+function getNotification(){
+    var myURL = head_url + "check_notification_content?user_id="+localStorage.getItem("sessionID")+"&page="+notificationPage;
+    $.ajax({
+        url: myURL,
+        type: "GET",
+        async: false, 
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("通知列表: ");
+            console.log(response);
+            showNotification(response);
+        },
+        error: function(){
+            console.log("error");
+        }
+    });
+}
+
+// call API，代表通知已經不是新的了～
+function notNewAnymore(){
+    var myURL = head_url + "set_notification_new?user_id="+localStorage.getItem("sessionID");
+    $.ajax({
+        url: myURL,
+        type: "GET",
+        async: false, 
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+//            console.log(response);
+            $("#newNotification").removeClass("badge bg-c-pink");
+        },
+        error: function(){
+//            console.log("error");
+        }
+    });
+}
+
+// call API，代表已經查看過～
+function alreadyChecked(index){
+    var myURL = head_url + "set_notification_check?user_id="+localStorage.getItem("sessionID")+"&id="+index;
+    console.log("已經查看過了～: "+myURL);
+    $.ajax({
+        url: myURL,
+        type: "GET",
+        async: false, 
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("成功回傳");
+            getNotification();
+        },
+        error: function(){
+            console.log("error");
+        }
+    });
+}
+
+function checkNotification(postId, index){
+    alreadyChecked(index);
+    localStorage.setItem("postType", "innerPost");
+    localStorage.setItem("singlePostId", postId);
+    setPage("mySinglePostFrame");
+}
+
+
+////////////////// 處理通知 END //////////////////
+
+window.addEventListener("load", function(){
+    start();
+    setNotification();
+}, false);

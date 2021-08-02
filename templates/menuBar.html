@@ -95,18 +95,18 @@
                         <!-- 通知＆個人頭像 -->
                         <ul class="nav-right">
                             <li class="header-notification">
-                                <a href="#!">
-                                    <i class="ti-bell"></i>
-                                    <!-- 新通知粉色的那個 -->
-                                    <span class="badge bg-c-pink"></span>
+                                <a href="#">
+                                    <i id="bell" class="ti-bell"></i>
+<!--                                     新通知粉色的那個 -->
+                                        <span id="newNotification"></span>
                                 </a>
-                                <ul class="show-notification">
+                                <ul class="show-notification" id="showNotification">
                                     <li>
                                         <h6>通知</h6>
-                                        <label class="label label-danger">新的</label>
                                     </li>
                                     <li>
                                         <div class="media">
+                                            <label class="label label-danger">是新的</label>
                                             <img class="d-flex align-self-center" src="../static/images/jackson.png" alt="Generic placeholder image">
                                             <div class="media-body">
                                                 <h5 class="notification-user">易烊千璽</h5>
@@ -117,6 +117,7 @@
                                     </li>
                                     <li>
                                         <div class="media">
+                                            <label class="label label-danger" style="background: #505458;">已看過</label>
                                             <img class="d-flex align-self-center" src="../static/images/person_4.jpg" alt="Generic placeholder image">
                                             <div class="media-body">
                                                 <h5 class="notification-user">王俊凱</h5>
@@ -127,6 +128,7 @@
                                     </li>
                                     <li>
                                         <div class="media">
+                                            <label class="label label-danger" style="background: #505458;">已看過</label>
                                             <img class="d-flex align-self-center" src="../static/images/person_5.jpeg" alt="Generic placeholder image">
                                             <div class="media-body">
                                                 <h5 class="notification-user">王源</h5>

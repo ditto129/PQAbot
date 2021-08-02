@@ -1,5 +1,5 @@
 var pageNumber = 1;
-var forwardPage;
+var forwardPage, postType;
 
 function setLocalStorage(id){
     localStorage.setItem("replyId", id);
@@ -46,6 +46,14 @@ function deletePostOrAnswer(){
             afterURL = "delete_faq_post";
             break;
     }
+    switch(postType){
+        case "innerPost":
+            afterURL = "delete_inner_post";
+            break;
+        case "faq":
+            afterURL = "delete_faq_post";
+            break;
+    }
     //----- 檢查是哪種貼文（faq vs inner） END -----//
     //delete_faq
     var singlePostId = localStorage.getItem("singlePostId");
@@ -84,6 +92,22 @@ function deletePostOrAnswer(){
                 break;
             // FAQ的回覆
             case "FaqFrame":
+                data = {faq_id: singlePostId, id: answerId};
+                afterURL = "delete_faq_answer";
+                break;
+        }
+        switch(postType){
+            case "innerPost":
+                afterURL = "delete_inner_post_response";
+                if(localStorage.getItem("role")=="generalUser"){//自己po，自己刪
+                    data = {post_id: singlePostId, _id: answerId, replier_id: localStorage.getItem("sessionID")};
+                }
+                else{//管理者刪的
+                    afterURL = "delete_inner_post_response";
+                    data = {post_id: singlePostId, _id: answerId, replier_id: getAnswerOwner(singlePostId, answerId)};
+                }
+                break;
+            case "faq":
                 data = {faq_id: singlePostId, id: answerId};
                 afterURL = "delete_faq_answer";
                 break;
@@ -179,6 +203,22 @@ function showQuestion(response){
             modalTitle = "刪除貼文";
             break;
         case "FaqFrame":
+            postCharacteristic = "faqPost";
+            title = response.question.title;
+            question = response.question.content;
+            tags = response.tags;
+            modalTitle = "刪除FAQ";
+            break;
+    }
+    switch(postType){
+        case "innerPost":
+            postCharacteristic = "innerPost";
+            title = response.title;
+            question = response.question;
+            tags = response.tag;
+            modalTitle
+            break;
+        case "faq":
             postCharacteristic = "faqPost";
             title = response.question.title;
             question = response.question.content;
@@ -338,6 +378,17 @@ function showAnswers(response){
             tempAnswerLength = response.answers.length;
             break;
     }
+    switch(postType){
+        case "innerPost":
+            response.answer.sort(function(a, b){
+                return a.time < b.time ? 1 : -1;
+            });
+            tempAnswerLength = response.answer.length;
+            break;
+        case "faq":
+            tempAnswerLength = response.answers.length;
+            break;
+    }
     
     if(tempAnswerLength==0){
         content += '<div class="title card-header">目前暫無回答</div>';
@@ -364,6 +415,36 @@ function showAnswers(response){
                 answerId = response.answer[i]._id;
                 break;
             case "FaqFrame":
+                answerId = response.answers[i].id;
+                answerTitle = "回覆的ID #" + answerId;
+                answerContent = response.answers[i].content.replaceAll('\n', '<br>');
+                answerTime = new Date(response.time);
+                answerTime = answerTime.toISOString();
+                answerTime = answerTime.slice(0, 10);
+                for(var j=0; j<response.answers[i].score.length; j++){
+                    answerScore += response.answers[i].score[j].score;
+                }
+                break;
+        }
+        
+        switch(postType){
+            case "innerPost":
+                if(response.answer[i].incognito == true){
+                    answerTitle = "匿名";
+                }
+                else{
+                    answerTitle = response.answer[i].replier_name;
+                }
+                answerContent = response.answer[i].response.replaceAll('\n', '<br>');
+                answerTime = new Date(response.answer[i].time);
+                answerTime = answerTime.toISOString();
+                answerTime = answerTime.slice(0, 10);
+                for(var j=0; j<response.answer[i].score.length; j++){
+                    answerScore += response.answer[i].score[j].score;
+                }
+                answerId = response.answer[i]._id;
+                break;
+            case "faq":
                 answerId = response.answers[i].id;
                 answerTitle = "回覆的ID #" + answerId;
                 answerContent = response.answers[i].content.replaceAll('\n', '<br>');
@@ -498,6 +579,7 @@ function showAnswers(response){
 }
 
 function start(){
+    postType = localStorage.getItem("postType");
     var userId = localStorage.getItem("sessionID");
     var afterURL;
     forwardPage = localStorage.getItem("forwardPage");
@@ -507,6 +589,14 @@ function start(){
             afterURL = "query_inner_post";
             break;
         case "FaqFrame":
+            afterURL = "query_faq_post";
+            break;
+    }
+    switch(postType){
+        case "innerPost":
+            afterURL = "query_inner_post";
+            break;
+        case "faq":
             afterURL = "query_faq_post";
             break;
     }
@@ -553,6 +643,14 @@ function start(){
                     showAnswers(response);
                     break;
                 case "FaqFrame":
+                    showAnswers(response);
+                    break;
+            }
+            switch(postType){
+                case "innerPost":
+                    showAnswers(response);
+                    break;
+                case "faq":
                     showAnswers(response);
                     break;
             }
