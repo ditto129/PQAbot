@@ -24,8 +24,6 @@ from flask_cors import CORS
 from views import register_blueprint
 #from lib import config
 
-
-
 def create_app():
     app = Flask(__name__)
     app.jinja_env.auto_reload = True
