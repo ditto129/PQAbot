@@ -69,8 +69,10 @@
                                             
                                             <div class="card-header-right">
                                                 <i class="icofont icofont-spinner-alt-5"></i>
+                                                <!--標籤-->
                                                 <i type="button" class="fa fa-tags fa-lg scoreBtn" aria-hidden="true" onclick=""></i>
-                                                <i type="button" class="fa fa-search fa-lg scoreBtn" aria-hidden="true" onclick=""></i>
+                                                <!--搜尋-->
+                                                <i type="button" class="fa fa-search fa-lg scoreBtn" aria-hidden="true" onclick="showSearchBar();"></i>
                                             </div>
                                             
                                             <!-- 貼文排序 START -->
@@ -171,6 +173,19 @@
   </div>
 </div>
 <!-- 篩選各種東西 END -->
+<!--搜尋匡 START -->
+<div class="modal fade" id="searchBar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="margin-top: 200px;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color:transparent; border: 0;"> 
+            <div class="modal-body" style="background-color:transparent;">   
+                <div style="text-align: center;">
+                    <input id="searchTextContent2" type="text" name="search" placeholder="輸入相關文字...">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--搜尋匡 END -->
         <!-- Warning Section Starts -->
         <!-- Older IE warning message -->
     <!--[if lt IE 9]>
