@@ -157,23 +157,8 @@ def query_notification_by_page(user_id, page):
 def update_notification_check(user_id, id):
     _db.USER_COLLECTION.update_one({'_id':user_id, 'notification.id': id},
     { '$set': { 'notification.$.check' : True } })
-#    _db.USER_COLLECTION.aggregate([
-#    {
-#        '$match': {
-#            '_id': user_id
-#        }
-#    }, {
-#        '$unwind': {
-#            'path': '$notification'
-#        }
-#    }, {
-#        '$match': {
-#            'notification.id': id
-#        }
-#    }, {
-#        '$set': {
-#            'notification.check': True
-#        }
-#    }
-#])
+
+#刪除通知
+def update_notification_delete(post_id):
+    _db.USER_COLLECTION.update_many({}, {'$pull':{'notification':{'detail.post_id':post_id}}})
 """ """

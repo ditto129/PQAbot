@@ -233,7 +233,7 @@ def remove_post(post_id):
 '''湘的'''
 #內部搜尋
 def query_inner_search(keywords):
-    #case isnsitive處理
+    #case insensitive處理
     tag=[]
     keyword=[]
     lower_keywords=[]
