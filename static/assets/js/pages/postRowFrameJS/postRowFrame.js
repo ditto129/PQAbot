@@ -9,83 +9,6 @@ var pageNumberTag = 1;
 var option = "score";
 var postSum;
 
-// 透過字搜尋
-function search(which){
-    localStorage.setItem("method", "text");
-    if(which == "new"){
-        pageNumberSearch = 1;
-        disabledButton("backwardPage");
-    }
-    else{
-        abledButton("backwardPage");
-    }
-    var text = $("#searchText").val();
-    
-    var data = {title: text, page_size: 5, page_number: pageNumberSearch, option: option};
-    console.log(data);
-
-    var myURL = head_url + "query_inner_post_list_by_title";
-    console.log("搜尋: "+myURL);
-    $.ajax({
-        url: myURL,
-        type: "POST",
-        data: JSON.stringify(data),
-        async: false,
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        success: function(response){
-            console.log("成功: 透過字搜尋貼文（query_inner_post_list_by_title）");
-            console.log(response);
-            postSum = response.post_count;
-            showPost(response.post_list);
-        },
-        error: function(response){
-            console.log("失敗: 透過字搜尋貼文（query_inner_post_list_by_title）");
-            console.log(response);
-        }
-    });
-}
-
-// 透過tag搜尋
-function searchByTags(which){
-    localStorage.setItem("method", "tags");
-    if(which == "new"){
-        pageNumberTag = 1;
-        disabledButton("backwardPage");
-    }
-    else{
-        abledButton("backwardPage");
-    }
-    var sendTags=[];
-    for(var i=0; i<chosenTags.length; i++){
-        var temp = {tag_id: chosenTags[i], tag_name: allTags[chosenTags[i]]};
-        sendTags.push(temp);
-    }
-    
-    var data = {tag: sendTags, page_size: 5, page_number: pageNumberTag, option: option};
-    console.log(data);
-    
-    var myURL = head_url + "query_inner_post_list_by_tag";
-    $.ajax({
-        url: myURL,
-        type: "POST",
-        data: JSON.stringify(data),
-        async: false,
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        success: function(response){
-            console.log("成功: 透過tag搜尋貼文（query_inner_post_list_by_tag）");
-            console.log(response);
-            postSum = response.post_count;
-            showPost(response.post_list);
-        },
-        error: function(response){
-            console.log("失敗: 透過tag搜尋貼文（query_inner_post_list_by_tag）");
-            console.log(response);
-        }
-    });
-}
-
 function disabledButton(id){
     document.getElementById(id).disabled = true;
     document.getElementById(id).classList.add("disabledButton");
@@ -108,17 +31,17 @@ function editPageNum(sum){
         case "all":
             temp = pageNumber+sum;
             pageNumber = temp;
-            start("old");
+            searchAll("old");
             break;
         case "text":
             temp = pageNumberSearch+sum;
             pageNumberSearch = temp;
-            search("old");
+            searchText("old");
             break;
         case "tags":
             temp = pageNumberTag+sum;
             pageNumberTag = temp;
-            searchByTags("old");
+            searchTag("old");
             break;
     }
     console.log("temp: "+temp);
@@ -139,6 +62,413 @@ function editPageNum(sum){
     }
 }
 
+///////////////// 透過標籤篩選 START /////////////////
+// 用來記使用者選擇的所有標籤
+var language = [];
+var children = [];
+var chosenTags = [];
+// 以上3個都是放id
+var allTags = {};
+
+//根據chosenTags的內容 顯示已選擇的tags
+function showChosenTags(page){
+//    console.log("showChosenTags");
+    var chosen_tag_content = "<hr>";
+    var outer_content = "<br>";
+    
+    for(var i=0; i<chosenTags.length; i++){
+        chosen_tag_content += '<label class="badge purpleLabel" style="margin-right: 5px;">';
+            chosen_tag_content += allTags[chosenTags[i]];
+        chosen_tag_content += '<button type="button" class="labelXBtn" onclick="cancle(';
+        chosen_tag_content += "'";
+        chosen_tag_content += chosenTags[i];
+        chosen_tag_content += "','";
+        chosen_tag_content += page;
+        chosen_tag_content += "'";
+        chosen_tag_content += ')">x</button></label>';
+        
+        outer_content += '<label class="badge purpleLabel" style="margin-right: 5px;">';
+            outer_content += allTags[chosenTags[i]];
+        outer_content += '</label>';
+    }
+
+    document.getElementById("chosenTagInModalForSearch").innerHTML = chosen_tag_content;
+    
+    // 外面的最下面 也要顯示已選擇的tags
+    document.getElementById("chosen_tag").innerHTML = outer_content;
+}
+
+// 顯示可選擇的語言「子」標籤
+function click_tag(id, page){
+    // tag -> 是選擇了哪個tag
+    // page -> 是選語言(0) 還是選孩子(1)
+    var tag = allTags[id];
+    
+    
+    // 已選擇的tag START
+    
+    // card的最下面顯示已選擇的tags
+    if(!chosenTags.includes(id)){ //如果還沒選過
+//        console.log("顯示起來～");
+        chosenTags.push(id);
+        document.getElementById(id).setAttribute("style", "margin-right: 5px; background-color: #E6E6FA;");
+        if(language.indexOf(id)==-1){
+            showChosenTags(1);
+//            console.log("page1");
+        }
+        else{
+            showChosenTags(0);
+//            console.log("page0");
+        }
+    }
+    // 已選擇的tag END
+    
+    
+    // 可以選擇的標籤 START
+    if(page==0){
+        
+        var myURL = head_url+"query_all_offspring_tag?tag_id="+id;
+        children = [];
+            $.ajax({
+                url: myURL,
+                type: "GET",
+                async: false, 
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function(response){
+                    console.log("success");
+                    //先記下allTags 包含名字&ID
+                    for(var i=0; i<response.tags.length; i++){
+                        console.log("i: "+i);
+                        
+                        var temp = response.tags[i].tag_name;
+                        temp = temp.replace("'", "&apos;");
+                        
+                        allTags[response.tags[i].tag_id] = temp;
+                        children.push(response.tags[i].tag_id);
+                    }
+                },
+                error: function(){
+                    console.log("error");
+                }
+            });
+        showChildrenAndSetColor();
+    }
+    // 可以選擇的標籤 END
+}
+
+function showChildrenAndSetColor(){
+    localStorage.setItem("chooseTags", 1);
+    // 標題 START
+    // 需加上上一頁的按鈕
+    var titleContent = "";
+    titleContent += '<i class="fa fa-angle-left scoreBtn" aria-hidden="true" onclick="showLanguageTag()" style="color: gray; margin-right: 5px;">上一頁</i>';
+    
+    document.getElementById("forwardPageInModal").innerHTML = titleContent;
+    // 標題 END
+    
+    var content = "";
+    for(var i=0; i<children.length; i++){
+        content += '<label id="';
+        content += children[i]; //這裡要放id
+        content += '" class="badge purpleLabel2" style="margin-right: 5px;';
+        if(chosenTags.indexOf(children[i])!=-1){
+            content += 'background-color: #E6E6FA;';
+        }
+        content += '" onclick="click_tag(';
+        content += "'";
+        content += children[i];
+        content += "', '1'";
+        content += ')">';
+            content += allTags[children[i]];
+        content += "</label>";
+    }
+    
+//    console.log("innerHTML: "+content);
+    document.getElementById("choseTagForSearch").innerHTML = content;
+}
+
+// 顯示可選擇的語言標籤
+function getLanguageTag(){
+    
+    // 中間內容 START
+    // 先去跟後端拿 只有顯示語言的標籤有哪些
+    var myURL = head_url+"query_all_languages";
+    $.ajax({
+        url: myURL,
+        type: "GET",
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+//            console.log("success");
+            //先記下allTags 包含名字&ID
+            for(var i=0; i<response.tags.length; i++){
+                language.push(response.tags[0]._id);
+                allTags[response.tags[0]._id] = response.tags[0].tag;
+                showLanguageTag();
+            }
+        },
+        error: function(){
+//            console.log("error");
+        }
+    });
+    // 中間內容 END
+}
+
+// 顯示「語言」tag的content
+function showLanguageTag(){
+    localStorage.setItem("chooseTags", 0);
+    
+    // 不要顯示上一頁
+    document.getElementById("forwardPageInModal").innerHTML = "";
+    
+    var content = "";
+    for(var i=0; i<language.length; i++){
+        content += '<label id="';
+        content += language[i];
+        content += '" class="badge purpleLabel2" style="margin-right: 5px;';
+        //如果選過要變色
+        if(chosenTags.indexOf(language[i])!=-1){
+            content += 'background-color: #E6E6FA;';
+        }
+        content += '" onclick="click_tag(';
+        content += "'";
+        content += language[i];
+        content += "', '0'"
+        content += ')">';
+            content += allTags[language[i]];
+        content += '</label>';
+    }
+
+    document.getElementById("choseTagForSearch").innerHTML = content;
+}
+
+// 取消選擇tag後的處理
+function cancle(id, page){
+    
+    var index = chosenTags.indexOf(id);
+    if(index != -1){
+        chosenTags.splice(index,1);
+        showChosenTags(page);
+    }
+    
+    var temp = parseInt(localStorage.getItem("chooseTags"));
+    console.log("page為: "+temp);
+    if(temp==0 && language.indexOf(id)==-1){
+        showChildrenAndSetColor();
+        showLanguageTag();
+        localStorage.setItem("chooseTags", 0);
+    }
+    else if(temp==0 && language.indexOf(id)!=-1){
+        showLanguageTag();
+    }
+    else if(temp==1 && language.indexOf(id)==-1){
+        showChildrenAndSetColor();
+    }
+    else{
+        showLanguageTag();
+        showChildrenAndSetColor();
+        localStorage.setItem("chooseTags", 1);
+    }
+}
+///////////////// 透過標籤篩選 END /////////////////
+
+//---------- 篩選貼文方式 START -----------//
+// 篩選時的一些處理
+function filter(){
+//    language = [];
+//    children = [];
+//    chosenTags = [];
+//    allTags = {};
+//    getLanguageTag();
+    $("#aboutSearch").modal("show");
+
+    document.getElementById("searchAll").addEventListener("click", showSearchAll, false);
+    document.getElementById("searchText").addEventListener("click", showSearchTextInput, false);
+    document.getElementById("searchTag").addEventListener("click", showSearchTagInput, false);
+}
+
+// 隱藏打字＆選標籤的地方
+function showSearchAll(){
+    if($('input:radio[name="searchType"]:checked').val()=="searchAll"){
+        $("#searchTextContent").hide(); // 隱藏別人的
+        $("#searchTagContent").hide(); // 隱藏別人的
+        document.getElementById("chosen_tag").innerHTML = "";
+    }
+}
+
+// 顯示打字的地方
+function showSearchTextInput(){
+//    console.log("值: "+$('input:radio[name="searchType"]:checked').val());
+    if($('input:radio[name="searchType"]:checked').val()=="searchText"){
+        $("#searchTextContent").show(); // 顯示自己的
+        $("#searchTagContent").hide(); // 隱藏別人的
+        document.getElementById("chosen_tag").innerHTML = "";
+    }
+}
+
+// 顯示選擇tag的地方
+function showSearchTagInput(){
+    if($('input:radio[name="searchType"]:checked').val()=="searchTag"){
+        $("#searchTagContent").show(); // 顯示自己的
+        $("#searchTextContent").hide(); // 隱藏別人的
+        showLanguageTag();
+        showChosenTags(0);
+    }
+}
+//---------- 篩選貼文方式 END ----------//
+
+//---------- 各種搜尋 START ----------//
+
+function searchAll(which){
+    
+    localStorage.setItem("method", "all");
+    if(which == "new"){
+        pageNumber = 1;
+        disabledButton("backwardPage");
+    }
+    else{
+        abledButton("backwardPage");
+    }
+    var myURL = head_url + "query_inner_post_list";
+    
+    var data = {page_size: 5, page_number: pageNumber, option: option};
+    console.log(data);
+    var content = "";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+//            console.log("成功: 拿所有貼文（query_inner_post_list）");
+//            console.log(response);
+            postSum = response.post_count;
+            showPost(response.post_list);
+        },
+        error: function(){
+//            console.log("失敗: 拿所有貼文（query_inner_post_list）");
+        }
+    });
+}
+
+// 透過字搜尋
+function searchText(which){
+    if(which == "new"){
+        pageNumberSearch = 1;
+        disabledButton("backwardPage");
+    }
+    else{
+        abledButton("backwardPage");
+    }
+    var text = $("#searchTextContent").val();
+    
+    var data = {title: text, page_size: 5, page_number: pageNumberSearch, option: option};
+    console.log(data);
+
+    var myURL = head_url + "query_inner_post_list_by_title";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+//            console.log("成功: 透過字搜尋貼文（query_inner_post_list_by_title）");
+//            console.log(response);
+            postSum = response.post_count;
+            showPost(response.post_list);
+        },
+        error: function(response){
+//            console.log("失敗: 透過字搜尋貼文（query_inner_post_list_by_title）");
+//            console.log(response);
+        }
+    });
+}
+
+// 透過tag搜尋
+function searchTag(which){
+    localStorage.setItem("method", "tags");
+    if(which == "new"){
+        pageNumberTag = 1;
+        disabledButton("backwardPage");
+    }
+    else{
+        abledButton("backwardPage");
+    }
+    var sendTags=[];
+    for(var i=0; i<chosenTags.length; i++){
+        var temp = {tag_id: chosenTags[i], tag_name: allTags[chosenTags[i]]};
+        sendTags.push(temp);
+    }
+    
+    var data = {tag: sendTags, page_size: 5, page_number: pageNumberTag, option: option};
+//    console.log(data);
+    
+    var myURL = head_url + "query_inner_post_list_by_tag";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+//            console.log("成功: 透過tag搜尋貼文（query_inner_post_list_by_tag）");
+//            console.log(response);
+            postSum = response.post_count;
+            showPost(response.post_list);
+        },
+        error: function(response){
+//            console.log("失敗: 透過tag搜尋貼文（query_inner_post_list_by_tag）");
+//            console.log(response);
+        }
+    });
+}
+
+function searchInnerPost(){
+    var searchType = $('input:radio[name="searchType"]:checked').val();
+    var sortType = $('input:radio[name="sortType"]:checked').val();
+    var content = "篩選條件", contentSearch, contentSort;
+    
+    switch(sortType){
+        case "sortScore":
+            option = "score";
+            contentSort = " | 依分數排序";
+            break;
+        case "sortView":
+            option = "view_count";
+            contentSort = " | 依觀看次數排序";
+            break;
+        case "sortDate":
+            option = "time";
+            contentSort = " | 依日期排序";
+            break;
+    }
+    
+    switch(searchType){
+        case "searchAll":
+            searchAll("new");
+            contentSearch = " | 顯示全部";
+            break;
+        case "searchText":
+            searchText("new");
+            contentSearch = " | 相關的字";
+            break;
+        case "searchTag":
+            searchTag("new");
+            contentSearch = " | 相關標籤";
+            break;
+    }
+    
+    document.getElementById("optionText").innerHTML = content+contentSearch+contentSort;
+}
+//---------- 各種搜尋 END ----------//
+
+// 顯示文章
 function showPost(response){
     // 處理上下頁Button START
     if(postSum<=5){
@@ -150,8 +480,8 @@ function showPost(response){
     // 處理上下頁Button END
     
     var role = localStorage.getItem("role");
-    console.log("這裡的response: ");
-    console.log(response);
+//    console.log("這裡的response: ");
+//    console.log(response);
     var content = "";
     if(response.length==0){
         content = '<div class="title">目前沒有符合的貼文</div>';
@@ -159,7 +489,7 @@ function showPost(response){
     for(var i=0; i<response.length; i++){
         var id = response[i]._id;
         var title = response[i].title;
-        console.log("title: "+title);
+//        console.log("title: "+title);
         var tag = response[i].tag;
         var time = new Date(response[i].time);
         time = time.toISOString();
@@ -219,296 +549,16 @@ function showPost(response){
     document.getElementById("post").innerHTML = content;
 }
 
-function start(which){
-    
-    localStorage.setItem("method", "all");
-    if(which == "new"){
-        pageNumber = 1;
-        disabledButton("backwardPage");
-    }
-    else{
-        abledButton("backwardPage");
-    }
-    var myURL = head_url + "query_inner_post_list";
-    
-    var data = {page_size: 5, page_number: pageNumber, option: option};
-    console.log(data);
-    var content = "";
-    $.ajax({
-        url: myURL,
-        type: "POST",
-        data: JSON.stringify(data),
-        async: false,
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        success: function(response){
-            console.log("成功: 拿所有貼文（query_inner_post_list）");
-            console.log(response);
-            postSum = response.post_count;
-            showPost(response.post_list);
-        },
-        error: function(){
-            console.log("失敗: 拿所有貼文（query_inner_post_list）");
-        }
-    });
-}
-
-///////////////// 透過標籤篩選 START /////////////////
-// 用來記使用者選擇的所有標籤
-var language = [];
-var children = [];
-var chosenTags = [];
-// 以上3個都是放id
-var allTags = {};
-
-//根據chosenTags的內容 顯示已選擇的tags
-function showChosenTags(page){
-    console.log("showChosenTags");
-    var chosen_tag_content = "<hr>";
-    var outer_content = "<br>";
-    
-    for(var i=0; i<chosenTags.length; i++){
-        chosen_tag_content += '<label class="badge purpleLabel" style="margin-right: 5px;">';
-            chosen_tag_content += allTags[chosenTags[i]];
-        chosen_tag_content += '<button type="button" class="labelXBtn" onclick="cancle(';
-        chosen_tag_content += "'";
-        chosen_tag_content += chosenTags[i];
-        chosen_tag_content += "','";
-        chosen_tag_content += page;
-        chosen_tag_content += "'";
-        chosen_tag_content += ')">x</button></label>';
-        
-        outer_content += '<label class="badge purpleLabel" style="margin-right: 5px;">';
-            outer_content += allTags[chosenTags[i]];
-        outer_content += '</label>';
-    }
-
-    document.getElementById("chosen_tag_in_modal").innerHTML = chosen_tag_content;
-    
-    // 外面的最下面 也要顯示已選擇的tags
-    document.getElementById("chosen_tag").innerHTML = outer_content;
-}
-
-// 顯示可選擇的語言「子」標籤
-function click_tag(id, page){
-    // tag -> 是選擇了哪個tag
-    // page -> 是選語言(0) 還是選孩子(1)
-    var tag = allTags[id];
-    
-    
-    // 已選擇的tag START
-    
-    // card的最下面顯示已選擇的tags
-    if(!chosenTags.includes(id)){ //如果還沒選過
-        console.log("顯示起來～");
-        chosenTags.push(id);
-        document.getElementById(id).setAttribute("style", "margin-right: 5px; background-color: #E6E6FA;");
-        if(language.indexOf(id)==-1){
-            showChosenTags(1);
-            console.log("page1");
-        }
-        else{
-            showChosenTags(0);
-            console.log("page0");
-        }
-    }
-    // 已選擇的tag END
-    
-    
-    // 可以選擇的標籤 START
-    if(page==0){
-        
-        var myURL = head_url+"query_all_offspring_tag?tag_id="+id;
-        children = [];
-            $.ajax({
-                url: myURL,
-                type: "GET",
-                async: false, 
-                dataType: "json",
-                contentType: 'application/json; charset=utf-8',
-                success: function(response){
-                    console.log("success");
-                    //先記下allTags 包含名字&ID
-                    for(var i=0; i<response.tags.length; i++){
-                        console.log("i: "+i);
-                        
-                        var temp = response.tags[i].tag_name;
-                        temp = temp.replace("'", "&apos;");
-                        
-                        allTags[response.tags[i].tag_id] = temp;
-                        children.push(response.tags[i].tag_id);
-                    }
-                },
-                error: function(){
-                    console.log("error");
-                }
-            });
-        showChildrenAndSetColor();
-    }
-    // 可以選擇的標籤 END
-}
-
-function showChildrenAndSetColor(){
-    localStorage.setItem("chooseTags", 1);
-    // 標題 START
-    // 需加上上一頁的按鈕
-    var titleContent = "";
-    titleContent += '<i class="fa fa-angle-left scoreBtn" aria-hidden="true" onclick="showLanguageTag()" style="color: gray; margin-right: 5px;"></i>';
-    titleContent += "選擇相關標籤";
-    
-    document.getElementById("exampleModalLabel").innerHTML = titleContent;
-    // 標題 END
-    
-    var content = "";
-    for(var i=0; i<children.length; i++){
-        content += '<label id="';
-        content += children[i]; //這裡要放id
-        content += '" class="badge purpleLabel2" style="margin-right: 5px;';
-        if(chosenTags.indexOf(children[i])!=-1){
-            content += 'background-color: #E6E6FA;';
-        }
-        content += '" onclick="click_tag(';
-        content += "'";
-        content += children[i];
-        content += "', '1'";
-        content += ')">';
-            content += allTags[children[i]];
-        content += "</label>";
-    }
-    
-//    console.log("innerHTML: "+content);
-    document.getElementById("chose_tag").innerHTML = content;
-}
-
-// 顯示可選擇的語言標籤
-function getLanguageTag(){
-    
-    // 中間內容 START
-    // 先去跟後端拿 只有顯示語言的標籤有哪些
-    var myURL = head_url+"query_all_languages";
-    $.ajax({
-        url: myURL,
-        type: "GET",
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        success: function(response){
-            console.log("success");
-            //先記下allTags 包含名字&ID
-            for(var i=0; i<response.tags.length; i++){
-                language.push(response.tags[0]._id);
-                allTags[response.tags[0]._id] = response.tags[0].tag;
-                showLanguageTag();
-            }
-        },
-        error: function(){
-            console.log("error");
-        }
-    });
-    // 中間內容 END
-}
-
-// 顯示「語言」tag的content
-function showLanguageTag(){
-    localStorage.setItem("chooseTags", 0);
-    // 標題 START
-    var titleContent = "";
-    titleContent += "選擇相關標籤";
-    
-    document.getElementById("exampleModalLabel").innerHTML = titleContent;
-    // 標題 END
-    
-    var content = "";
-    for(var i=0; i<language.length; i++){
-//        console.log("language.length: "+language.length);
-//        console.log("language[i]: "+language[i]);
-        content += '<label id="';
-        content += language[i];
-        content += '" class="badge purpleLabel2" style="margin-right: 5px;';
-        //如果選過要變色
-        if(chosenTags.indexOf(language[i])!=-1){
-            content += 'background-color: #E6E6FA;';
-        }
-        content += '" onclick="click_tag(';
-        content += "'";
-        content += language[i];
-        content += "', '0'"
-        content += ')">';
-            content += allTags[language[i]];
-        content += '</label>';
-    }
-
-    document.getElementById("chose_tag").innerHTML = content;
-}
-
-// 取消選擇tag後的處理
-function cancle(id, page){
-    
-    var index = chosenTags.indexOf(id);
-    if(index != -1){
-        chosenTags.splice(index,1);
-        showChosenTags(page);
-    }
-    
-    var temp = parseInt(localStorage.getItem("chooseTags"));
-    console.log("page為: "+temp);
-    if(temp==0 && language.indexOf(id)==-1){
-        showChildrenAndSetColor();
-        showLanguageTag();
-        localStorage.setItem("chooseTags", 0);
-    }
-    else if(temp==0 && language.indexOf(id)!=-1){
-        showLanguageTag();
-    }
-    else if(temp==1 && language.indexOf(id)==-1){
-        showChildrenAndSetColor();
-    }
-    else{
-        showLanguageTag();
-        showChildrenAndSetColor();
-        localStorage.setItem("chooseTags", 1);
-    }
-}
-///////////////// 透過標籤篩選 END /////////////////
-
-var optionVal = ["score", "view_count", "time"];
-var optionText = ["貼文排序 | 依分數高低", "貼文排序 | 依觀看次數", "貼文排序 | 依日期"];
-function changeSort(){
-    var radio=document.getElementsByName("postSort");
-    for(var i=0;i<radio.length;i++){
-        if(radio[i].checked==true) {
-            option = optionVal[i];
-            document.getElementById("optionText").innerHTML = optionText[i];
-            break;
-        }
-    }
-    
-    var method = localStorage.getItem("method");
-    if(method == "all"){
-        start("new");
-    }
-    else if(method == "text"){
-        search("new");
-    }
-    else{
-        searchByTags("new");
-    }
-}
-
 function set(){
     getLanguageTag();
     localStorage.setItem("forwardPage", "postRowFrame");
     localStorage.setItem("postAPI", "query_inner_post_list");
-
-    var searchButton = document.getElementById("searchText");
-    searchButton.addEventListener('keydown', function(e){
-      // enter 的 keyCode 是 13
-      if( e.keyCode === 13 ){
-          search("new");
-      }
-    }, false);
+    
+    $("#searchTextContent").hide(); // 隱藏別人的
+    $("#searchTagContent").hide(); // 隱藏別人的
 }
 
 window.addEventListener("load", function(){
     set();
-    start("new");
+    searchAll("new");
 }, false);

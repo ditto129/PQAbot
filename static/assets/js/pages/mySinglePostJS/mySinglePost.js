@@ -6,28 +6,10 @@ function setLocalStorage(id){
     setPage('editReplyFrame');
 }
 
-/////////////// 刪除貼文 START ///////////////
-function deletePost(){
-    var afterURL;
-    //----- 檢查是哪種貼文（faq vs inner） START -----//
-    switch(forwardPage){
-        case "postRowFrame":
-        case "profileFrame":
-            afterURL = "delete_inner_post";
-            break;
-        case "manageFAQsFrame":
-            afterURL = "delete_faq_post";
-            break;
-    }
-    //----- 檢查是哪種貼文（faq vs inner） END -----//
-    //delete_faq_post
-    var singlePostId = localStorage.getItem("singlePostId");
-//    console.log("singlePostId: "+singlePostId);
-    
-    var data = {_id: singlePostId};
-//    console.log(data);
-
-    var myURL = head_url + afterURL;
+/////////////// 刪除貼文/回覆 START ///////////////
+function getAnswerOwner(postId, answerId){
+    var data = {_id: postId}, temp=null;
+    var myURL = head_url + "query_inner_post";
     $.ajax({
         url: myURL,
         type: "POST",
@@ -36,25 +18,102 @@ function deletePost(){
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-//            console.log("成功: 刪除貼文");
-//            console.log(response);
-            localStorage.removeItem('singlePostId');
-            setPage(forwardPage);
+            console.log(response);
+            for(var i=0; i<response.answer.length; i++){
+                if(response.answer[i]._id == answerId){
+                    temp = response.answer[i].replier_id;
+                    console.log("回答者的id: "+temp);
+                    break;
+                }
+            }
         },
         error: function(response){
-//            console.log("失敗: 刪除貼文");
-//            console.log(response);
         }
     });
+    return temp;
+}
+
+//!!!!!!!!!!!!!!!!!!!還沒好!!!!!!!!!!!!!!!!!!!!!!!!!!!
+function deletePostOrAnswer(){
+    var afterURL, data, answerOwner;
+    //----- 檢查是哪種貼文（faq vs inner） START -----//
+    switch(forwardPage){
+        case "postRowFrame":
+        case "profileFrame":
+            afterURL = "delete_inner_post";
+            break;
+        case "FaqFrame":
+            afterURL = "delete_faq_post";
+            break;
+    }
+    //----- 檢查是哪種貼文（faq vs inner） END -----//
+    //delete_faq
+    var singlePostId = localStorage.getItem("singlePostId");
+    var answerId = localStorage.getItem("answerId");
+    if(answerId==null){ //代表刪除的是文章
+        var data = {_id: singlePostId};
+        var myURL = head_url + afterURL;
+        $.ajax({
+            url: myURL,
+            type: "POST",
+            data: JSON.stringify(data),
+            async: false,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function(response){
+                localStorage.removeItem('singlePostId');
+                setPage(forwardPage);
+            },
+            error: function(response){
+            }
+        });
+    }
+    else{ // 代表刪除的是回覆
+        switch(forwardPage){
+            //內部貼文的回覆
+            case "postRowFrame":
+            case "profileFrame":
+                afterURL = "delete_inner_post_response";
+                if(localStorage.getItem("role")=="generalUser"){//自己po，自己刪
+                    data = {post_id: singlePostId, _id: answerId, replier_id: localStorage.getItem("sessionID")};
+                }
+                else{//管理者刪的
+                    afterURL = "delete_inner_post_response";
+                    data = {post_id: singlePostId, _id: answerId, replier_id: getAnswerOwner(singlePostId, answerId)};
+                }
+                break;
+            // FAQ的回覆
+            case "FaqFrame":
+                data = {faq_id: singlePostId, id: answerId};
+                afterURL = "delete_faq_answer";
+                break;
+        }
+        console.log("data: ");
+        console.log(data);
+        var myURL = head_url + afterURL;
+        $.ajax({
+            url: myURL,
+            type: "POST",
+            data: JSON.stringify(data),
+            async: false,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function(response){
+                localStorage.removeItem('singlePostId');
+                localStorage.removeItem('answerId');
+                location.reload();
+            },
+            error: function(response){
+            }
+        });
+    }
 }
 
 function wantDeleteAnswer(answerId){
     document.getElementById("exampleModalLabel").innerHTML = "刪除回覆";
     $("#exampleModal").modal('show');
     
-    
-    console.log("answerId: "+answerId);
-    //接刪除回覆的API
+    localStorage.setItem("answerId", answerId);
 }
 ///////////////  刪除貼文 END ///////////////
 
@@ -119,7 +178,7 @@ function showQuestion(response){
             tags = response.tag;
             modalTitle = "刪除貼文";
             break;
-        case "manageFAQsFrame":
+        case "FaqFrame":
             postCharacteristic = "faqPost";
             title = response.question.title;
             question = response.question.content;
@@ -265,8 +324,6 @@ function showQuestion(response){
 }
 
 function showAnswers(response){
-    console.log("回覆貼文");
-    console.log(response);
     content = "";
     var tempAnswerLength;
     switch(forwardPage){
@@ -277,7 +334,7 @@ function showAnswers(response){
             });
             tempAnswerLength = response.answer.length;
             break;
-        case "manageFAQsFrame":
+        case "FaqFrame":
             tempAnswerLength = response.answers.length;
             break;
     }
@@ -306,8 +363,9 @@ function showAnswers(response){
                 }
                 answerId = response.answer[i]._id;
                 break;
-            case "manageFAQsFrame":
-                answerTitle = "回覆的ID #" + response.answers[i]._id;
+            case "FaqFrame":
+                answerId = response.answers[i].id;
+                answerTitle = "回覆的ID #" + answerId;
                 answerContent = response.answers[i].content.replaceAll('\n', '<br>');
                 answerTime = new Date(response.time);
                 answerTime = answerTime.toISOString();
@@ -315,7 +373,6 @@ function showAnswers(response){
                 for(var j=0; j<response.answers[i].score.length; j++){
                     answerScore += response.answers[i].score[j].score;
                 }
-                answerId = response.answers[i]._id;
                 break;
         }
         
@@ -328,7 +385,26 @@ function showAnswers(response){
                     content += '</span>';
 
                     //----- 編輯、刪除按鈕 START -----//
-                    if(forwardPage=="manageFAQsFrame" || response.answer[i].replier_id == localStorage.getItem("sessionID")){
+        
+                    //內部貼文（使用者、管理者）
+                    if(forwardPage!="FaqFrame" && response.answer[i].replier_id == localStorage.getItem("sessionID")){
+                        content += '<button type="button" class="scoreBtn" onclick="setLocalStorage(';
+                        content += "'";
+                        content += answerId;
+                        content += "'";
+                        content += ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
+                        content += '<button type="button" class="scoreBtn" onclick="wantDeleteAnswer(\'';
+                        content += answerId;
+                        content += '\')"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+                    }
+                    else if(forwardPage!="FaqFrame" && localStorage.getItem("role")=="manager"){
+                        content += '<button type="button" class="scoreBtn" onclick="wantDeleteAnswer(\'';
+                        content += answerId;
+                        content += '\')"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+                    }
+        
+                    //FAQ（管理者）
+                    if(forwardPage=="FaqFrame" && localStorage.getItem("role")=="manager"){
                         content += '<button type="button" class="scoreBtn" onclick="setLocalStorage(';
                         content += "'";
                         content += answerId;
@@ -430,7 +506,7 @@ function start(){
         case "profileFrame":
             afterURL = "query_inner_post";
             break;
-        case "manageFAQsFrame":
+        case "FaqFrame":
             afterURL = "query_faq_post";
             break;
     }
@@ -476,7 +552,7 @@ function start(){
                 case "profileFrame":
                     showAnswers(response);
                     break;
-                case "manageFAQsFrame":
+                case "FaqFrame":
                     showAnswers(response);
                     break;
             }
@@ -487,9 +563,9 @@ function start(){
         }
     });
     
-    // 內部貼文全部都可以回覆
+    // 內部貼文只有一般使用者都可以回覆
     // FAQ只有管理者可以回覆
-    if(localStorage.getItem("role")=="generalUser" || (localStorage.getItem("role")=="manager" && forwardPage=="manageFAQsFrame")){
+    if((localStorage.getItem("role")=="generalUser" && (forwardPage=="postRowFrame" || forwardPage=="profileFrame"))|| (localStorage.getItem("role")=="manager" && forwardPage=="FaqFrame")){
         content = "";
         content += ''
         content += '<button type="button" class="scoreBtn" onclick="setPage(\'replyQuestionFrame\')">';

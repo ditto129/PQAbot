@@ -9,12 +9,12 @@ var forwardPage = localStorage.getItem("forwardPage");//manageFAQsFrame
 function start(){
     var afterURL;
     switch(forwardPage){
-        case "manageFAQsFrame":
+        case "FaqFrame":
             afterURL = "query_faq_post";
             break;
         default:
             afterURL = "query_inner_post";
-            breka;
+            break;
     }
     var myURL = head_url + afterURL;
     var postId = localStorage.getItem("singlePostId");
@@ -31,7 +31,7 @@ function start(){
 //            console.log("成功: 拿單篇貼文（query_inner_post）");
 //            console.log(response);
             
-            if(forwardPage=="manageFAQsFrame"){
+            if(forwardPage=="FaqFrame"){
                 data = response;
                 delete data["keywords"];
                 delete data["view_count"];
@@ -72,7 +72,7 @@ function save(){
     
     var myURL, afterURL;
     switch(forwardPage){
-        case "manageFAQsFrame":
+        case "FaqFrame":
             afterURL = "update_faq_post";
             var time = new Date().toJSON();
             time = time.slice(0, 23);
