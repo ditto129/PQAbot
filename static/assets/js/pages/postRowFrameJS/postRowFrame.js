@@ -558,7 +558,25 @@ function set(){
     $("#searchTagContent").hide(); // 隱藏別人的
 }
 
+function showSearchBar(){
+    $("#searchBar").modal("show");
+}
+
 window.addEventListener("load", function(){
     set();
     searchAll("new");
+    
+    //幫searchBar註冊enter press事件
+    console.log("add enter listener")
+    var input = document.getElementById("searchTextContent2");
+    input.addEventListener("keyup", function(event) {
+      // Number 13 is the "Enter" key on the keyboard
+      if (event.keyCode === 13) {
+          console.log("press enter");
+          $('#searchBar').modal('hide');
+          var keywords = document.getElementById("searchTextContent2").value
+        //做事～～～～～～
+      }
+    });
+    //註冊完畢
 }, false);

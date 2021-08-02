@@ -1,5 +1,6 @@
 /* ================ Facebook Login ================= */
 // 設定 Facebook JavaScript SDK
+var head_url = "https://soselab.asuscomm.com:55002/api/"
 window.fbAsyncInit = function () {
     FB.init({
       appId: '1018939978932508',
@@ -40,7 +41,7 @@ function checkLoginState() {
             // 取得使用者資料丟到後端
             $.ajax({
                 type: "POST",
-                url: '/facebook_sign_in',
+                url: head_url + 'facebook_sign_in',
                 data: JSON.stringify(response),
                 success: function () {
                 console.log('Facebook login success')
@@ -57,19 +58,28 @@ function checkLoginState() {
 
 /* ================ Google Sign in ================= */
 function onLoadGoogleCallback(){
-  gapi.load('auth2', function() {
+  
+  gapi.load('auth2', function(){
     auth2 = gapi.auth2.init({
       client_id: '417777300686-b6isl0oe0orcju7p5u0cpdeo07hja9qs.apps.googleusercontent.com',
       cookiepolicy: 'single_host_origin',
       scope: 'profile'
     });
+    attachSignin(document.getElementById('google-login-btn'));
+  });
+}
 
+function attachSignin(element) {
+  console.log(element.id);
   auth2.attachClickHandler(element, {},
-    function(googleUser) {
+      function(googleUser) 
+      {
+        // 登入成功
         var profile = googleUser.getBasicProfile();
+        //傳送access token至後端驗證
         $.ajax({
           type: "POST",
-          url: '/google_sign_in',
+          url: head_url + 'google_sign_in',
           data: JSON.stringify({
             'id_token': googleUser.getAuthResponse().id_token
           }),
@@ -83,12 +93,11 @@ function onLoadGoogleCallback(){
         console.log('Name: ' + profile.getName());
         console.log('Image URL: ' + profile.getImageUrl());
         console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-      }, function(error) {
+      }, 
+      function(error) 
+      {
+        //登入失敗
         console.log('Sign-in error', error);
-      }
-    );
-  });
-
-  element = document.getElementById('google-login-btn');
+      });
 }
 /* ================================================= */

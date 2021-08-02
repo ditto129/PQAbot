@@ -28,7 +28,7 @@ def google_sign_in():
             
     except ValueError:
         # Invalid token
-        raise ValueError('Invalid token')
+        return jsonify({'error':'Invalid token'})
     # 取得使用者資料，若使用者不存在就建立一份
     user_dict = user.query_user(id_info['sub'])
     if user_dict == None:
@@ -45,7 +45,7 @@ def google_sign_in():
         }
         user.insert_user(user_dict)
         user_dict = user.query_user(id_info['sub'])
-    return jsonify(user_dict),200
+    return jsonify(user_dict)
 
 @login_api.route('/facebook_sign_in', methods=['POST'])
 def facebook_sign_in():
@@ -66,4 +66,4 @@ def facebook_sign_in():
         }
         user.insert_user(user_dict)
         user_dict = user.query_user(data['id'])
-    return jsonify(user_dict),200
+    return jsonify(user_dict)
