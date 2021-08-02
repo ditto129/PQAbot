@@ -23,10 +23,6 @@ from flask_cors import CORS
 #import models
 from views import register_blueprint
 #from lib import config
-''' ----------------- '
-' -- login testing -- '
-' ----------------- '''
-from flask_login import LoginManager
 
 def create_app():
     app = Flask(__name__)
