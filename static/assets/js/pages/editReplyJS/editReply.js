@@ -1,4 +1,4 @@
-var forwardPage = localStorage.getItem("forwardPage");
+var postType;
 
 ////////////// 拿回覆資料＆顯示 START //////////////
 function showFaqAnswer(){
@@ -16,9 +16,6 @@ function showFaqAnswer(){
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-            console.log("成功: 拿單篇貼文（query_inner_post）");
-            console.log(response);
-            
             var replyId = localStorage.getItem("replyId");
             for(var i=0; i<response.answers.length; i++){
                 if(response.answers[i].id == replyId){
@@ -29,7 +26,7 @@ function showFaqAnswer(){
             }
         },
         error: function(){
-            console.log("失敗: 拿單篇貼文（query_inner_post）");
+//            console.log("失敗: 拿單篇貼文（query_inner_post）");
         }
     });
 }
@@ -47,9 +44,6 @@ function showInnerPostAnswer(){
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-            console.log("成功: 拿單篇貼文（query_inner_post）");
-            console.log(response);
-            
             var replyId = localStorage.getItem("replyId");
             for(var i=0; i<response.answer.length; i++){
                 if(response.answer[i]._id == replyId){
@@ -60,23 +54,25 @@ function showInnerPostAnswer(){
             }
         },
         error: function(){
-            console.log("失敗: 拿單篇貼文（query_inner_post）");
+//            console.log("失敗: 拿單篇貼文（query_inner_post）");
         }
     });
 }
 
 function start(){
-    switch(forwardPage){
-        case "FaqFrame":
+    postType = localStorage.getItem("postType");
+    switch(postType){
+        case "faq":
             showFaqAnswer();
             break;
-        case "postRowFrame":
-        case "profileFrame":
+        case "innerPost":
             showInnerPostAnswer();
             break;
     }
 }
 ////////////// 拿回覆資料＆顯示 END //////////////
+
+
 
 ////////////// 編輯回覆 START //////////////
 function editFaqAnswer(){
@@ -98,26 +94,27 @@ function editFaqAnswer(){
     }
     else{
         var data = {faq_id: faqId, id: answerId, vote: vote, content: response};
-        console.log("data");
+        console.log("data: ");
         console.log(data);
-//        myURL = head_url + "update_faq_answer";
-//        $.ajax({
-//            url: myURL,
-//            type: "POST",
-//            data: JSON.stringify(data),
-//            async: false,
-//            dataType: "json",
-//            contentType: 'application/json; charset=utf-8',
-//            success: function(response){
-//    //            console.log("成功: 編輯回覆（update_inner_post_response）");
-//                setPage('mySinglePostFrame');
-//            },
-//            error: function(response){
-//    //            console.log("失敗: 編輯回覆（update_inner_post_response）");
-//    //            console.log(response);
-//                window.alert("編輯回覆 失敗！\n請再試一次");
-//            }
-//        });
+        myURL = head_url + "update_faq_answer";
+        $.ajax({
+            url: myURL,
+            type: "POST",
+            data: JSON.stringify(data),
+            async: false,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function(response){
+                localStorage.removeItem("replyId");
+    //            console.log("成功: 編輯回覆（update_inner_post_response）");
+                setPage('mySinglePostFrame');
+            },
+            error: function(response){
+    //            console.log("失敗: 編輯回覆（update_inner_post_response）");
+    //            console.log(response);
+                window.alert("編輯回覆 失敗！\n請再試一次");
+            }
+        });
     }
 }
 
@@ -162,12 +159,11 @@ function editInnerPostAnswer(){
 }
 
 function edit(){
-    switch(forwardPage){
-        case "FaqFrame":
+    switch(postType){
+        case "faq":
             editFaqAnswer();
             break;
-        case "postRowFrame":
-        case "profileFrame":
+        case "innerPost":
             editInnerPostAnswer();
             break;
     }

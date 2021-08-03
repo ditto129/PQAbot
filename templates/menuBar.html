@@ -94,48 +94,15 @@
                         
                         <!-- 通知＆個人頭像 -->
                         <ul class="nav-right">
-                            <li class="header-notification">
-                                <a href="#!">
-                                    <i class="ti-bell"></i>
-                                    <!-- 新通知粉色的那個 -->
-                                    <span class="badge bg-c-pink"></span>
+                            <li class="header-notification" id="headerNotification">
+                                <a href="#">
+                                    <i id="bell" class="ti-bell"></i>
+<!--                                     新通知粉色的那個 -->
+                                        <span id="newNotification"></span>
                                 </a>
-                                <ul class="show-notification">
-                                    <li>
-                                        <h6>通知</h6>
-                                        <label class="label label-danger">新的</label>
-                                    </li>
-                                    <li>
-                                        <div class="media">
-                                            <img class="d-flex align-self-center" src="../static/images/jackson.png" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">易烊千璽</h5>
-                                                <p class="notification-msg">您的貼文有新的回覆</p>
-                                                <span class="notification-time">30分鐘前</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="media">
-                                            <img class="d-flex align-self-center" src="../static/images/person_4.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">王俊凱</h5>
-                                                <p class="notification-msg">王俊凱傳送了共同討論的邀請給您</p>
-                                                <span class="notification-time">40分鐘前</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="media">
-                                            <img class="d-flex align-self-center" src="../static/images/person_5.jpeg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">王源</h5>
-                                                <p class="notification-msg">王源傳送了共同討論的邀請給您</p>
-                                                <span class="notification-time">45分鐘前</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
+                                <!-- 通知內容 START -->
+                                <ul class="show-notification" id="showNotification" style="width: 250px; height: 390px; overflow: scroll;"></ul>
+                                <!-- 通知內容 END -->
                             </li>
                             <li class="user-profile header-notification">
                                 
@@ -211,7 +178,7 @@
                                         
                                         <!-- 聊天室列表 START -->
                                         <div class="col-3">
-                                            <div class="card">
+                                            <div class="card" id="chatList">
                                                 <div class="card-header">
                                                     <h5 class="card-header-text">聊天室列表</h5>
                                                 </div>
@@ -308,7 +275,7 @@
                             
                                         
                                         <!-- 正在聊天的頭像 START -->
-                                        <div>
+                                        <div id="chatImage">
                                             <img src="../static/images/baymaxChat.png" class="rounded-circle scaled_img chatIng" onclick="open_close()">
                                         </div>
                                         <!-- 正在聊天的頭像 END -->

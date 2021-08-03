@@ -35,8 +35,21 @@
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <!-- 匿名的bootstrap END -->
     
+    <!-- 程式碼區塊 START -->
+    <link rel="stylesheet" href="../static/assets/css/codeStyle.css" />
+    <link rel="stylesheet" href="../static/assets/css/editormd.css" />
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
+    <!-- 程式碼區塊 END -->
+    
+    <!-- highlight START -->
+    <link rel="stylesheet" href="../static/assets/highlight/styles/color-brewer.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <!-- highlight END -->
+    
     <!-- font-awesome.css -->
     <link rel="stylesheet" type="text/css" href="../static/assets/css/font-awesome.css">
+    <script src="../static/assets/js/pages/replyQuestionJS/replyQuestion.js"></script>
 </head>
 
 <body style="background: white;">
@@ -68,14 +81,19 @@
                                                     <!-- 回覆內容 row start -->
                                                     <div class="form-group row">
                                                         <label class="col-sm-2 col-form-label">回覆內容</label>
-                                                        <div class="col-sm-10">
-                                                            <textarea id="answerContent" rows="5" cols="5" class="form-control"
-                                                            placeholder="輸入回覆內容"></textarea>
-                                                        </div>
                                                     </div>
+                                                </form>
+<!-- markdown START -->
+<div id="layout">
+    <div id="test-editormd">
+        <textarea id="contentText" style="display:none;"></textarea>
+    </div>
+</div>
+<!-- markdown END -->
+                                                    
                                                     <!-- 回覆內容 row end -->
                                                     <input class="btn btn-primary purpleBtn" value="回覆" onclick="save()">
-                                                </form>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -174,7 +192,67 @@
 <script src="../static/assets/js/demo-12.js"></script>
 <script src="../static/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="../static/assets/js/common.js"></script>
-    <script src="../static/assets/js/pages/replyQuestionJS/replyQuestion.js"></script>
+    <script src="../static/assets/js/pages/codeJS/editormd.js"></script>
+    
+    <!-- markdown START -->
+    <script src="../static/assets/js/editormd.js"></script>
+    <script type="text/javascript">
+        var testEditor;
+
+        $(function() {   
+            var widgets = [];
+
+            testEditor = editormd("test-editormd", {
+                width: "90%",
+                height: 720,
+                path : '../lib/',
+                disabledKeyMaps : [
+                    "Ctrl-B", "F11", "F10"  // disable some default keyboard shortcuts handle
+                ],
+                onchange : function() {
+                            $("#test").remove();
+                            var cm = this.cm;
+                            var cursor = cm.getCursor();
+
+                            //cm.replaceSelection("@");
+
+                            widgets.push(cm.addWidget({line : cursor.line, ch : cursor.ch}, $("<p style='z-index:100000;' id='test'></p>")[0], true));
+                            console.log(cm.getCursor(), cm.getLine(cursor.line), cm.getLineTokens(cursor.line));   
+                },
+                onload : function() {
+                    var keyMap = {
+                        "Ctrl-S": function(cm) {
+                            alert("Ctrl+S");
+                            //return false;
+                        },
+                        "Ctrl-A": function(cm) { // default Ctrl-A selectAll
+                            // custom
+                            alert("Ctrl+A");
+                            cm.execCommand("selectAll");
+                        },
+                        //"Shift-2" : function(cm){
+                        //}
+                    };
+
+                    this.cm.on("keyup", function(cm){
+                        $("#test").remove();
+                    });
+
+                    // setting signle key
+                    var keyMap2 = {
+                          "Ctrl-T": function(cm) {
+                            alert("Ctrl+T");
+                          }
+                    };
+
+                    this.addKeyMap(keyMap);
+                    this.addKeyMap(keyMap2);
+                    this.removeKeyMap(keyMap2);  // remove signle key
+                }
+            });    
+        });
+    </script>
+    <!-- markdown END -->
 </body>
 
 </html>
