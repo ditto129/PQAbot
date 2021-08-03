@@ -150,7 +150,7 @@ def update_answer(data_dict):
 
 def remove_answer(data_dict):
     tags = _db.FAQ_DATA_COLLECTION.find_one({'_id':data_dict['faq_id']})
-    _db.FAQ_COLLECTION.update_one({'_id':data_dict['faq_id']},
+    _db.FAQ_DATA_COLLECTION.update_one({'_id':data_dict['faq_id']},
                                   {'$pull':{'answers':{'id':data_dict['id']}}})
     # 扣掉tag count
     for tag in tags:

@@ -55,3 +55,10 @@ def set_notification_check():
     id=request.values.get('id')
     user.update_notification_check(user_id, int(id))
     return jsonify({"message":"success"})
+
+#刪貼文時刪通知
+@notification_api.route('delete_notification')
+def delete_notification():
+    post_id=request.values.get('post_id')
+    user.update_notification_delete(post_id)
+    return jsonify({"message":"success"})

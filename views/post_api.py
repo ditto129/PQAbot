@@ -4,7 +4,7 @@ from flask import Blueprint, request, jsonify
 
 # --- our models ---- #
 from models import inner_post
-from models.TextAnalyze import TextAnalyze
+# from models.TextAnalyze import TextAnalyze
 from datetime import datetime
 
 post_api = Blueprint('post_api', __name__)
@@ -145,7 +145,6 @@ def delete_inner_post_response():
             'post_id' : data['post_id'],
             '_id' : data['_id'],
             "replier_id" : data['replier_id'],
-            "score":data['score']
         }
         inner_post.remove_response(response_dict)
     except Exception as e :
