@@ -151,8 +151,8 @@ def like_faq_post():
     data = request.get_json()
     try:
         score_dict = {
-            'faq_id' : data['post_id'],
-            'answer_id' : data['response_id'],
+            'faq_id' : data['faq_id'],
+            'answer_id' : data['answer_id'],
             'user':data['user'],
             'score' : 1,
         }
@@ -166,8 +166,8 @@ def dislike_faq_post():
     data = request.get_json()
     try:
         score_dict = {
-            'faq_id' : data['post_id'],
-            'answer_id' : data['response_id'],
+            'faq_id' : data['faq_id'],
+            'answer_id' : data['answer_id'],
             'user':data['user'],
             'score' : -1,
         }
