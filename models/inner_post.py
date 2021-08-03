@@ -110,7 +110,6 @@ def update_post(post_data):
                                                                         'title':post_data['title'],
                                                                         'question':post_data['question'],
                                                                         'keyword':post_data['keyword'],
-                                                                        'markdown':post_data['markdown'],
                                                                         'time':post_data['time']}})
     # 使用者發文更新
     user.update_post_list(post_data['asker_id'])
@@ -152,7 +151,6 @@ def update_response(response_dict):
     post_id = response_dict.pop('post_id')
     _db.INNER_POST_COLLECTION.update_one({'_id':post_id,'answer._id':response_dict['_id']},
                                          {'$set':{'answer.$.response':response_dict['response'],
-                                                  'answer.$.markdown':response_dict['markdown'],
                                                   'answer.$.time':response_dict['time']}})
 # 刪除貼文回覆
 def remove_response(response_dict):
