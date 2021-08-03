@@ -320,6 +320,8 @@ function showSearchTagInput(){
 
 //---------- 各種搜尋 START ----------//
 
+
+
 function searchAll(which){
     
     localStorage.setItem("method", "all");
@@ -355,6 +357,9 @@ function searchAll(which){
 }
 
 // 透過字搜尋
+function showSearchBar(){
+    $("#searchBar").modal("show");
+}
 function searchText(which){
     if(which == "new"){
         pageNumberSearch = 1;
@@ -363,7 +368,7 @@ function searchText(which){
     else{
         abledButton("backwardPage");
     }
-    var text = $("#searchTextContent").val();
+    var text = $("#searchTextContent2").val();
     
     var data = {title: text, page_size: 5, page_number: pageNumberSearch, option: option};
     console.log(data);
@@ -558,10 +563,6 @@ function set(){
     $("#searchTagContent").hide(); // 隱藏別人的
 }
 
-function showSearchBar(){
-    $("#searchBar").modal("show");
-}
-
 window.addEventListener("load", function(){
     set();
     searchAll("new");
@@ -574,7 +575,7 @@ window.addEventListener("load", function(){
       if (event.keyCode === 13) {
           console.log("press enter");
           $('#searchBar').modal('hide');
-          var keywords = document.getElementById("searchTextContent2").value
+          var keywords = document.getElementById("searchTextContent2").value;
         //做事～～～～～～
       }
     });

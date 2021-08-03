@@ -44,14 +44,14 @@ function save(){
 //    var deleteTextarea = document.getElementById("test-editormd").innerHTML;
 //    deleteTextarea = deleteTextarea.replace(reg, "");
 //    console.log("刪掉textarea: "+deleteTextarea);
-//    switch(postType){
-//        case "faq":
-//            addFaqAnswer();
-//            break;
-//        case "innerPost":
-//            addInnerPostAnswer();
-//            break;
-//    }
+    switch(postType){
+        case "faq":
+            addFaqAnswer();
+            break;
+        case "innerPost":
+            addInnerPostAnswer();
+            break;
+    }
 }
 
 function addFaqAnswer(){
@@ -106,7 +106,18 @@ function addInnerPostAnswer(){
     var replierId = localStorage.getItem("sessionID");
     var replierName = localStorage.getItem("userName");
 //    var response = document.getElementsByTagName("textarea")[0].value;
-    var response = document.getElementById("test-editormd").innerHTML;
+    //---
+    var allstring = document.getElementById("test-editormd");
+    console.log("值: "+$('#contentText').val());
+    $('#contentText'). remove();
+    console.log("內容是: " + allstring.innerHTML);
+    var previewMarkdown = document.getElementsByClassName("editormd-preview");
+    console.log("預覽畫面是: "+previewMarkdown[0].innerHTML);
+    
+    //---
+//    var response = document.getElementById("test-editormd").innerHTML;
+//    var response = allstring.innerHTML; //全部的
+    var response = previewMarkdown[0].innerHTML;
     
     //true->匿名, false->不是匿名
     var anonymous = document.getElementById('anonymous').checked;
@@ -145,12 +156,12 @@ function addInnerPostAnswer(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
 //            console.log("成功: 新增貼文通知（add_post_notification）");
-//            setPage('mySinglePostFrame');
+            setPage('mySinglePostFrame');
         },
         error: function(response){
 //            console.log("失敗: 新增貼文通知（add_post_notification）");
 //            console.log(response);
-//            window.alert("回覆貼文 失敗！\n請再試一次");
+            window.alert("回覆貼文 失敗！\n請再試一次");
         }
     });
     
