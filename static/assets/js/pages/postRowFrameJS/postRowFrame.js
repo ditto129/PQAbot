@@ -8,6 +8,7 @@ var pageNumberSearch = 1;
 var pageNumberTag = 1;
 var option = "score";
 var postSum;
+var whichSearchType = "all";//all, text, tag
 
 function disabledButton(id){
     document.getElementById(id).disabled = true;
@@ -275,54 +276,75 @@ function cancle(id, page){
 
 //---------- 篩選貼文方式 START -----------//
 // 篩選時的一些處理
-function filter(){
-//    language = [];
-//    children = [];
-//    chosenTags = [];
-//    allTags = {};
-//    getLanguageTag();
-    $("#aboutSearch").modal("show");
-
-    document.getElementById("searchAll").addEventListener("click", showSearchAll, false);
-    document.getElementById("searchText").addEventListener("click", showSearchTextInput, false);
-    document.getElementById("searchTag").addEventListener("click", showSearchTagInput, false);
-}
-
-// 隱藏打字＆選標籤的地方
-function showSearchAll(){
-    if($('input:radio[name="searchType"]:checked').val()=="searchAll"){
-        $("#searchTextContent").hide(); // 隱藏別人的
-        $("#searchTagContent").hide(); // 隱藏別人的
-        document.getElementById("chosen_tag").innerHTML = "";
-    }
-}
-
-// 顯示打字的地方
-function showSearchTextInput(){
-//    console.log("值: "+$('input:radio[name="searchType"]:checked').val());
-    if($('input:radio[name="searchType"]:checked').val()=="searchText"){
-        $("#searchTextContent").show(); // 顯示自己的
-        $("#searchTagContent").hide(); // 隱藏別人的
-        document.getElementById("chosen_tag").innerHTML = "";
-    }
-}
-
-// 顯示選擇tag的地方
-function showSearchTagInput(){
-    if($('input:radio[name="searchType"]:checked').val()=="searchTag"){
-        $("#searchTagContent").show(); // 顯示自己的
-        $("#searchTextContent").hide(); // 隱藏別人的
-        showLanguageTag();
-        showChosenTags(0);
-    }
-}
+//function filter(){
+////    language = [];
+////    children = [];
+////    chosenTags = [];
+////    allTags = {};
+////    getLanguageTag();
+//    $("#aboutSearch").modal("show");
+//
+//    document.getElementById("searchAll").addEventListener("click", showSearchAll, false);
+//    document.getElementById("searchText").addEventListener("click", showSearchTextInput, false);
+//    document.getElementById("searchTag").addEventListener("click", showSearchTagInput, false);
+//}
+//
+//// 隱藏打字＆選標籤的地方
+//function showSearchAll(){
+//    if($('input:radio[name="searchType"]:checked').val()=="searchAll"){
+//        $("#searchTextContent").hide(); // 隱藏別人的
+//        $("#searchTagContent").hide(); // 隱藏別人的
+//        document.getElementById("chosen_tag").innerHTML = "";
+//    }
+//}
+//
+//// 顯示打字的地方
+//function showSearchTextInput(){
+////    console.log("值: "+$('input:radio[name="searchType"]:checked').val());
+//    if($('input:radio[name="searchType"]:checked').val()=="searchText"){
+//        $("#searchTextContent").show(); // 顯示自己的
+//        $("#searchTagContent").hide(); // 隱藏別人的
+//        document.getElementById("chosen_tag").innerHTML = "";
+//    }
+//}
+//
+//// 顯示選擇tag的地方
+//function showSearchTagInput(){
+//    if($('input:radio[name="searchType"]:checked').val()=="searchTag"){
+//        $("#searchTagContent").show(); // 顯示自己的
+//        $("#searchTextContent").hide(); // 隱藏別人的
+//        showLanguageTag();
+//        showChosenTags(0);
+//    }
+//}
 //---------- 篩選貼文方式 END ----------//
+
+//---------- 貼文排序方式 START ----------//
+function showPostSort(){
+    $("#aboutPost").modal('show');
+}
+
+function changePostSort(){
+    //排序條件 | 依分數排序
+    switch(whichSearchType){
+        case "all":
+            searchAll("new");
+            break;
+        case "text":
+            searchText("new");
+            break;
+        case "tag":
+            searchTag("new");
+            break;
+    }
+}
+//---------- 貼文排序方式 END ----------//
 
 //---------- 各種搜尋 START ----------//
 
 function searchAll(which){
-    
-    localStorage.setItem("method", "all");
+    whichSearchType = "all";
+//    localStorage.setItem("method", "all");
     if(which == "new"){
         pageNumber = 1;
         disabledButton("backwardPage");
@@ -355,7 +377,11 @@ function searchAll(which){
 }
 
 // 透過字搜尋
+function showSearchBar(){
+    $("#searchBar").modal("show");
+}
 function searchText(which){
+    whichSearchType = "text";
     if(which == "new"){
         pageNumberSearch = 1;
         disabledButton("backwardPage");
@@ -363,7 +389,7 @@ function searchText(which){
     else{
         abledButton("backwardPage");
     }
-    var text = $("#searchTextContent").val();
+    var text = $("#searchTextContent2").val();
     
     var data = {title: text, page_size: 5, page_number: pageNumberSearch, option: option};
     console.log(data);
@@ -390,8 +416,11 @@ function searchText(which){
 }
 
 // 透過tag搜尋
+function showSearchTag(){
+    $("#aboutTag").modal('show');
+}
 function searchTag(which){
-    localStorage.setItem("method", "tags");
+    whichSearchType = "tag";
     if(which == "new"){
         pageNumberTag = 1;
         disabledButton("backwardPage");
@@ -478,7 +507,8 @@ function showPost(response){
         abledButton("forwardPage");
     }
     // 處理上下頁Button END
-    
+    console.log("收到的資料: ");
+    console.log(response);
     var role = localStorage.getItem("role");
 //    console.log("這裡的response: ");
 //    console.log(response);
@@ -547,6 +577,7 @@ function showPost(response){
         content += '</div>';
     }
     document.getElementById("post").innerHTML = content;
+    console.log("content: "+content);
 }
 
 function set(){
@@ -558,25 +589,19 @@ function set(){
     $("#searchTagContent").hide(); // 隱藏別人的
 }
 
-function showSearchBar(){
-    $("#searchBar").modal("show");
-}
-
 window.addEventListener("load", function(){
     set();
     searchAll("new");
     
-    //幫searchBar註冊enter press事件
-    console.log("add enter listener")
+    //幫searchBar註冊enter press事件 START
     var input = document.getElementById("searchTextContent2");
     input.addEventListener("keyup", function(event) {
-      // Number 13 is the "Enter" key on the keyboard
-      if (event.keyCode === 13) {
-          console.log("press enter");
-          $('#searchBar').modal('hide');
-          var keywords = document.getElementById("searchTextContent2").value
-        //做事～～～～～～
-      }
+        if (event.keyCode === 13) {
+            console.log("press enter");
+            $('#searchBar').modal('hide');
+            searchText("new");
+        }
     });
-    //註冊完畢
+    //註冊完畢 END
+    
 }, false);
