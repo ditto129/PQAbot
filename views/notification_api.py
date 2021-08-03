@@ -33,11 +33,11 @@ def check_new_notification():
             return jsonify({"new":True})
     return jsonify({"new":False})
    
-#點開鈴鐺，new全設false
-@notification_api.route('set_notification_new')
+#點開鈴鐺，new設false
+@notification_api.route('set_notification_new', methods=['post'])
 def set_notification_new():
-    user_id=request.values.get('user_id')
-    user.update_notification_new(user_id)
+    data = request.get_json()
+    user.update_notification_new(data['user_id'], data['id'])
     return jsonify({"message":"success"})
     
 #依頁數查看通知
@@ -54,4 +54,11 @@ def set_notification_check():
     user_id=request.values.get('user_id')
     id=request.values.get('id')
     user.update_notification_check(user_id, int(id))
+    return jsonify({"message":"success"})
+
+#刪貼文時刪通知
+@notification_api.route('delete_notification')
+def delete_notification():
+    post_id=request.values.get('post_id')
+    user.update_notification_delete(post_id)
     return jsonify({"message":"success"})

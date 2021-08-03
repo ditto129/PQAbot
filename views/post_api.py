@@ -145,7 +145,6 @@ def delete_inner_post_response():
             'post_id' : data['post_id'],
             '_id' : data['_id'],
             "replier_id" : data['replier_id'],
-            "score":data['score']
         }
         inner_post.remove_response(response_dict)
     except Exception as e :
