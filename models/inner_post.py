@@ -109,6 +109,7 @@ def update_post(post_data):
                                                                     {
                                                                         'title':post_data['title'],
                                                                         'question':post_data['question'],
+                                                                        'edit':post_data['edit'],#慈
                                                                         'keyword':post_data['keyword'],
                                                                         'time':post_data['time']}})
     # 使用者發文更新

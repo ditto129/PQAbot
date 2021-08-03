@@ -24,11 +24,10 @@ function editPageNum(sum){
     var begin = 1, end = Math.ceil((postSum/5));
     console.log("總頁數: "+end);
     
-    var method = localStorage.getItem("method");
     var temp;
     sum = parseInt(sum);
     
-    switch(method){
+    switch(whichSearchType){
         case "all":
             temp = pageNumber+sum;
             pageNumber = temp;
@@ -39,7 +38,7 @@ function editPageNum(sum){
             pageNumberSearch = temp;
             searchText("old");
             break;
-        case "tags":
+        case "tag":
             temp = pageNumberTag+sum;
             pageNumberTag = temp;
             searchTag("old");
@@ -240,7 +239,7 @@ function showLanguageTag(){
             content += allTags[language[i]];
         content += '</label>';
     }
-
+    console.log("show語言標籤: "+content);
     document.getElementById("choseTagForSearch").innerHTML = content;
 }
 
@@ -326,6 +325,21 @@ function showPostSort(){
 
 function changePostSort(){
     //排序條件 | 依分數排序
+    var sortType = $('input:radio[name="sortType"]:checked').val();
+    switch(sortType){
+        case "sortScore":
+            option = "score";
+            document.getElementById("optionText").innerHTML = "排序條件 | 依分數排序";
+            break;
+        case "sortView":
+            option = "view_count";
+            document.getElementById("optionText").innerHTML = "排序條件 | 依觀看次數排序";
+            break;
+        case "sortDate":
+            option = "time";
+            document.getElementById("optionText").innerHTML = "排序條件 | 依時間排序";
+            break;
+    }
     switch(whichSearchType){
         case "all":
             searchAll("new");
@@ -340,7 +354,7 @@ function changePostSort(){
 }
 //---------- 貼文排序方式 END ----------//
 
-//---------- 各種搜尋 START ----------//
+//---------- 搜尋方法 START ----------//
 
 function searchAll(which){
     whichSearchType = "all";
@@ -495,7 +509,7 @@ function searchInnerPost(){
     
     document.getElementById("optionText").innerHTML = content+contentSearch+contentSort;
 }
-//---------- 各種搜尋 END ----------//
+//---------- 搜尋方法 END ----------//
 
 // 顯示文章
 function showPost(response){
@@ -577,21 +591,17 @@ function showPost(response){
         content += '</div>';
     }
     document.getElementById("post").innerHTML = content;
-    console.log("content: "+content);
 }
 
 function set(){
-    getLanguageTag();
     localStorage.setItem("postType", "innerPost");
     localStorage.setItem("postAPI", "query_inner_post_list");
-    
-    $("#searchTextContent").hide(); // 隱藏別人的
-    $("#searchTagContent").hide(); // 隱藏別人的
 }
 
 window.addEventListener("load", function(){
     set();
     searchAll("new");
+    getLanguageTag();
     
     //幫searchBar註冊enter press事件 START
     var input = document.getElementById("searchTextContent2");

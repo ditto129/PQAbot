@@ -67,8 +67,8 @@ function deletePostOrAnswer(){
     //--- faq回覆 START ---//
     else if(postType=="faq" && deleteType=="answer"){
         data = {faq_id: postId, id: answerId};
-        console.log("刪除faq的回覆: ");
-        console.log(data);
+//        console.log("刪除faq的回覆: ");
+//        console.log(data);
         
         var myURL = head_url + "delete_faq_answer";
         $.ajax({
@@ -79,11 +79,11 @@ function deletePostOrAnswer(){
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function(response){
-                console.log("API名稱: delete_faq_answer");
+//                console.log("API名稱: delete_faq_answer");
                 console.log(response);
                 localStorage.removeItem("delete");
                 localStorage.removeItem("answerId");
-                setPage("mySinglePostFrame");
+                location.reload();
             },
             error: function(response){
             }
@@ -119,8 +119,8 @@ function deletePostOrAnswer(){
     //--- innerPost回覆 START ---//
     else if(postType=="innerPost" && deleteType=="answer"){
         data = {post_id: postId, _id: answerId, replier_id: getAnswerOwner(postId, answerId)};
-        console.log("刪除innerPost的回覆: ");
-        console.log(data);
+//        console.log("刪除innerPost的回覆: ");
+//        console.log(data);
         
         var myURL = head_url + "delete_inner_post_response";
         $.ajax({
@@ -131,8 +131,8 @@ function deletePostOrAnswer(){
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function(response){
-                console.log("API名稱: delete_inner_post_response");
-                console.log(response);
+//                console.log("API名稱: delete_inner_post_response");
+//                console.log(response);
                 localStorage.removeItem("delete");
                 localStorage.removeItem("answerId");
                 setPage("mySinglePostFrame");
@@ -271,6 +271,8 @@ function thumbs(score, answerId, targetUserId){
 
 /////////////// 抓初始資料 START ///////////////
 function showQuestion(response){
+    console.log("出使資料: ");
+    console.log(response);
     var id, title, question, tags, time;
     //----- 檢查是哪種貼文（faq vs inner） START -----//
     switch(postType){
@@ -434,6 +436,7 @@ function showQuestion(response){
     content += '</div>';
 
     document.getElementById("question").innerHTML = content;
+    hljs.highlightAll();
 }
 
 function showAnswers(response){
@@ -602,6 +605,7 @@ function showAnswers(response){
     }
 
     document.getElementById("response").innerHTML = content;
+    hljs.highlightAll();
 }
 
 function start(){

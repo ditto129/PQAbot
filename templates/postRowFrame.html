@@ -67,13 +67,14 @@
                                                 <div class="title">貼文列表</div>
                                              </div>
                                             
-                                            <div class="card-header-right">
-                                                <i class="icofont icofont-spinner-alt-5"></i>
+                                            <!-- 搜尋貼文方式 START -->
+                                            <div style="float: right;">
                                                 <!--標籤-->
-                                                <i type="button" class="fa fa-tags fa-lg scoreBtn" aria-hidden="true" onclick="showSearchTag()"></i>
+                                                <i type="button" class="fa fa-tags scoreBtn" aria-hidden="true" onclick="showSearchTag()"></i>
                                                 <!--搜尋-->
-                                                <i type="button" class="fa fa-search fa-lg scoreBtn" aria-hidden="true" onclick="showSearchBar()"></i>
+                                                <i type="button" class="fa fa-search scoreBtn" aria-hidden="true" onclick="showSearchBar()"></i>
                                             </div>
+                                            <!-- 搜尋貼文方式 END -->
                                             
                                             <!-- 貼文排序 START -->
                                             <div>
@@ -84,6 +85,7 @@
                                             
                                             <!--已選標籤-->
                                             <div id="chosen_tag"></div>
+                                            
                                         </div>
                                         <!-- 貼文列表 start -->
                                         <div class="card-block">
@@ -91,6 +93,7 @@
                                             </div>
                                         </div>
                                         <!-- 貼文列表 end -->
+                                        
                                         <!-- 翻頁 start-->
                                         <div class="pagination" style="text-align: center;">
                                             <button href="#" id="backwardPage" onclick="editPageNum('-1')">❮</button>
@@ -115,7 +118,7 @@
         
         <!-- 貼文排序方式 START -->
         <div class="modal-header">
-            <h5 class="modal-title">貼文排序方式</h5>
+            <h5 class="modal-title">選擇相關標籤</h5>
         </div>    
         <div class="modal-body">
             <div style="padding-left: 32.22px; border-color: #505458;" id="searchTagContent">

@@ -58,13 +58,42 @@
                                                     <div class="form-group row" id="editReplyVote"></div>
                                                     <br>
                                                     <!-- 回覆內容 row start -->
+                                                    <!-- 回覆內容 row start -->
                                                     <div class="form-group row">
                                                         <label class="col-sm-2 col-form-label">回覆內容</label>
                                                         <div class="col-sm-10">
-                                                            <textarea id="response" rows="5" cols="5" class="form-control" placeholder="請輸入回覆內容"></textarea>
+                                                            <!-- 選擇程式碼語言 START -->
+                                                            <select name="codeLanguage">
+                                                                <option value="python" selected>python</option>
+                                                                <option value="html">HTML</option>
+                                                                <option value="css">CSS</option>
+                                                                <option value="javascript">Javascript</option>
+                                                                <option value="c">C</option>
+                                                            </select>
+                                                            <!-- 選擇程式碼語言 END -->
+                                                            
+                                                            <!-- 新增程式碼按鈕 START -->
+                                                            <div class="themeButton" style="display: inline-block; padding: 3px;" onclick="addCodeArea()">
+                                                            新增程式碼區塊
+                                                            </div>
+                                                            <!-- 新增程式碼按鈕 END -->
+                                                            
+                                                            <!-- 預覽按鈕 START -->
+                                                            <div class="themeButton" style="display: inline-block; padding: 3px;" onclick="showReplyContent('see')">預覽
+                                                            </div>
+                                                            <!-- 預覽按鈕 END -->
+                                                            
+                                                            <textarea id="replyContent" rows="5" cols="5" class="form-control"
+                                                        placeholder="輸入回覆內容"></textarea>
+                                                            
+                                                            <!-- 預覽區塊 START -->
+                                                            <div id="previewContent" style="border: 0.1mm solid; border-color: #545048;">
+                                                            <br>預覽區塊<br><br>
+                                                            </div>
+                                                            <!-- 預覽區塊 END -->
                                                         </div>
                                                     </div>
-                                                    <!-- 回覆內容 row end -->
+                                                    <!-- 回覆內容 row END -->
                                                     <input class="btn btn-primary purpleBtn" value="編輯" onclick="edit()">
                                                 </form>
                                             </div>

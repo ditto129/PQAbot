@@ -145,8 +145,13 @@ def insert_answer(data_dict):
         _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$inc':{'usage_counter':1}})
 
 def update_answer(data_dict):
+#    _db.FAQ_DATA_COLLECTION.update({'_id':data_dict['faq_id'],'answers.id':data_dict['id']},
+#                                   {'$set':{'answers.$.content':data_dict['content'],'answers.$.vote':data_dict['vote']}})
+
+    #慈 START
     _db.FAQ_DATA_COLLECTION.update({'_id':data_dict['faq_id'],'answers.id':data_dict['id']},
-                                   {'$set':{'answers.$.content':data_dict['content'],'answers.$.vote':data_dict['vote']}})
+                                   {'$set':{'answers.$.content':data_dict['content'],'answers.$.vote':data_dict['vote'], 'answers.$.edit':data_dict['edit']}})
+    #慈 END
 
 def remove_answer(data_dict):
     tags = _db.FAQ_DATA_COLLECTION.find_one({'_id':data_dict['faq_id']})
@@ -229,6 +234,7 @@ def update_faq(data_dict):
         target_faq['keywords'] = [] 
     target_faq['link'] = data_dict['link']
     target_faq['question']['title'] = data_dict['question']['title']
+    target_faq['question']['edit'] = data_dict['question']['edit']
     target_faq['question']['vote'] = data_dict['question']['vote']
     target_faq['time'] = data_dict['time']
     # 更新tags，扣除舊tag計數

@@ -51,6 +51,7 @@ def insert_inner_post():
             'asker_name' : data['asker_name'],
             'title' : data['title'],
             'question' : data['question'],
+            'edit' : data['edit'],#慈加的
             'answer' : [],
             'keyword' : [],
             'tag' : data['tag'],
@@ -78,6 +79,7 @@ def update_inner_post():
             'asker_id':data['asker_id'],
             'title' : data['title'],
             'question' : data['question'],
+            'edit' : data['edit'], #慈
             'keyword' : [],
             'time' : datetime.fromisoformat(data['time'])
         }

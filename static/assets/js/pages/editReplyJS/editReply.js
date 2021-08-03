@@ -1,5 +1,78 @@
 var postType;
 
+////////// 處理程式碼 START //////////
+// 預覽內容
+function showReplyContent(why){//why可以是see, save
+    var userContent = $("#replyContent").val();
+    var storeContent = ""; //要存起來的程式碼
+    
+    //dotNum 代表有連續幾個`
+    //needCouple 是否需要後半段```
+    //language 代表程式碼的語言
+    var dotNum=0, needCouple=false, language="";
+    for(var i=0; i<userContent.length; i++){
+        if(userContent[i]=="`"){ //遇到`
+            dotNum += 1;
+            if(dotNum==3 && needCouple==false){ //湊滿3個 && 是第一次
+                
+                dotNum = 0;//需要清空`的數量
+                
+                //先去拿語言
+                i += 1;//直接前往下一個index
+                var flag = false;
+                while(true){
+                    if(userContent[i] ==']') break;
+                    if(flag==true){
+                        language += userContent[i];
+                    }
+                    if(userContent[i] == '['){
+                        flag = true;
+                    }
+                    i += 1;
+                }
+                storeContent += '<pre><code class="';
+                storeContent += language
+                storeContent += '">';
+                
+                language = "";
+                needCouple = true; //代表需要後半段
+            }
+            else if(dotNum==3 && needCouple==true){ //湊滿3個 && 是第二次
+                dotNum = 0;//需要清空`的數量
+                needCouple = false;
+                
+                storeContent += "</code></pre>";
+            }
+        }
+        else{
+            storeContent += userContent[i];
+        }
+    }
+    if(why=="see"){
+        document.getElementById("previewContent").innerHTML = storeContent;
+        hljs.highlightAll();
+    }
+    else if(why=="save"){
+        return storeContent;
+    }
+    return "";
+}
+
+// 新增程式碼區塊
+function addCodeArea(){
+    console.log("addCodeArea");
+    var language = $("select[name='codeLanguage']").val();
+    var content = $("#replyContent").val();
+    console.log("原本的content: "+content);
+    content += '```[';
+    content += language;
+    content += ']\n```';
+    
+    $("#replyContent").val(content);
+//    setCodeColor();
+}
+////////// 處理程式碼 END //////////
+
 ////////////// 拿回覆資料＆顯示 START //////////////
 function showFaqAnswer(){
     document.getElementById("editReplyVote").innerHTML = '<label class="col-sm-2 col-form-label">回覆的分數</label><input class="addFAQsInput col-sm-10" id="answerScore"><br>';
@@ -20,7 +93,7 @@ function showFaqAnswer(){
             for(var i=0; i<response.answers.length; i++){
                 if(response.answers[i].id == replyId){
                     $("#answerScore").val(response.answers[i].vote);
-                    document.getElementById("response").innerHTML = response.answers[i].content;
+                    document.getElementById("replyContent").innerHTML = response.answers[i].edit;
                     break;
                 }
             }
@@ -79,7 +152,8 @@ function editFaqAnswer(){
     var faqId = localStorage.getItem("singlePostId");
     var answerId = localStorage.getItem("replyId");
     var vote = $("#answerScore").val();
-    var response = $("#response").val();
+    var response = showReplyContent("save");
+    var edit = $("#replyContent").val();
     if(vote=="" && response==""){
         document.getElementById("modalContent").innerHTML = "請輸入回覆的分數 以及 回覆內容";
         $("#note").modal("show");
@@ -93,7 +167,7 @@ function editFaqAnswer(){
         $("#note").modal("show");
     }
     else{
-        var data = {faq_id: faqId, id: answerId, vote: vote, content: response};
+        var data = {faq_id: faqId, id: answerId, vote: vote, edit: edit, content: response};
         console.log("data: ");
         console.log(data);
         myURL = head_url + "update_faq_answer";

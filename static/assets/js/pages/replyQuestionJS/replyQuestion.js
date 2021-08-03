@@ -1,49 +1,80 @@
 var postType;
  
-function setCodeColor(){
-    hljs.highlightAll();
+////////// 處理程式碼 START //////////
+// 預覽內容
+function showReplyContent(why){//why可以是see, save
+    var userContent = $("#replyContent").val();
+    var storeContent = ""; //要存起來的程式碼
+    
+    //dotNum 代表有連續幾個`
+    //needCouple 是否需要後半段```
+    //language 代表程式碼的語言
+    var dotNum=0, needCouple=false, language="";
+    for(var i=0; i<userContent.length; i++){
+        if(userContent[i]=="`"){ //遇到`
+            dotNum += 1;
+            if(dotNum==3 && needCouple==false){ //湊滿3個 && 是第一次
+                
+                dotNum = 0;//需要清空`的數量
+                
+                //先去拿語言
+                i += 1;//直接前往下一個index
+                var flag = false;
+                while(true){
+                    if(userContent[i] ==']') break;
+                    if(flag==true){
+                        language += userContent[i];
+                    }
+                    if(userContent[i] == '['){
+                        flag = true;
+                    }
+                    i += 1;
+                }
+                storeContent += '<pre><code class="';
+                storeContent += language
+                storeContent += '">';
+                
+                language = "";
+                needCouple = true; //代表需要後半段
+            }
+            else if(dotNum==3 && needCouple==true){ //湊滿3個 && 是第二次
+                dotNum = 0;//需要清空`的數量
+                needCouple = false;
+                
+                storeContent += "</code></pre>";
+            }
+        }
+        else{
+            storeContent += userContent[i];
+        }
+    }
+    if(why=="see"){
+        document.getElementById("previewContent").innerHTML = storeContent;
+        hljs.highlightAll();
+    }
+    else if(why=="save"){
+        return storeContent;
+    }
+    return "";
 }
 
+// 新增程式碼區塊
 function addCodeArea(){
-    console.log("lan: "+$("#language").val());
-    var language = $("#language").val();
-    var content = document.getElementById("replyContent").innerHTML;
-    content += '<pre><code class="';
+    console.log("addCodeArea");
+    var language = $("select[name='codeLanguage']").val();
+    var content = $("#replyContent").val();
+    console.log("原本的content: "+content);
+    content += '```[';
     content += language;
-    content += '">';
-//    content += 'print("hello world")\n';
-//    content += 't = input()';
-    content += '</code></pre>';
+    content += ']\n```';
     
-    document.getElementById("replyContent").innerHTML = content;
-    setCodeColor();
+    $("#replyContent").val(content);
+//    setCodeColor();
 }
+////////// 處理程式碼 END //////////
 
 function save(){
-    var allstring = document.getElementById("test-editormd");
-//    var cln = allstring.cloneNode(true);
-//    $('#contentText').val();
-    console.log("值: "+$('#contentText').val());
-    $('#contentText'). remove();
-//    console.log("透過id抓: "+document.getElementById("contentText"));
-//    allstring.getElementById("contentText").remove();
-    console.log("內容是: " + allstring.innerHTML);
-//    var allString = document.getElementById("test-editormd");
-//    console.log("全部的內容: "+allString.innerHTML);
-//    
-//    var pureString = document.getElementsByTagName("textarea")[0];
-//    console.log("textarea的區塊: "+pureString.innerHTML);
-//    console.log("textarea的內容: "+pureString.value);
-    
-//    var temp = allString.innerHTML.replace(pureString.value, "");
-//    console.log("傳給灣龍的code: "+temp);
-    
-    // 先刪掉textarea
-    // 傳後面的
-//    var reg = /^<textarea|$<\/textarea>/;
-//    var deleteTextarea = document.getElementById("test-editormd").innerHTML;
-//    deleteTextarea = deleteTextarea.replace(reg, "");
-//    console.log("刪掉textarea: "+deleteTextarea);
+//    showReplyContent();
     switch(postType){
         case "faq":
             addFaqAnswer();
@@ -58,7 +89,10 @@ function addFaqAnswer(){
     //--- 取得表單資料 START ---//
     var faqId = localStorage.getItem("singlePostId");
     var vote = $("#answerScore").val();
-    var content = document.getElementsByTagName("textarea")[0].value;
+    var content = showReplyContent("save");
+    var edit = $("#replyContent").val();
+//    console.log("edit: "+edit);
+//    console.log("content: "+content);
     if(vote=="" && content==""){
         document.getElementById("modalContent").innerHTML="請輸入回覆的分數 以及 回覆內容";
         $("#note").modal("show");
@@ -72,9 +106,9 @@ function addFaqAnswer(){
         $("#note").modal("show");
     }
     else{
-        var data = {faq_id: faqId, vote: vote, content: content};
+        var data = {faq_id: faqId, vote: vote, edit: edit, content: content};
 //        console.log("data: ");
-//        console.log(data);
+        console.log(data);
         //--- 取得表單資料 END ---//
 
         //--- 呼叫API START ---//
@@ -105,19 +139,7 @@ function addInnerPostAnswer(){
     var postOwnerId;
     var replierId = localStorage.getItem("sessionID");
     var replierName = localStorage.getItem("userName");
-//    var response = document.getElementsByTagName("textarea")[0].value;
-    //---
-    var allstring = document.getElementById("test-editormd");
-    console.log("值: "+$('#contentText').val());
-    $('#contentText'). remove();
-    console.log("內容是: " + allstring.innerHTML);
-    var previewMarkdown = document.getElementsByClassName("editormd-preview");
-    console.log("預覽畫面是: "+previewMarkdown[0].innerHTML);
-    
-    //---
-//    var response = document.getElementById("test-editormd").innerHTML;
-//    var response = allstring.innerHTML; //全部的
-    var response = previewMarkdown[0].innerHTML;
+    var response = showReplyContent("save");
     
     //true->匿名, false->不是匿名
     var anonymous = document.getElementById('anonymous').checked;
@@ -167,7 +189,7 @@ function addInnerPostAnswer(){
     
     //----- 回覆貼文 -----//
     var data = {post_id: postId, replier_id: replierId, replier_name: replierName, response: response, time: time, incognito: anonymous};
-    console.log("回覆innerPost");
+//    console.log("回覆innerPost");
     console.log(data);
     myURL = head_url + "insert_inner_post_response";
     $.ajax({

@@ -1,3 +1,76 @@
+////////// 處理程式碼 START //////////
+// 預覽內容
+function showReplyContent(why){//why可以是see, save
+    var userContent = $("#replyContent").val();
+    var storeContent = ""; //要存起來的程式碼
+    
+    //dotNum 代表有連續幾個`
+    //needCouple 是否需要後半段```
+    //language 代表程式碼的語言
+    var dotNum=0, needCouple=false, language="";
+    for(var i=0; i<userContent.length; i++){
+        if(userContent[i]=="`"){ //遇到`
+            dotNum += 1;
+            if(dotNum==3 && needCouple==false){ //湊滿3個 && 是第一次
+                
+                dotNum = 0;//需要清空`的數量
+                
+                //先去拿語言
+                i += 1;//直接前往下一個index
+                var flag = false;
+                while(true){
+                    if(userContent[i] ==']') break;
+                    if(flag==true){
+                        language += userContent[i];
+                    }
+                    if(userContent[i] == '['){
+                        flag = true;
+                    }
+                    i += 1;
+                }
+                storeContent += '<pre><code class="';
+                storeContent += language
+                storeContent += '">';
+                
+                language = "";
+                needCouple = true; //代表需要後半段
+            }
+            else if(dotNum==3 && needCouple==true){ //湊滿3個 && 是第二次
+                dotNum = 0;//需要清空`的數量
+                needCouple = false;
+                
+                storeContent += "</code></pre>";
+            }
+        }
+        else{
+            storeContent += userContent[i];
+        }
+    }
+    if(why=="see"){
+        document.getElementById("previewContent").innerHTML = storeContent;
+        hljs.highlightAll();
+    }
+    else if(why=="save"){
+        return storeContent;
+    }
+    return "";
+}
+
+// 新增程式碼區塊
+function addCodeArea(){
+    console.log("addCodeArea");
+    var language = $("select[name='codeLanguage']").val();
+    var content = $("#replyContent").val();
+    console.log("原本的content: "+content);
+    content += '```[';
+    content += language;
+    content += ']\n```';
+    
+    $("#replyContent").val(content);
+//    setCodeColor();
+}
+////////// 處理程式碼 END //////////
+
 //// 用來記使用者選擇的所有標籤
 var language = [];
 var children = [];
@@ -268,7 +341,9 @@ function save(){
     // 標題
     var title = $("#postTitle").val();
     // 內容
-    var question = $("#postContent").val();
+//    var question = $("#postContent").val();
+    var question = showReplyContent("save");
+    var edit = $("#replyContent").val();
     // 標籤
     var tag = [];
     for(var i=0; i<chosenTags.length; i++){
@@ -282,7 +357,7 @@ function save(){
     //true->匿名, false->不是匿名
     var anonymous = document.getElementById('anonymous').checked;
     
-    var data = {"asker_id": id, "asker_name": name, "title": title, "question": question, "tag": tag, "time": time, "incognito": anonymous};
+    var data = {asker_id: id, asker_name: name, title: title, question: question, edit: edit, tag: tag, time: time, incognito: anonymous};
     console.log("傳出去的data資料");
     console.log(data);
     myURL = head_url + "insert_inner_post";

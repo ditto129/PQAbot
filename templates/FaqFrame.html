@@ -33,7 +33,6 @@
     <!-- highlight START -->
     <link rel="stylesheet" href="../static/assets/highlight/styles/color-brewer.min.css">
     <script src="../static/assets/highlight/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
     <!-- highlight END -->
   </head>
 
@@ -68,30 +67,23 @@
                                     <div class="card">
                                         <div class="card-header">
                                             <div class="card-header-left">
-                                                <div class="title">FAQs紀錄</div>
-                                                <br><br>
+                                                <div class="title">FAQ紀錄</div>
                                                 <div id="newFaqData"></div>
                                              </div>
                                             
-                                            <!-- 翻頁 start-->
-                                            <div class="pagination card-header-right" style="float: right;">
-                                                <button id="backwardPage" onclick="editPageNum('-1')">❮</button>
-                                                <button id="forwardPage" onclick="editPageNum('1')">❯</button>
+                                            <!-- 搜尋貼文方式 START -->
+                                            <div style="float: right;">
+                                                <!--標籤-->
+                                                <i type="button" class="fa fa-tags scoreBtn" aria-hidden="true" onclick="showSearchTag()"></i>
+                                                <!--搜尋-->
+                                                <i type="button" class="fa fa-search scoreBtn" aria-hidden="true" onclick="showSearchBar()"></i>
                                             </div>
-                                            <!-- 翻頁 end-->
-                                            
-<!--
-                                            <div class="card-header-right">
-                                                <i class="icofont icofont-spinner-alt-5"></i>
-                                            </div>
--->
-                                            
-
+                                            <!-- 搜尋貼文方式 END -->
                                             
                                             <!-- 貼文排序 START -->
                                             <div>
-                                            <i type="button" class="fa fa-filter fa-lg scoreBtn" aria-hidden="true" onclick="filter()" style="margin-top: 20px; display: inline-block;"></i>
-                                            <span style="display: inline-block;" id="optionText">篩選條件 | 顯示全部 | 依分數排序</span>
+                                            <i type="button" class="fa fa-filter fa-lg scoreBtn" aria-hidden="true" onclick="showPostSort()" style="margin-top: 20px; display: inline-block;"></i>
+                                            <span style="display: inline-block;" id="optionText">排序條件 | 依分數排序</span>
                                             </div>
                                             <!-- 貼文排序 END -->
                                             
@@ -100,11 +92,20 @@
                                             <!-- 已選標籤 END-->
                                         
                                 </div>
-                                    
+                                        <!-- FAQ貼文 START -->
                                         <div class="card-block">
                                             <div class="row" id="faq">
                                             </div>
                                         </div>
+                                        <!-- FAQ貼文 END -->
+                                        
+                                        <!-- 翻頁 START-->
+                                        <div class="pagination card-header-right" style="float: right;">
+                                            <button id="backwardPage" onclick="editPageNum('-1')">❮</button>
+                                            <button id="forwardPage" onclick="editPageNum('1')">❯</button>
+                                        </div>
+                                        <!-- 翻頁 END-->
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -132,7 +133,37 @@
                 常見問題分數：<input id="FAQScore" class="addFAQsInput"><br>
                 常見問題標題：<input id="FAQTitle" class="addFAQsInput"><br>
                 常見問題內容：<br>
-                <textarea id="FAQContent" class="addFAQsTextarea"></textarea><br>
+                <div>
+                    <!-- 選擇程式碼語言 START -->
+                    <select name="FAQQuestionCode">
+                        <option value="python" selected>python</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="javascript">Javascript</option>
+                        <option value="C">C</option>
+                    </select>
+                    <!-- 選擇程式碼語言 END -->
+
+                    <!-- 新增程式碼按鈕 START -->
+                    <div class="themeButton" style="display: inline-block; padding: 3px;" onclick="addCodeArea('FAQQuestionText', 'FAQQuestionCode')">
+                    新增程式碼區塊
+                    </div>
+                    <!-- 新增程式碼按鈕 END -->
+
+                    <!-- 預覽按鈕 START -->
+                    <div class="themeButton" style="display: inline-block; padding: 3px;" onclick="showReplyContent('see', 'FAQQuestionText', 'FAQQuestionView')">預覽
+                    </div>
+                    <!-- 預覽按鈕 END -->
+
+                    <textarea id="FAQQuestionText" rows="5" cols="5" class="form-control"
+                placeholder="輸入回覆內容"></textarea>
+
+                    <!-- 預覽區塊 START -->
+                    <div id="FAQQuestionView" style="border: 0.1mm solid; border-color: #545048;">
+                    <br>預覽區塊<br><br>
+                    </div>
+                    <!-- 預覽區塊 END -->
+                </div>
                 <br>
                 <hr>
                 <br>
@@ -145,8 +176,14 @@
                 <br><hr><br>
                 
                 <div class="title" id="addFAQTags">選擇相關標籤</div>
-                <div id="chose_tag" style="margin-top: 5px;"></div>    
-                <div id="chosen_tag_in_modal" style="margin-top: 15px;"></div>
+                <div style="padding-left: 32.22px; border-color: #505458;" id="search_tag_content">
+                    <div id="forward_page_in_modal">
+                    </div>
+                    <div id="chose_tag_for_search">
+                    </div>
+                    <div id="chosen_tag_in_modal_for_search" style="margin-top: 5px;">
+                    </div>
+                </div>
             </div>
             
             <div class="modal-footer">
@@ -200,34 +237,17 @@
 </div>
 <!-- 匯入FAQ END -->
       
-<!-- 篩選各種東西 START -->
-<div class="modal fade" id="aboutSearch" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- 選擇tag START -->
+<div class="modal fade" id="aboutTag" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content"> 
         
-        <!-- 篩選方式 START -->
+        <!-- 貼文排序方式 START -->
         <div class="modal-header">
-            <h5 class="modal-title">篩選貼文方式</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">     
-            <div style="margin: 15px;">
-                <input type="radio" name="searchType" id="searchAll" value="searchAll" checked>
-                <label class="form-check-label" for="searchAll">顯示全部</label>
-            </div>
-            <div style="margin: 15px;">
-                <input type="radio" name="searchType" id="searchText" value="searchText">
-                <label class="form-check-label" for="searchText">透過字串搜尋</label>
-                <div style="padding-left: 32.22px;">
-                    <input id="searchTextContent" type="text" name="search" placeholder="輸入相關文字...">
-                </div>
-            </div>
-            <div style="margin: 15px;">
-                <input type="radio" name="searchType" id="searchTag" value="searchTag">
-                <label class="form-check-label" for="searchTag">透過標籤搜尋</label>
-                <div style="padding-left: 32.22px; border-color: #505458;" id="searchTagContent">
+            <h5 class="modal-title">選擇相關標籤</h5>
+        </div>    
+        <div class="modal-body">
+            <div style="padding-left: 32.22px; border-color: #505458;" id="searchTagContent">
                     <div id="forwardPageInModal">
                     </div>
                     <div id="choseTagForSearch">
@@ -235,9 +255,20 @@
                     <div id="chosenTagInModalForSearch" style="margin-top: 5px;">
                     </div>
                 </div>
-            </div>
         </div>
-        <!-- 篩選方式 END -->
+        <!-- 貼文排序方式 END -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="searchTag('new')" data-dismiss="modal">搜尋</button>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- 選擇tag END -->
+      
+<!-- 貼文排序 START -->
+<div class="modal fade" id="aboutPost" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content"> 
         
         <!-- 貼文排序方式 START -->
         <div class="modal-header">
@@ -259,12 +290,26 @@
         </div>
         <!-- 貼文排序方式 END -->
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="searchFaqPost()" data-dismiss="modal">搜尋</button>
+            <button type="button" class="btn btn-secondary" onclick="changePostSort()" data-dismiss="modal">排序</button>
         </div>
     </div>
   </div>
 </div>
-<!-- 篩選各種東西 END -->
+<!-- 貼文排序 END -->
+      
+<!--搜尋匡 START -->
+<div class="modal fade" id="searchBar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="margin-top: 200px;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color:transparent; border: 0;"> 
+            <div class="modal-body" style="background-color:transparent;">   
+                <div style="text-align: center;">
+                    <input id="searchTextContent2" type="text" name="search" placeholder="輸入相關文字...">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--搜尋匡 END -->
       
         <!-- Warning Section Starts -->
         <!-- Older IE warning message -->
