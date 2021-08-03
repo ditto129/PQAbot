@@ -23,36 +23,52 @@ from flask_cors import CORS
 #import models
 from views import register_blueprint
 #from lib import config
+''' ------------------ '
+' --- login testing--- '
+' ------------------ '''
+# from flask_session import Session
+# from models._db import DB
+from os import urandom
+from models.PSAbotLoginManager import PSAbotLoginManager,UserModel
 
 def create_app():
     app = Flask(__name__)
     app.jinja_env.auto_reload = True
+    app.config['SECRET_KEY'] = urandom(24).hex()
     #app.config.from_object(config.Config())
     CORS(app)
     # models setup
     #models.setup(app)
-
     # security setup
-
-   # Security(app, models.user.USER_DATASTORE,login_form=models.user.ExtendedLoginForm)
-
+    # Security(app, models.user.USER_DATASTORE,login_form=models.user.ExtendedLoginForm)
+    ''' --- login manager ---- '''
+    login_manager = PSAbotLoginManager(app)
+    @login_manager.user_loader
+    def user_loader(user_id):  
+        user_now = UserModel(user_id)   
+        return user_now
+    ''' ---------------------- '''
     # register app
     register_blueprint(app)
     return app
 
 
+  
+    
+
+
 #def refresh_schedule():
 #    models.reschedule.refresh_schedule()
-
-
-
 
 if __name__ == "__main__":
     # scheduler=APScheduler()
     app = create_app()
+    
     # scheduler.init_app(app)
     # scheduler.start()
     app.run(host='0.0.0.0', port=55001)
     
 #"192.168.111.128",port=55001
+
+
 
