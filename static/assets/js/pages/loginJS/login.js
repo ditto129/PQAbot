@@ -1,7 +1,7 @@
 /* ================ Facebook Login ================= */
 // 設定 Facebook JavaScript SDK
 //var head_url = "https://soselab.asuscomm.com:55002/api/"
-var head_url = "https://1d9bba825e73.ngrok.io/api/"
+var head_url = "https://332644560e4d.ngrok.io/api/"
 window.fbAsyncInit = function () {
     FB.init({
       appId: '1018939978932508',
@@ -33,26 +33,33 @@ function checkLoginState() {
         console.log(response)
         // 若已登入則利用facebook api取得使用者資料
         FB.api(
-            '/me',
-            'GET', {
-            "fields": "id,name,email"
-            },
-            function (response) {
+          '/me',
+          'GET', {
+          "fields": "id,name,email"
+          },
+          function (response) {
             console.log(response)
             // 取得使用者資料丟到後端
             $.ajax({
                 type: "POST",
                 url: head_url + 'facebook_sign_in',
                 data: JSON.stringify(response),
-                success: function () {
-                console.log('Facebook login success')
+                async: false,
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (response_data) {
+                  sessionStorage.setItem('user_id', response_data['_id']);
+                  sessionStorage.setItem('role', response_data['role']);
+                  console.log('user_id :' + sessionStorage.getItem('user_id') + ' ,role: ' + sessionStorage.getItem('role') + ' has logged in.')
                 },
-                dataType: 'application/json',
-                contentType: "application/json",
+                error: function (xhr, status, error) {
+                  console.log('get_data: '+ xhr.responseText + status + ',error_msg: ' + error);
+                }
             });
-            });
-        }
-    });
+          });
+      }
+    }
+  );
 }
 
 /* ================================================= */
@@ -81,18 +88,19 @@ function onLoadGoogleCallback(){
           data: JSON.stringify({
             'id_token': googleUser.getAuthResponse().id_token
           }),
-          success: function () {
-            console.log('google login success')
+          async: false,
+          dataType: "json",
+          contentType: 'application/json; charset=utf-8',
+          success: function (response_data) {
+            sessionStorage.setItem('user_id', response_data['_id']);
+            sessionStorage.setItem('role', response_data['role']);
+            console.log('user_id :' + sessionStorage.getItem('user_id') + ' ,role: ' + sessionStorage.getItem('role') + ' has logged in.')
           },
-          dataType: 'application/json',
-          contentType: "application/json",
+          error: function (xhr, status, error) {
+            console.log('get_data: '+ xhr.responseText + status + ',error_msg: ' + error);
+          }
         });
-        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        console.log('Name: ' + profile.getName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-        console.log('user_id:'+ sessionStorage.getItem('user_id'));
-        console.log('user_role:'+ sessionStorage.getItem('role'));
+        
         
       }, 
       function(error) 
