@@ -29,8 +29,7 @@ from views import register_blueprint
 # from flask_session import Session
 # from models._db import DB
 from os import urandom
-from flask_login import LoginManager
-from models.UserModel import UserModel
+from models.PSAbotLoginManager import PSAbotLoginManager,UserModel
 
 def create_app():
     app = Flask(__name__)
@@ -42,20 +41,17 @@ def create_app():
     #models.setup(app)
     # security setup
     # Security(app, models.user.USER_DATASTORE,login_form=models.user.ExtendedLoginForm)
-    login_manager = LoginManager()
-    login_manager.init_app(app)
-    login_manager.login_view = 'login_web.login'
-    @login_manager.user_loader  
+    ''' --- login manager ---- '''
+    login_manager = PSAbotLoginManager(app)
+    @login_manager.user_loader
     def user_loader(user_id):  
-        """  
-        設置二： 透過這邊的設置讓flask_login可以隨時取到目前的使用者id   
-        :param email:官網此例將email當id使用，賦值給予user.id    
-        """   
         user_now = UserModel(user_id)   
         return user_now
+    ''' ---------------------- '''
     # register app
     register_blueprint(app)
     return app
+
 
   
     

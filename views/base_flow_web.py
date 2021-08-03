@@ -7,8 +7,7 @@ Created on Mon Apr 19 19:04:59 2021
 """
 
 from flask import Blueprint, render_template
-from flask_login import login_required
-from models.UserModel import requires_roles
+# from models.PSAbotLoginManager import roles_required,login_required
 
 base_flow_web=Blueprint('base_flow_web', __name__)
 
@@ -18,8 +17,8 @@ def base_flow():
 
 
 @base_flow_web.route("/PSAbot")
-@login_required
-@requires_roles('facebook_user', 'google_user')
+# @login_required
+# @roles_required('facebook_user', 'google_user')
 def PSAbot():
     return render_template("menuBar.html")
 

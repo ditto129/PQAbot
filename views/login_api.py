@@ -1,14 +1,14 @@
 # --- flask --- #
 from flask import Blueprint, request, jsonify,session
 #from flask_security import logout_user, login_required
-from flask_login import login_user, current_user, login_required, logout_user
+from flask_login import login_user, current_user, logout_user
 # --- google sign-in --- #
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
 # --- our models ---- #
 from models import user
-from models import UserModel
+from models.PSAbotLoginManager import UserModel
 
 login_api = Blueprint("login_api", __name__)
 GOOGLE_OAUTH2_CLIENT_ID = '417777300686-b6isl0oe0orcju7p5u0cpdeo07hja9qs.apps.googleusercontent.com'
@@ -47,7 +47,7 @@ def google_sign_in():
         user.insert_user(user_dict)
         user_dict = user.query_user(id_info['sub'])
     # --- flask login --- #
-    user_now = UserModel.UserModel(user_dict['_id'])  
+    user_now = UserModel(user_dict['_id'])  
     login_user(user_now) 
     session['user_id'] = user_dict['_id']
     session['role'] = user_dict['role']
@@ -74,7 +74,7 @@ def facebook_sign_in():
         user.insert_user(user_dict)
         user_dict = user.query_user(data['id'])
     # --- flask login --- #
-    user_now = UserModel.UserModel(user_dict['_id'])  
+    user_now = UserModel(user_dict['_id'])  
     login_user(user_now) 
     session['user_id'] = user_dict['_id']
     session['role'] = user_dict['role']
@@ -87,6 +87,8 @@ def logout():
             "msg" : "user " + current_user.get_id() + " logged out."
         }
         logout_user()
+        session['user_id'] = None
+        session['role'] = None
     except Exception as e :
         msg = {"error" : e.__class__.__name__ + ":" +e.args[0]}
     return jsonify(msg)

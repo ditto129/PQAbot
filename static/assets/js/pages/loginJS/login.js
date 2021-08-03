@@ -1,7 +1,7 @@
 /* ================ Facebook Login ================= */
 // 設定 Facebook JavaScript SDK
 //var head_url = "https://soselab.asuscomm.com:55002/api/"
-var head_url = "https://5645a731eeda.ngrok.io/api/"
+var head_url = "https://1d9bba825e73.ngrok.io/api/"
 window.fbAsyncInit = function () {
     FB.init({
       appId: '1018939978932508',
@@ -59,7 +59,6 @@ function checkLoginState() {
 
 /* ================ Google Sign in ================= */
 function onLoadGoogleCallback(){
-  
   gapi.load('auth2', function(){
     auth2 = gapi.auth2.init({
       client_id: '417777300686-b6isl0oe0orcju7p5u0cpdeo07hja9qs.apps.googleusercontent.com',
@@ -68,11 +67,9 @@ function onLoadGoogleCallback(){
     });
     attachSignin(document.getElementById('google-login-btn'));
   });
-}
-
-function attachSignin(element) {
-  console.log(element.id);
-  auth2.attachClickHandler(element, {},
+  function attachSignin(element) {
+    console.log(element.id);
+    auth2.attachClickHandler(element, {},
       function(googleUser) 
       {
         // 登入成功
@@ -94,11 +91,19 @@ function attachSignin(element) {
         console.log('Name: ' + profile.getName());
         console.log('Image URL: ' + profile.getImageUrl());
         console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        console.log('user_id:'+ sessionStorage.getItem('user_id'));
+        console.log('user_role:'+ sessionStorage.getItem('role'));
+        
       }, 
       function(error) 
       {
         //登入失敗
         console.log('Sign-in error', error);
-      });
+      }
+    );
+  }
 }
+
+
+
 /* ================================================= */

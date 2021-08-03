@@ -5,7 +5,7 @@
 <script src="https://apis.google.com/js/platform.js?onload=onLoadGoogleCallback" async defer></script> 
 ============================================================== */
 //var head_url = "https://soselab.asuscomm.com:55002/api/"
-var head_url = "https://5645a731eeda.ngrok.io/api/"
+var head_url = "https://1d9bba825e73.ngrok.io/api/"
 function googleSignOut() {
     var auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(function () {
