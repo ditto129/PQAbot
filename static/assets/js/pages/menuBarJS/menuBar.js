@@ -331,12 +331,12 @@ function clickChatroomInnerSearch(postId){
 function start(){
     localStorage.clear();
     //這個是管理者
-    localStorage.setItem("role", "manager");
-    localStorage.setItem("sessionID", 4444);
+//    localStorage.setItem("role", "manager");
+//    localStorage.setItem("sessionID", 4444);
     
     // 這個是一般使用者
-//    localStorage.setItem("role", "generalUser");
-//    localStorage.setItem("sessionID", 123);
+    localStorage.setItem("role", "generalUser");
+    localStorage.setItem("sessionID", 123);
     var session_id = localStorage.getItem("sessionID");
     var role = localStorage.getItem("role");
     
@@ -1091,6 +1091,8 @@ function moreNotification(){
 
 // 顯示通知
 function showNotification(response){
+    console.log("收到的通知: ");
+    console.log(response);
     notificationIndex = [];
     var content;
     if(notificationPage==0){
@@ -1110,9 +1112,27 @@ function showNotification(response){
     }
     for(var i=0; i<response.result.length; i++){
         notificationIndex.push(response.result[i].id);
-        var time = new Date(response.result[i].time);
-        time = time.toISOString();
-        time = time.slice(0, 10);
+
+        var now = new Date();
+        var time = new Date(dateToJsType(response.result[i].time));
+        var diff = new Date(Date.parse(now)-Date.parse(time));//相差幾毫秒
+        
+        if(diff<86400000){ //同一天，一天有86400000毫秒
+           if(diff<3600000){ //幾分鐘前
+               time = Math.floor(diff/60000);
+               time = time + "分鐘前";
+               console.log(time);
+            }
+            else{ //幾小時前
+                time = Math.floor(diff/3600000);
+                time = time + "小時前";
+                console.log(time);
+            }
+        }
+        else{ //不同天
+            time = time.toISOString();
+            time = time.slice(0, 10);
+        }
         
         content += '<li id="background';
         content += response.result[i].id;

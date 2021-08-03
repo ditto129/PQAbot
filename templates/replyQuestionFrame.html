@@ -36,11 +36,9 @@
     <!-- 匿名的bootstrap END -->
     
     <!-- 程式碼區塊 START -->
-    <link rel="stylesheet" href="../static/assets/css/pages/codeCSS/style.css" />
-    <link rel="stylesheet" href="../static/assets/css/pages/codeCSS/editormd.css" />
-    <style>
-        #codes textarea {display: none;}
-    </style>
+    <link rel="stylesheet" href="../static/assets/css/codeStyle.css" />
+    <link rel="stylesheet" href="../static/assets/css/editormd.css" />
+    <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
     <!-- 程式碼區塊 END -->
     
     <!-- highlight START -->
@@ -83,47 +81,19 @@
                                                     <!-- 回覆內容 row start -->
                                                     <div class="form-group row">
                                                         <label class="col-sm-2 col-form-label">回覆內容</label>
-                                                        
-                                                        <p>語言 : 
-                                                            <select id="language">
-                                                                <option value="python">python</option>
-                                                                <option value="html">html</option>
-                                                                <option value="CSS">CSS</option>
-                                                                <option value="javascript">javascript</option>
-                                                                <option value="java">Java</option>
-                                                            </select>
-                                                            </p>
-                                                        
-                                                            <button type="button" style="margin-left: 5px;" class="themeButton" onclick="addCodeArea()">新增程式碼區塊</button>
-                                                        
-                                                            <button type="button" style="margin-left: 5px;" class="themeButton" onclick="setCodeColor()">程式碼變色</button>
-                                                        
-<!--
-                                                        <div class="col-sm-10 form-control" style="border:2px #545058 solid;" contenteditable="true" id="replyContent">
-
-                                                        </div>
--->
-                                                        
-                                                        <div class="col-sm-10" contenteditable="true" style="border:2px #545058 solid;" contenteditable="true" id="replyContent">
-<!--
-<pre>
-<code class="python">
-print("OMG")
-</code>
-</pre>
--->
-  
-<!--
-                                                            <textarea id="answerContent" rows="5" cols="5" class="form-control"
-                                                            placeholder="輸入回覆內容">
-
-                                                            </textarea>
--->
-                                                        </div>
                                                     </div>
+                                                </form>
+<!-- markdown START -->
+<div id="layout">
+    <div id="test-editormd">
+        <textarea id="contentText" style="display:none;"></textarea>
+    </div>
+</div>
+<!-- markdown END -->
+                                                    
                                                     <!-- 回覆內容 row end -->
                                                     <input class="btn btn-primary purpleBtn" value="回覆" onclick="save()">
-                                                </form>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -223,6 +193,66 @@ print("OMG")
 <script src="../static/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="../static/assets/js/common.js"></script>
     <script src="../static/assets/js/pages/codeJS/editormd.js"></script>
+    
+    <!-- markdown START -->
+    <script src="../static/assets/js/editormd.js"></script>
+    <script type="text/javascript">
+        var testEditor;
+
+        $(function() {   
+            var widgets = [];
+
+            testEditor = editormd("test-editormd", {
+                width: "90%",
+                height: 720,
+                path : '../lib/',
+                disabledKeyMaps : [
+                    "Ctrl-B", "F11", "F10"  // disable some default keyboard shortcuts handle
+                ],
+                onchange : function() {
+                            $("#test").remove();
+                            var cm = this.cm;
+                            var cursor = cm.getCursor();
+
+                            //cm.replaceSelection("@");
+
+                            widgets.push(cm.addWidget({line : cursor.line, ch : cursor.ch}, $("<p style='z-index:100000;' id='test'></p>")[0], true));
+                            console.log(cm.getCursor(), cm.getLine(cursor.line), cm.getLineTokens(cursor.line));   
+                },
+                onload : function() {
+                    var keyMap = {
+                        "Ctrl-S": function(cm) {
+                            alert("Ctrl+S");
+                            //return false;
+                        },
+                        "Ctrl-A": function(cm) { // default Ctrl-A selectAll
+                            // custom
+                            alert("Ctrl+A");
+                            cm.execCommand("selectAll");
+                        },
+                        //"Shift-2" : function(cm){
+                        //}
+                    };
+
+                    this.cm.on("keyup", function(cm){
+                        $("#test").remove();
+                    });
+
+                    // setting signle key
+                    var keyMap2 = {
+                          "Ctrl-T": function(cm) {
+                            alert("Ctrl+T");
+                          }
+                    };
+
+                    this.addKeyMap(keyMap);
+                    this.addKeyMap(keyMap2);
+                    this.removeKeyMap(keyMap2);  // remove signle key
+                }
+            });    
+        });
+    </script>
+    <!-- markdown END -->
 </body>
 
 </html>
