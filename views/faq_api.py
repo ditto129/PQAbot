@@ -2,7 +2,7 @@
 from datetime import datetime
 from flask import Blueprint,request, jsonify
 '''匯入faq相關'''
-#from flask import Flask,flash,redirect
+#from flask import Flask,flash,redirect,current_app
 #from werkzeug.utils import secure_filename
 #import os
 
@@ -288,20 +288,20 @@ def import_faq_post():
     return jsonify(faq_list)
 
 
-UPLOAD_FOLDER = "/home/bach/PSAbot-vm/static/images/user_img"
 # UPLOAD_FOLDER = "/home/bach/PSAbot-vm/static/images/user_img"
 
-#app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app = Flask(__name__)
+
+with app.app_context():  # Create an :class:`~flask.ctx.AppContext`.
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = {'json'}
 
-#判斷檔案是否合法
+#判斷檔案類型
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# 前端OK
 @faq_api.route('/upload_faq', methods=['post'])
 def upload_faq():
     # check if the post request has the file part
@@ -309,15 +309,21 @@ def upload_faq():
          flash('No file part')
          return redirect(request.url)
     file = request.files['faq']
-    # if user does not select file, browser also
-    # submit an empty part without filename
-    if file.filename == '':
-         flash('No selected file')
-         return redirect(request.url)
-    if file and allowed_file(file.filename):
-         filename = secure_filename(file.filename)
-         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-         return jsonify({'message':'success'})
-    else:
-         return jsonify({'message':'falied'})
+    # if user does not select file, browser also submit an empty part without filename
+    try:
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            json_url = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            # 存檔案
+            file.save(json_url)
+            data = json.load(open(json_url))
+            # 刪除檔案
+            os.remove(json_url)
+            return jsonify({'message':data})       
+    except Exception as e :
+             return jsonify({'message':e})
+     
 '''
