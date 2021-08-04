@@ -1,7 +1,10 @@
 # --- flask --- #
-from flask import Blueprint, request, jsonify
 from datetime import datetime
-#from flask_security import logout_user, login_required
+from flask import Blueprint,request, jsonify
+'''匯入faq相關'''
+#from flask import Flask,flash,redirect
+#from werkzeug.utils import secure_filename
+#import os
 
 # --- our models ---- #
 from models import faq_data
@@ -245,3 +248,76 @@ def delete_faq_post():
     except Exception as e :
         data = {"error" : e.__class__.__name__ + " : " +e.args[0]}
     return jsonify(data)
+
+'''施工中的匯入FAQ
+# 匯入FAQ
+@faq_api.route('/import_faq_post', methods=['POST'])
+def import_faq_post():
+    data = request.get_json()
+    try: 
+        faq_list = [
+            {
+                        "_id" : "",          
+                        "link" : faq['link'],         
+                        "question" : 
+                        {
+                            "id" : "",       
+                            "title" : faq['question']['title'],    
+                            "content": faq['question']['content'],   
+                            "vote" : faq['question']['vote'],      
+                            "score" : [],
+                        },
+                        "answers" : 
+                        [
+                            {       
+                                "id" : "",       
+                                "content" : a['content'],
+                                "vote" : a['vote'],     
+                                "score" : [],
+                            } for a in faq['answers']
+                        ],
+                        "keywords" : [],     
+                        "tags" : faq['tags'],
+                        "time" : datetime.fromisoformat(faq['time']),
+                        "view_count" : 0
+            } for faq in data['faq_list']
+        ]
+        faq_data.insert_faq(faq_list,'inner_faq')
+    except Exception as e :
+        faq_list = {"error" : e.__class__.__name__ + " : " +e.args[0]}
+    return jsonify(faq_list)
+
+
+UPLOAD_FOLDER = "/home/bach/PSAbot-vm/static/images/user_img"
+# UPLOAD_FOLDER = "/home/bach/PSAbot-vm/static/images/user_img"
+
+#app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+ALLOWED_EXTENSIONS = {'json'}
+
+#判斷檔案是否合法
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# 前端OK
+@faq_api.route('/upload_faq', methods=['post'])
+def upload_faq():
+    # check if the post request has the file part
+    if 'faq' not in request.files:
+         flash('No file part')
+         return redirect(request.url)
+    file = request.files['faq']
+    # if user does not select file, browser also
+    # submit an empty part without filename
+    if file.filename == '':
+         flash('No selected file')
+         return redirect(request.url)
+    if file and allowed_file(file.filename):
+         filename = secure_filename(file.filename)
+         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+         return jsonify({'message':'success'})
+    else:
+         return jsonify({'message':'falied'})
+'''

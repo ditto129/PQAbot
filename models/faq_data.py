@@ -172,7 +172,8 @@ def transform_faq(faq_list):
             {
                 "id" : faq['question']['id'],       
                 "title" : faq['question']['title'],    
-                "content" : faq['question']['content'],   
+                "content" : faq['question']['content'],
+                "edit" : "",
                 "vote" : faq['question']['vote'],      
                 "score" : []
             },
@@ -181,6 +182,7 @@ def transform_faq(faq_list):
                 {       
                     "_id" : ans['id'],       
                     "content" : ans['content'],
+                    "edit":"",
                     "vote" : ans['vote'],     
                     "score" : [],
                 } for ans in faq['answers']
@@ -251,3 +253,4 @@ def remove_faq(faq_id):
     for tag in target_faq['tags']:
          _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$inc':{'usage_counter':-1}})
     _db.FAQ_DATA_COLLECTION.delete_one({'_id':faq_id})
+
