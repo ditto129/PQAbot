@@ -109,7 +109,7 @@ def update_post(post_data):
                                                                     {
                                                                         'title':post_data['title'],
                                                                         'question':post_data['question'],
-                                                                        'edit':post_data['edit'],#慈
+                                                                        'edit':post_data['edit'],
                                                                         'keyword':post_data['keyword'],
                                                                         'time':post_data['time']}})
     # 使用者發文更新
@@ -152,7 +152,9 @@ def update_response(response_dict):
     post_id = response_dict.pop('post_id')
     _db.INNER_POST_COLLECTION.update_one({'_id':post_id,'answer._id':response_dict['_id']},
                                          {'$set':{'answer.$.response':response_dict['response'],
-                                                  'answer.$.time':response_dict['time']}})
+                                                  'answer.$.edit':response_dict['edit'],
+                                                  'answer.$.time':response_dict['time']
+                                                  }})
 # 刪除貼文回覆
 def remove_response(response_dict):
     tags = _db.INNER_POST_COLLECTION.find_one({'_id':response_dict['post_id']})['tag']

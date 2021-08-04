@@ -145,13 +145,10 @@ def insert_answer(data_dict):
         _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$inc':{'usage_counter':1}})
 
 def update_answer(data_dict):
-#    _db.FAQ_DATA_COLLECTION.update({'_id':data_dict['faq_id'],'answers.id':data_dict['id']},
-#                                   {'$set':{'answers.$.content':data_dict['content'],'answers.$.vote':data_dict['vote']}})
-
-    #慈 START
     _db.FAQ_DATA_COLLECTION.update({'_id':data_dict['faq_id'],'answers.id':data_dict['id']},
-                                   {'$set':{'answers.$.content':data_dict['content'],'answers.$.vote':data_dict['vote'], 'answers.$.edit':data_dict['edit']}})
-    #慈 END
+                                   {'$set':{'answers.$.content':data_dict['content'],
+                                            'answers.$.vote':data_dict['vote'], 
+                                            'answers.$.edit':data_dict['edit']}})
 
 def remove_answer(data_dict):
     tags = _db.FAQ_DATA_COLLECTION.find_one({'_id':data_dict['faq_id']})

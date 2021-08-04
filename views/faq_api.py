@@ -77,7 +77,7 @@ def insert_faq_post():
                             "_id" : "",       
                             "title" : data['question']['title'],    
                             "content": data['question']['content'],
-                            "edit": data['question']['edit'], #慈加
+                            "edit": data['question']['edit'],
                             "vote" : data['question']['vote'],      
                             "score" : [],
                         },
@@ -86,7 +86,7 @@ def insert_faq_post():
                             {       
                                 "_id" : "",       
                                 "content" : a['content'],
-                                "edit" : a['edit'], #慈加
+                                "edit" : a['edit'],
                                 "vote" : a['vote'],     
                                 "score" : [],
                             } for a in data['answers']
@@ -114,7 +114,8 @@ def import_faq_post():
                         {
                             "id" : "",       
                             "title" : faq['question']['title'],    
-                            "content": faq['question']['content'],   
+                            "content": faq['question']['content'],
+                            "edit": faq['question']['edit'],
                             "vote" : faq['question']['vote'],      
                             "score" : [],
                         },
@@ -123,7 +124,8 @@ def import_faq_post():
                             {       
                                 "id" : "",       
                                 "content" : a['content'],
-                                "vote" : a['vote'],     
+                                "vote" : a['vote'],   
+                                "edit" : a['edit'],
                                 "score" : [],
                             } for a in faq['answers']
                         ],
@@ -186,7 +188,7 @@ def insert_faq_answer():
             'faq_id':data['faq_id'],
             'id':"",
             'content':data['content'],
-            'edit':data['edit'],#慈慈加的
+            'edit':data['edit'],
             'vote':data['vote'],
             'score':[]
         }
@@ -203,7 +205,7 @@ def update_faq_answer():
             'faq_id':data['faq_id'],
             'id':data['id'],
             'content':data['content'],
-            'edit':data['edit'],#慈慈加的
+            'edit':data['edit'],
             'vote':data['vote'],
         }
         faq_data.update_answer(answer_dict)

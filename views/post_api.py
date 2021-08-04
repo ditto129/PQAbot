@@ -51,7 +51,7 @@ def insert_inner_post():
             'asker_name' : data['asker_name'],
             'title' : data['title'],
             'question' : data['question'],
-            'edit' : data['edit'],#慈加的
+            'edit' : data['edit'],
             'answer' : [],
             'keyword' : [],
             'tag' : data['tag'],
@@ -79,7 +79,7 @@ def update_inner_post():
             'asker_id':data['asker_id'],
             'title' : data['title'],
             'question' : data['question'],
-            'edit' : data['edit'], #慈
+            'edit' : data['edit'],
             'keyword' : [],
             'time' : datetime.fromisoformat(data['time'])
         }
@@ -112,6 +112,7 @@ def insert_inner_post_response():
             "replier_id" : data['replier_id'],
             "replier_name" : data['replier_name'],
             "response" : data['response'],
+            "edit" : data['edit'],
             "time" : datetime.fromisoformat(data['time']),
             "score":[],
             "incognito":data['incognito']
@@ -131,6 +132,7 @@ def update_inner_post_response():
             '_id' : data['_id'],
             "replier_id" : data['replier_id'],
             "response" : data['response'],
+            "edit" : data['edit'],
             "time" : datetime.fromisoformat(data['time'])
         }
         inner_post.update_response(response_dict)
