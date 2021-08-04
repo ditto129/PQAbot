@@ -157,13 +157,15 @@ def update_response(response_dict):
                                                   }})
 # 刪除貼文回覆
 def remove_response(response_dict):
-    tags = _db.INNER_POST_COLLECTION.find_one({'_id':response_dict['post_id']})['tag']
+    target_post = _db.INNER_POST_COLLECTION.find_one({'_id':response_dict['post_id']})
+    target_response = next(response for response in target_post['answer'] if response['_id'] == response_dict['_id'])
+    tags = target_post['tag']
     _db.INNER_POST_COLLECTION.update_one({'_id':response_dict['post_id']},
                                          {'$pull':{'answer':{'_id':response_dict['_id']}}})
     user.update_response_list(response_dict['replier_id'])
     # 扣掉回覆者所得分數
     for tag in tags:
-        user.update_user_score(response_dict['replier_id'],tag['tag_id'],tag['tag_name'],-(1 + sum(score['score'] for score in response_dict['score'])))
+        user.update_user_score(response_dict['replier_id'],tag['tag_id'],tag['tag_name'],-(1 + sum(score['score'] for score in target_response['score'])))
         # 扣掉tag count
         _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$inc':{'usage_counter': -1}})
 
