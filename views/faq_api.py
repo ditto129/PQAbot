@@ -2,9 +2,10 @@
 from datetime import datetime
 from flask import Blueprint,request, jsonify
 '''匯入faq相關'''
-#from flask import Flask,flash,redirect,current_app
-#from werkzeug.utils import secure_filename
-#import os
+from flask import Flask,flash,redirect,current_app
+from werkzeug.utils import secure_filename
+import os
+import json
 
 # --- our models ---- #
 from models import faq_data
@@ -81,7 +82,7 @@ def insert_faq_post():
                             "title" : data['question']['title'],    
                             "content": data['question']['content'],
                             "edit": data['question']['edit'],
-                            "vote" : data['question']['vote'],      
+                            "vote" : int(data['question']['vote']),      
                             "score" : [],
                         },
                         "answers" : 
@@ -90,7 +91,7 @@ def insert_faq_post():
                                 "_id" : "",       
                                 "content" : a['content'],
                                 "edit" : a['edit'],
-                                "vote" : a['vote'],     
+                                "vote" : int(a['vote']),     
                                 "score" : [],
                             } for a in data['answers']
                         ],
@@ -104,44 +105,7 @@ def insert_faq_post():
         faq_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
     return jsonify(faq_dict)
     
-# 匯入FAQ
-@faq_api.route('/import_faq_post', methods=['POST'])
-def import_faq_post():
-    data = request.get_json()
-    try: 
-        faq_list = [
-            {
-                        "_id" : "",          
-                        "link" : faq['link'],         
-                        "question" : 
-                        {
-                            "id" : "",       
-                            "title" : faq['question']['title'],    
-                            "content": faq['question']['content'],
-                            "edit": faq['question']['edit'],
-                            "vote" : faq['question']['vote'],      
-                            "score" : [],
-                        },
-                        "answers" : 
-                        [
-                            {       
-                                "id" : "",       
-                                "content" : a['content'],
-                                "vote" : a['vote'],   
-                                "edit" : a['edit'],
-                                "score" : [],
-                            } for a in faq['answers']
-                        ],
-                        "keywords" : [],     
-                        "tags" : faq['tags'],
-                        "time" : datetime.fromisoformat(faq['time']),
-                        "view_count" : 0
-            } for faq in data['faq_list']
-        ]
-        faq_data.insert_faq(faq_list,'inner_faq')
-    except Exception as e :
-        faq_list = {"error" : e.__class__.__name__ + " : " +e.args[0]}
-    return jsonify(faq_list)
+
 
 # 查看單篇FAQ
 @faq_api.route('/query_faq_post', methods=['POST'])
@@ -192,7 +156,7 @@ def insert_faq_answer():
             'id':"",
             'content':data['content'],
             'edit':data['edit'],
-            'vote':data['vote'],
+            'vote':int(data['vote']),
             'score':[]
         }
         faq_data.insert_answer(answer_dict)
@@ -209,7 +173,7 @@ def update_faq_answer():
             'id':data['id'],
             'content':data['content'],
             'edit':data['edit'],
-            'vote':data['vote'],
+            'vote':int(data['vote']),
         }
         faq_data.update_answer(answer_dict)
     except Exception as e :
@@ -249,65 +213,26 @@ def delete_faq_post():
         data = {"error" : e.__class__.__name__ + " : " +e.args[0]}
     return jsonify(data)
 
-'''施工中的匯入FAQ
-# 匯入FAQ
-@faq_api.route('/import_faq_post', methods=['POST'])
-def import_faq_post():
-    data = request.get_json()
-    try: 
-        faq_list = [
-            {
-                        "_id" : "",          
-                        "link" : faq['link'],         
-                        "question" : 
-                        {
-                            "id" : "",       
-                            "title" : faq['question']['title'],    
-                            "content": faq['question']['content'],   
-                            "vote" : faq['question']['vote'],      
-                            "score" : [],
-                        },
-                        "answers" : 
-                        [
-                            {       
-                                "id" : "",       
-                                "content" : a['content'],
-                                "vote" : a['vote'],     
-                                "score" : [],
-                            } for a in faq['answers']
-                        ],
-                        "keywords" : [],     
-                        "tags" : faq['tags'],
-                        "time" : datetime.fromisoformat(faq['time']),
-                        "view_count" : 0
-            } for faq in data['faq_list']
-        ]
-        faq_data.insert_faq(faq_list,'inner_faq')
-    except Exception as e :
-        faq_list = {"error" : e.__class__.__name__ + " : " +e.args[0]}
-    return jsonify(faq_list)
-
 
 # UPLOAD_FOLDER = "/home/bach/PSAbot-vm/static/images/user_img"
+UPLOAD_FOLDER = "/Users/jacknahu/Documents/GitHub/PQAbot/static/images/user_img"
 
 app = Flask(__name__)
-
-with app.app_context():  # Create an :class:`~flask.ctx.AppContext`.
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = {'json'}
 
 #判斷檔案類型
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@faq_api.route('/upload_faq', methods=['post'])
-def upload_faq():
+@faq_api.route('/import_faq_post', methods=['POST'])
+def import_faq_post():
     # check if the post request has the file part
     if 'faq' not in request.files:
-         flash('No file part')
-         return redirect(request.url)
+          flash('No file part')
+          return redirect(request.url)
     file = request.files['faq']
     # if user does not select file, browser also submit an empty part without filename
     try:
@@ -319,11 +244,43 @@ def upload_faq():
             json_url = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             # 存檔案
             file.save(json_url)
-            data = json.load(open(json_url))
+            data_list = json.load(open(json_url,'r',encoding='utf-8'))
+            new_data = process_import_data(data_list)
             # 刪除檔案
             os.remove(json_url)
-            return jsonify({'message':data})       
+            return jsonify({'message':new_data})       
     except Exception as e :
-             return jsonify({'message':e})
-     
-'''
+              return jsonify({'message':e})
+
+def process_import_data(data_list):
+    faq_list = [
+            {
+                "_id" : "",          
+                "link" : faq['link'],         
+                "question" : 
+                {
+                    "id" : "",       
+                    "title" : faq['question']['title'],    
+                    "content": faq['question']['content'],   
+                    "edit": "", 
+                    "vote" : faq['question']['vote'],      
+                    "score" : [],
+                },
+                "answers" : 
+                [
+                    {       
+                        "id" : "",       
+                        "content" : a['content'],
+                        "edit" : "",
+                        "vote" : a['vote'],     
+                        "score" : [],
+                    } for a in faq['answers']
+                ],
+                "keywords" : [],     
+                "tags" : [],
+                "time" : datetime.now().replace(microsecond=0).isoformat(),
+                "view_count" : 0
+            } for faq in data_list
+    ]
+    return faq_list
+    faq_data.insert_faq(faq_list,'inner_faq')
