@@ -27,19 +27,19 @@ nlu:
    
 - lookup: os
   examples: |
-   - mac_OS作業系統
-   - windows作業系統
-   - linux作業系統
+   - mac_OS rasaOS
+   - windows rasaOS
+   - linux rasaOS
    
 - lookup: pl
   examples: |
-   - python程式語言
-   - java程式語言
-   - c語言程式語言
+   - python rasaPL
+   - java rasaPL
+   - c語言 rasaPL
    
 - regex: question_or_error_message
   examples: |
-   - question_or_error_message .*
+   - question_or_error_message.*
 
 - intent: start
   examples: |
