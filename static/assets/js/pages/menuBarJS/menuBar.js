@@ -331,12 +331,12 @@ function clickChatroomInnerSearch(postId){
 function start(){
     localStorage.clear();
     //這個是管理者
-//    localStorage.setItem("role", "manager");
-//    localStorage.setItem("sessionID", 4444);
+    localStorage.setItem("role", "manager");
+    localStorage.setItem("sessionID", 4444);
     
     // 這個是一般使用者
-    localStorage.setItem("role", "generalUser");
-    localStorage.setItem("sessionID", 123);
+//    localStorage.setItem("role", "generalUser");
+//    localStorage.setItem("sessionID", 123);
     var session_id = localStorage.getItem("sessionID");
     var role = localStorage.getItem("role");
     
@@ -485,8 +485,8 @@ function getUserInterestTags(){
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-            console.log("成功: 興趣標籤（query_user_skill）");
-            console.log(response);
+//            console.log("成功: 興趣標籤（query_user_skill）");
+//            console.log(response);
             
             for(var i=0; i<response.length; i++){
                 if(response[i].interested_score == 1){
@@ -496,8 +496,8 @@ function getUserInterestTags(){
             }
         },
         error: function(response){
-            console.log("失敗: 興趣標籤（query_user_skill）");
-            console.log(response);
+//            console.log("失敗: 興趣標籤（query_user_skill）");
+//            console.log(response);
         }
     });
     // 取得興趣標籤 END

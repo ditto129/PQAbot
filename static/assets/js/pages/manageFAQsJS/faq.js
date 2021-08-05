@@ -568,8 +568,28 @@ function importFAQsData(){
     $("#code").addClass("json");
 }
 
-function getFile(fileList){
+// 拿到檔案並傳送給後端
+function saveFaqAuto(){
+    var fileInput = $('#importFile').get(0).files[0];
+	console.info(fileInput);
     
+    var myURL = head_url + "import_faq_post";
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: fileInput,
+        async: false,
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("上傳多篇FAQ-成功");
+            console.log(response);
+        },
+        error: function(response){
+            console.log("上傳多篇FAQ-失敗");
+            console.log(response);
+        }
+    });
 }
 // 匯入檔案（完整FAQ） END
 
