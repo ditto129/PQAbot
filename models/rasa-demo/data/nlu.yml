@@ -27,19 +27,19 @@ nlu:
    
 - lookup: os
   examples: |
-   - mac_OS
-   - windows
-   - linux
+   - mac_OS作業系統
+   - windows作業系統
+   - linux作業系統
    
 - lookup: pl
   examples: |
-   - python
-   - java
-   - c語言
+   - python程式語言
+   - java程式語言
+   - c語言程式語言
    
 - regex: question_or_error_message
   examples: |
-   - question_or_error_message.*
+   - question_or_error_message .*
 
 - intent: start
   examples: |
@@ -71,7 +71,7 @@ nlu:
     
 - intent: say_question_or_error_message
   examples: |
-    - [question_or_error_message](question_or_error_message)
+    - [my error message is: ...](question_or_error_message)
     
 - intent: say_keywords
   examples: |
