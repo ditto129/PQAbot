@@ -266,7 +266,7 @@ def process_import_data(data_list):
                     "title" : faq['question']['title'],    
                     "content": faq['question']['content'],   
                     "edit": "", 
-                    "vote" : faq['question']['vote'],      
+                    "vote" : int(faq['question']['vote']),      
                     "score" : [],
                 },
                 "answers" : 
@@ -275,7 +275,7 @@ def process_import_data(data_list):
                         "id" : "",       
                         "content" : a['content'],
                         "edit" : "",
-                        "vote" : a['vote'],     
+                        "vote" : int(a['vote']),     
                         "score" : [],
                     } for a in faq['answers']
                 ],

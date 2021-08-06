@@ -174,7 +174,7 @@ def transform_faq(faq_list):
                 "title" : faq['question']['title'],    
                 "content" : faq['question']['content'],
                 "edit" : "",
-                "vote" : faq['question']['vote'],      
+                "vote" : int(faq['question']['vote']),      
                 "score" : []
             },
             "answers" : 
@@ -183,7 +183,7 @@ def transform_faq(faq_list):
                     "_id" : ans['id'],       
                     "content" : ans['content'],
                     "edit":"",
-                    "vote" : ans['vote'],     
+                    "vote" : int(ans['vote']),     
                     "score" : [],
                 } for ans in faq['answers']
             ],
