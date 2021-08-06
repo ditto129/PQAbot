@@ -203,12 +203,13 @@ def delete_inner_post():
 def query_inner_search():
     data = request.get_json()
     #print(data['keywords'])
-    #try:
     inner_search_result=inner_post.query_inner_search(data['keywords'])
     inner_search_result_dict = {
         'inner_search_result': inner_search_result
     }
-#    except Exception as e :
-#        inner_search_result_dict = {"error" : e.__class__.__name__ + ":" +e.args[0]}
-#        print(e)
     return jsonify(inner_search_result_dict)
+
+#近日熱門貼文
+@post_api.route('query_hot_post', methods=['get'])
+def query_hot_post():
+    return jsonify({"hot_post":inner_post.query_hot_post()})

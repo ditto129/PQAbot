@@ -12,7 +12,7 @@ from . import user
 import re
 # ======================= #
 from sklearn import preprocessing
-
+from datetime import datetime, timedelta
 # 取得所有貼文列表
 def query_post_list(page_size,page_number,option):
     post_count = [i for i in _db.INNER_POST_COLLECTION.aggregate([{'$count': 'post_count'}])][0]['post_count']
@@ -418,4 +418,35 @@ def query_inner_search(keywords):
     else:
         #print([])
         return []
+        
+#五日內回覆數最多排行(近日熱門貼文)
+def query_hot_post():
+    five_days_ago_datetime = datetime.today() - timedelta(days=5)
+    print(five_days_ago_datetime)
+    hot_post = [i['_id'] for i in _db.INNER_POST_COLLECTION.aggregate([
+    {
+        '$unwind': {
+            'path': '$answer'
+        }
+    }, {
+        '$match': {
+            'answer.time': {
+                '$lte': five_days_ago_datetime
+            }
+        }
+    }, {
+        '$group': {
+            '_id': '$_id',
+            'recentReply': {
+                '$sum': 1
+            }
+        }
+    }, {
+        '$sort': {
+            'recentReply': -1
+        }
+    }
+])]
+    #print(hot_post)
+    return hot_post
 '''香的'''

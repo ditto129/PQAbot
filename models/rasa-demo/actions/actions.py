@@ -109,25 +109,25 @@ class analyze_and_search(Action):
     #        print("內部搜尋的結果: ", response.text)
     
             # 慈 START
-            postNumber = 1
-            reply = "謝謝您的等待，以下為搜尋結果：<br>"
-            
             objectAllPost = json.loads(response.text)
-            for i in range(0, len(objectAllPost["inner_search_result"])):
-                postId = objectAllPost["inner_search_result"][i]
-                singlePostResponse = requests.post(head_url+'query_inner_post', json={'_id':postId})
-                # 轉成object
-                objectSinglePost = json.loads(singlePostResponse.text)
-    #            print("單篇文章結果: ", objectSinglePost)
-                reply += str(postNumber)
-                reply += '. <a href="#" onclick="clickChatroomInnerSearch(\''
-                reply += objectSinglePost["_id"]
-                reply += '\')">'
-                reply += objectSinglePost["title"]
-                reply += '</a><br>'
-                postNumber += 1
-            
-    #        print("reply的結果: "+reply);
+            if len(objectAllPost["inner_search_result"]) > 0:
+                postNumber = 1
+                reply = "謝謝您的等待，以下為搜尋結果：<br>"
+                for i in range(0, len(objectAllPost["inner_search_result"])):
+                    postId = objectAllPost["inner_search_result"][i]
+                    singlePostResponse = requests.post(head_url+'query_inner_post', json={'_id':postId})
+                    # 轉成object
+                    objectSinglePost = json.loads(singlePostResponse.text)
+        #            print("單篇文章結果: ", objectSinglePost)
+                    reply += str(postNumber)
+                    reply += '. <a href="#" onclick="clickChatroomInnerSearch(\''
+                    reply += objectSinglePost["_id"]
+                    reply += '\')">'
+                    reply += objectSinglePost["title"]
+                    reply += '</a><br>'
+                    postNumber += 1
+                
+        #        print("reply的結果: "+reply);
             # 慈 END
             
             #外部搜尋結果（URL）
