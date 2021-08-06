@@ -331,28 +331,41 @@ def query_inner_search(keywords):
 #    print("篩選結果：")
 #    print(top_ten_post_dict_array)
     if len(top_ten_post_dict_array) > 0:
-        #計算keyword match數
+        #計算keyword match數、tag match數
         for i in top_ten_post_dict_array:
-            count = 0
+            count_key = 0
             i['matches_keyword'] = 0
+            count_tag = 0
+            i['matches_tag'] = 0
             for j in i['keyword']:
                 if j.lower() in lower_keywords:
-                    count += 1
-            i['matches_keyword'] = count
-            
-        #計算tag match數
-        for i in top_ten_post_dict_array:
-            count = 0
-            i['matches_tag'] = 0
+                    count_key += 1
+            i['matches_keyword'] = count_key
             for j in i['tag']:
                 if j['tag_name'].lower() in lower_keywords:
-                    count += 1
-            i['matches_tag'] = count
-            
-        #加總match數
-        for i in top_ten_post_dict_array:
+                    count_tag += 1
+            i['matches_tag'] = count_tag
+            #加總match數
             i['matches'] = i['matches_keyword'] + i['matches_tag']
             
+#        #計算tag match數
+#        for i in top_ten_post_dict_array:
+#            count_tag = 0
+#            i['matches_tag'] = 0
+#            for j in i['tag']:
+#                if j['tag_name'].lower() in lower_keywords:
+#                    count_tag += 1
+#            i['matches_tag'] = count_tag
+            
+#        #加總match數
+#        for i in top_ten_post_dict_array:
+#            i['matches'] = i['matches_keyword'] + i['matches_tag']
+            
+        #規定至少匹配兩個
+        for i in range(len(top_ten_post_dict_array)-1, -1, -1):
+            if top_ten_post_dict_array[i]['matches'] < 2:
+                top_ten_post_dict_array.pop(i)
+        
         top_ten_post_dict_array = sorted(top_ten_post_dict_array, key=lambda k: (k['matches'], k['scoreTotal'], k['_id']), reverse=True)[0:10]
         
         #print(top_ten_post_dict_array)
