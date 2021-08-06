@@ -4,8 +4,6 @@
 <!-- Google Cloud Platform JS -->
 <script src="https://apis.google.com/js/platform.js?onload=onLoadGoogleCallback" async defer></script> 
 ============================================================== */
-//var head_url = "https://soselab.asuscomm.com:55002/api/"
-var head_url = "https://9283b482a383.ngrok.io/api/"
 
 function logout(){
     if(sessionStorage.getItem('role') == 'google_user'){
