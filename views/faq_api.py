@@ -248,9 +248,12 @@ def import_faq_post():
             new_data = process_import_data(data_list)
             # 刪除檔案
             os.remove(json_url)
-            return jsonify({'message':new_data})       
+            return jsonify({'message':new_data})
+        else:
+            flash('Please upload a .json file.')
+            return jsonify({'message':'Invalid file type.'})
     except Exception as e :
-              return jsonify({'message':e})
+        return jsonify({'message':e})
 
 def process_import_data(data_list):
     faq_list = [
