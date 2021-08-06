@@ -1,7 +1,7 @@
 /* ================ Facebook Login ================= */
 // 設定 Facebook JavaScript SDK
 //var head_url = "https://soselab.asuscomm.com:55002/api/"
-var head_url = "https://332644560e4d.ngrok.io/api/"
+var head_url = "https://9283b482a383.ngrok.io/api/"
 window.fbAsyncInit = function () {
     FB.init({
       appId: '1018939978932508',
@@ -28,7 +28,7 @@ window.fbAsyncInit = function () {
 // 檢查Facebook登入狀態
 function checkLoginState() {
 // 取得登入狀態資訊
-    FB.getLoginStatus(function (response) {
+    FB.login(function (response) {
         if (response.status === 'connected') {
         console.log(response)
         // 若已登入則利用facebook api取得使用者資料
@@ -59,7 +59,7 @@ function checkLoginState() {
           });
       }
     }
-  );
+    , { auth_type: 'reauthenticate' });
 }
 
 /* ================================================= */
