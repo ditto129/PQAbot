@@ -325,6 +325,38 @@ function clickChatroomInnerSearch(postId){
 }
 // innerSearch END
 
+// outerSearch START
+function summary(id){//單篇的摘要
+    console.log("單篇的摘要");
+    console.log("id: "+id);
+    
+//    query_cache_by_id
+    var myURL = head_url+"query_cache_by_id";
+    console.log("myURL: "+myURL);
+    var data = {idx: id};
+    $.ajax({
+        url: myURL,
+        type: "POST",
+        data: JSON.stringify(data),
+        async: false, 
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log("success");
+            console.log(response);
+        },
+        error: function(){
+            console.log("error");
+        }
+    });
+}
+
+function rank(id){//全部的排行
+    console.log("全部的排行")
+    console.log("id: "+id);
+}
+// outerSearch END
+
 ////////////////// 聊天室 END ////////////////////
 
 ////////////////// 初始化 START////////////////////

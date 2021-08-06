@@ -206,31 +206,34 @@
             </div>
             
             <div class="modal-body">
-                <input id="importFile" type="file" accept=".json,.txt" onchange="getFile()"> 
-                
+                <form id="importForm">
+                    <input id="importFile" type="file" accept=".json"> 
+                </form>
                 <br><br>
                 請匯入以下格式的檔案
 <pre>
 <!-- class後面接你要放的語言 -->
 <code class="json">
-{
-    "link": "FAQ文章的連結(String)",
-    "question": {
-        "title": "FAQ的標題(String)",
-        "content": "FAQ的內容(String)",
-    },
-    // answer是Array
-    "answers": [{
-        "score": 回答的分數(Int),
-        "content": "回答的內容(String)",
-    }],
-}
+[
+    {
+        "link": "FAQ文章的連結(String)",
+        "question": {
+            "title": "FAQ的標題(String)",
+            "content": "FAQ的內容(String)",
+        },
+        // answer是Array
+        "answers": [{
+            "score": 回答的分數(Int),
+            "content": "回答的內容(String)",
+        }],
+    },...
+]
 </code>
 </pre>
             </div>
             
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" onclick="save()">儲存</button>
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="saveFaqAuto()">儲存</button>
             </div>
         </div>
     </div>

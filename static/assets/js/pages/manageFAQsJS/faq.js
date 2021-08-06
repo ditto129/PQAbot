@@ -570,25 +570,28 @@ function importFAQsData(){
 
 // 拿到檔案並傳送給後端
 function saveFaqAuto(){
-    var fileInput = $('#importFile').get(0).files[0];
-	console.info(fileInput);
     
-    var myURL = head_url + "import_faq_post";
+    var myURL = head_url + "import_faq_post"
+//    var fileInput = $('#importFile').get(0).files[0];
+//	console.info(fileInput);
+    
+    var form_data = new FormData($('#importForm')[0]);
     $.ajax({
         url: myURL,
-        type: "POST",
-        data: fileInput,
-        async: false,
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        success: function(response){
-            console.log("上傳多篇FAQ-成功");
-            console.log(response);
+        type: 'POST',
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false,
+        success: function(response) {
+            if(response.message=="error"){
+                window.alert("匯入失敗～");
+                console.log("匯入失敗");
+            }
+            else{
+                console.log("匯入成功");
+            }
         },
-        error: function(response){
-            console.log("上傳多篇FAQ-失敗");
-            console.log(response);
-        }
     });
 }
 // 匯入檔案（完整FAQ） END
