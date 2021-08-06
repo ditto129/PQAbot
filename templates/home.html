@@ -19,6 +19,10 @@
             --lottie-player-seeker-track-color: transparent;
             --lottie-player-seeker-thumb-color: transparent;
           }
+            
+            #titleDiv{
+                cursor: pointer;
+            }
         </style>
     </head>
     
@@ -44,10 +48,8 @@
                                                 <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_iorpbol0.json" background="transparent"  speed="1"  style="width: 100%; height: 350px" loop controls autoplay></lottie-player>
                                                 <!--熱門貼文start-->
                                                 <div style="font-size: 25px; color: gray; text-align: center;">
-                                                    <span>今日</span>
+<!--                                                    <span></span>-->
                                                     <div style="display: inline;" id="titleDiv">
-                                                    <i id="trophy" class="fa fa-trophy" aria-hidden="true" style="color: #FFD700; font-size: 25px; height: 5%; margin-top: 15px; margin-left: 15px; margin-right: 5px;"></i>
-                                                    <span id="questionName">top 1 的標題 </span>
                                                     </div>
                                                 </div>
                                                 <!--熱門貼文end-->
@@ -63,8 +65,9 @@
             </div>
         </div>
     </body>
-    
+    <script type="text/javascript" src="../static/assets/js/jquery.min.js"></script>
     <script src="../static/assets/js/pages/homeJS/home.js"></script>
+    <script src="../static/assets/js/common.js"></script>
     <!--影片-->
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </html>
