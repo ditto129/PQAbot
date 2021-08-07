@@ -329,31 +329,14 @@ function clickChatroomInnerSearch(postId){
 function summary(id){//單篇的摘要
     console.log("單篇的摘要");
     console.log("id: "+id);
-    
-//    query_cache_by_id
-    var myURL = head_url+"query_cache_by_id";
-    console.log("myURL: "+myURL);
-    var data = {idx: id};
-    $.ajax({
-        url: myURL,
-        type: "POST",
-        data: JSON.stringify(data),
-        async: false, 
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        success: function(response){
-            console.log("success");
-            console.log(response);
-        },
-        error: function(){
-            console.log("error");
-        }
-    });
+    localStorage.setItem("summaryId", "t_000004");
+    setPage('summary_new');
 }
 
-function rank(id){//全部的排行
-    console.log("全部的排行")
-    console.log("id: "+id);
+function rank(idArray){//全部的排行
+    var idArray = ['t_000001', 't_000002', 't_000003', 't_000004', 't_000005'];
+    localStorage.setItem("rankArray", idArray);
+    setPage('comprehensive');
 }
 // outerSearch END
 

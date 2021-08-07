@@ -27,7 +27,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/atelier-forest-light.min.css">
         
         <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
-        <script>hljs.highlightAll();</script>
+<!--        <script>hljs.highlightAll();</script>-->
         <!-- highlight程式碼 END -->
         <link rel="stylesheet" type="text/css" href="../static/assets/css/pages/profileCSS/custom.css">
         
@@ -38,13 +38,13 @@
         
         <div class="col-lg-6">
             <div class="card">
-                <div style="padding: 15px;">
+                <div style="padding: 15px;" id="stackoverflowQuestion">
                     <span style="font-size: 25px; font-weight: bold; width: auto; color: #505458;">
                         stackoverflow文章的標題
                         <span style="float: right;">
-                        <i class="fa fa-trophy" aria-hidden="true" style="font-size: 10px; color: #505458;"></i>
-                        <span style="font-size: 10px; color: #505458;"> 30</span>
-                    </span>
+                            <i class="fa fa-trophy" aria-hidden="true" style="font-size: 10px; color: #505458;"></i>
+                            <span style="font-size: 10px; color: #505458;"> 30</span>
+                        </span>
                     </span>
                     
                     
@@ -53,7 +53,11 @@
                     <a href="https://www.youtube.com/watch?v=ewmMS-5TpTg&t=344s" target="_blank" class="">點我看原文</a>
                     
                     <br>
-                    <span>包含原始文章內容＆相應程式碼</span>
+                    <span style="font-size: 16px; font-weight: bold; width: auto; color: #505458;">摘要: 
+                    </span>
+                    
+                    <span style="font-size: 16px; font-weight: bold; width: auto; color: #505458;">完整內容: 
+                    </span>
                     <div style="margin-top: 10px">
                         <pre>
 <code class="python"># Python program to find the largest number among the three input numbers

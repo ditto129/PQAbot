@@ -215,7 +215,8 @@ def delete_faq_post():
 
 
 # UPLOAD_FOLDER = "/home/bach/PSAbot-vm/static/images/user_img"
-UPLOAD_FOLDER = "/Users/jacknahu/Documents/GitHub/PQAbot/static/images/user_img"
+#UPLOAD_FOLDER = "/Users/jacknahu/Documents/GitHub/PQAbot/static/images/user_img"
+UPLOAD_FOLDER = "/Users/cihcih/Documents/GitHub/PQAbot/static/images/user_img"
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER

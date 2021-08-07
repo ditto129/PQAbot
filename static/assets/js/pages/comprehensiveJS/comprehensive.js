@@ -1,5 +1,18 @@
 function start(){
-    summaryContent();
+    var address = 'stackoverflowRank.json';
+    $.ajax({
+        url: address,
+//        data: JSON.stringify(data),
+        type: "GET",
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log(response);
+//            rankContent(response);
+        },
+        error: function(response){
+        }
+    });
 }
 
 function like(id){
@@ -20,18 +33,27 @@ function dislike(id){
     console.log("id: "+id);
 }
 
-function summaryContent(){
-    var comment = document.getElementById("sclae-accordion");
+function rankContent(response){
+//    console.log(response);
+    var comment = document.getElementById("accordion");
     var content = "";
-    for(var i=1; i<10; i++){
+    for(var i=0; i<response.scores.length; i++){
 //        console.log("i: "+i);
-        content += '<div class="accordion-msg" style="">';
-            content += ' <a class="ourHover" style="font-size: 20px; color: #505458;">最佳解答';
+        content += '<div class="accordion-panel">';//第一個div
+            //----- 標題 START -----//
+            content += '<div class="accordion-heading" role="tab" id="heading';
             content += i;
-            content += '</a>';
-        
-            content += '<div style="float: right; font-size: 15px;">';
-
+            content += '">';
+            
+                content += '<h3 class="card-title accordion-title">';
+                    content += '<a class="accordion-msg" data-toggle="collapse" data-parent="#accordion" href="#collapse';
+                    content += i;
+                    content += '" aria-expanded="true" aria-controls="collapse';
+                    content += i;
+                    content += '">';
+                        content += '最佳解答'
+                        content += (i+1);
+                    
         
             // like & dislike
 //                content += '<i class="fa fa-thumbs-o-up" aria-hidden="true" onclick="like(';
@@ -53,22 +75,32 @@ function summaryContent(){
 //                content += '<span id="dislike';
 //                content += i;
 //                content += '" style="margin-right: 5px; color: gray;">0</span>';
-                content += '<button type="button" class="scoreBtn"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>';
-                content += '<button type="button" class="scoreBtn" style="margin-right: 10px;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button>';
-                    
-                content += '<i class="fa fa-trophy" aria-hidden="true" style="color: #505458;"></i>';
-                content += '<span style="margin-right: 5px; color: #505458;">30</span>';
+                        content += '<button type="button" class="scoreBtn"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>';
+                        content += '<button type="button" class="scoreBtn" style="margin-right: 10px;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button>';
+
+                        content += '<i class="fa fa-trophy" aria-hidden="true" style="color: #505458;"></i>';
+                        content += '<span style="margin-right: 5px; color: #505458;">30</span>';
+                    content += '</a>';
+                content += '</h3>';
             content += '</div>';
+            //----- 標題 END -----//
+        
+            //----- 解答 START -----//
+            content += '<div id="collapse';
+            content += i;
+            content += '" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading';
+            content += i;
+            content += '">';
 
-        content += '</div>';
-
-        content += '<div class="accordion-desc">';
-            content += '<p>';
-                content += '<a href="https://www.youtube.com/watch?v=ewmMS-5TpTg&t=344s" target="_blank" class="">點我看原文</a><br><br>';
-                content += '完整答案 或 答案摘要';
-                content += i;
-            content += '</p>';
-        content += '</div>';
+                content += '<div class="accordion-content accordion-desc">';
+        
+                    content += '<p>';
+                        content += '<a href="https://www.youtube.com/watch?v=ewmMS-5TpTg&t=344s" target="_blank">點我看原文</a><br><br>';
+                        content += response.scores[i].content;
+                    content += '</p>';
+                content += '</div>';
+            content += '</div>';
+        content += '</div>'
     }
     comment.innerHTML = content;
 }

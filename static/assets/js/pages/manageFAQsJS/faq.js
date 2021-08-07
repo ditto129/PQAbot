@@ -572,27 +572,48 @@ function importFAQsData(){
 function saveFaqAuto(){
     
     var myURL = head_url + "import_faq_post";
-//    var fileInput = $('#importFile').get(0).files[0];
-//	console.info(fileInput);
+    //方法1
+    var fileInput = $('#importFile').get(0).files[0];
+	console.info(fileInput);
     
-    var form_data = new FormData("faq", $('#importForm')[0]);
-    $.ajax({
-        url: myURL,
-        type: 'POST',
-        data: form_data,
-        contentType: false,
-        cache: false,
-        processData: false,
-        success: function(response) {
-            if(response.message=="error"){
-                window.alert("匯入失敗～");
-                console.log("匯入失敗");
-            }
-            else{
-                console.log("匯入成功");
-            }
-        },
-    });
+    // 方法2
+//    var formData = new FormData();
+//    formData.append('faq', document.getElementById("importForm").files[0]);
+//    formData.get('file'); // 取得目前的檔案
+    
+//    $.ajax({
+//        url: myURL,
+//        type: 'POST',
+//        data: formData,
+//        contentType: false,
+//        processData: false,
+//        success: function(response) {
+//            if(response.message=="error"){
+//                window.alert("匯入失敗～");
+//                console.log("匯入失敗");
+//            }
+//            else{
+//                console.log("匯入成功");
+//            }
+//        },
+//    });
+    let form = new FormData();
+    if(document.getElementById("importFile").files[0] != null){
+        form.append("faq", document.getElementById("importFile").files[0]);
+        form.get("file");
+        
+        var myURL = head_url + "import_faq_post";
+
+        fetch(myURL, {
+            method: 'POST',
+            body: form,
+            async: false, 
+        }).then(res => {
+            return res.json();   // 使用 json() 可以得到 json 物件
+        }).then(result => {
+            console.log(result); // 得到 {name: "oxxo", age: 18, text: "你的名字是 oxxo，年紀 18 歲～"}
+        });
+    }
 }
 // 匯入檔案（完整FAQ） END
 
