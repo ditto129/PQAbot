@@ -2,14 +2,14 @@
 from datetime import datetime
 from flask import Blueprint,request, jsonify
 '''匯入faq相關'''
-from flask import Flask,flash,redirect,current_app
+from flask import Flask,flash,redirect
 from werkzeug.utils import secure_filename
 import os
 import json
 
 # --- our models ---- #
 from models import faq_data
-
+#from . import TextAnalyze
 faq_api = Blueprint('faq_api', __name__)
 
 # 調整更新週期
