@@ -571,10 +571,10 @@ function importFAQsData(){
 // 拿到檔案並傳送給後端
 function saveFaqAuto(){
     
-    var myURL = head_url + "import_faq_post";
-    //方法1
-    var fileInput = $('#importFile').get(0).files[0];
-	console.info(fileInput);
+//    var myURL = head_url + "import_faq_post";
+//    //方法1
+//    var fileInput = $('#importFile').get(0).files[0];
+//	console.info(fileInput);
     
     // 方法2
 //    var formData = new FormData();
