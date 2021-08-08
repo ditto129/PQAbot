@@ -126,6 +126,8 @@ class analyze_and_search(Action):
                     reply += objectSinglePost["title"]
                     reply += '</a><br>'
                     postNumber += 1
+            else:
+                reply = ""
                 
         #        print("reply的結果: "+reply);
             # 慈 END
