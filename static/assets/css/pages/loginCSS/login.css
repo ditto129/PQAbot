@@ -7,9 +7,9 @@
 #google-login-btn {
     display: inline-block;
     background: white;
-    color: #838B8B;;
-    width: 194px;
-    height: 30px;
+    color: #838B8B;
+    width: 70%;
+    height: 30%;
     border-radius: 5px;
     border: solid white;
     box-shadow: 0px 0px 3px 2px #cccccc;
@@ -39,8 +39,8 @@ span.buttonText {
     display: inline-block;
     background: #3A5FCD;
     color: white;
-    width: 194px;
-    height: 30px;
+    width: 70%;
+    height: 30%;
     border: solid #3A5FCD;
     white-space: nowrap;
     border-radius: 5px;
@@ -49,7 +49,7 @@ span.buttonText {
 
 #facebook-login-btn:hover {
     cursor: pointer;
-/*
+    /*
     background: rgb(30, 118, 255);
     color: white;
     border: solid rgb(30, 118, 255);
@@ -122,8 +122,8 @@ span.buttonText {
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-body{
+body {
     height: 100vh;
-/*    overflow: auto;*/
-    background-image: linear-gradient(to right top, #a06bd1, #905db3, #7f4f96, #6d437b, #5a3762, #5a3461, #5b3061, #5b2c60, #6f2d77, #832d8e, #972ba7, #ac27c0);   
+    /*    overflow: auto;*/
+    background-image: linear-gradient(to right top, #a06bd1, #905db3, #7f4f96, #6d437b, #5a3762, #5a3461, #5b3061, #5b2c60, #6f2d77, #832d8e, #972ba7, #ac27c0);
 }

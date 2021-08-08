@@ -2,14 +2,14 @@
 from datetime import datetime
 from flask import Blueprint,request, jsonify
 '''匯入faq相關'''
-from flask import Flask,flash,redirect,current_app
+from flask import Flask,flash,redirect
 from werkzeug.utils import secure_filename
 import os
 import json
 
 # --- our models ---- #
 from models import faq_data
-
+#from . import TextAnalyze
 faq_api = Blueprint('faq_api', __name__)
 
 # 調整更新週期
@@ -267,7 +267,7 @@ def process_import_data(data_list):
                     "title" : faq['question']['title'],    
                     "content": faq['question']['content'],   
                     "edit": "", 
-                    "vote" : faq['question']['vote'],      
+                    "vote" : int(faq['question']['vote']),      
                     "score" : [],
                 },
                 "answers" : 
@@ -276,7 +276,7 @@ def process_import_data(data_list):
                         "id" : "",       
                         "content" : a['content'],
                         "edit" : "",
-                        "vote" : a['vote'],     
+                        "vote" : int(a['vote']),     
                         "score" : [],
                     } for a in faq['answers']
                 ],
