@@ -201,7 +201,7 @@ def update_score(score_dict):
     # response_id為空表示更新貼文評分
     if len(score_dict['answer_id']) == 0 :
         # 若使用者按過讚/倒讚，使用set
-        if any(s['user_id'] == score_dict['user'] for s in target_faq['score']):
+        if any(s['user_id'] == score_dict['user'] for s in target_faq['question']['score']):
             _db.FAQ_DATA_COLLECTION.update_one({'_id':score_dict['faq_id'],'question.score.user_id': score_dict['user']},{'$set':{'question.score.$':new_score_record}})
         else:
             # FAQ本身push一個使用者評分
