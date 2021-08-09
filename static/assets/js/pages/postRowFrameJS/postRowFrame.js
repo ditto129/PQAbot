@@ -395,6 +395,9 @@ function showSearchBar(){
     $("#searchBar").modal("show");
 }
 function searchText(which){
+    // 搜尋方式改變 tag清空 START
+    clearTags();
+    // 搜尋方式改變 tag清空 END
     whichSearchType = "text";
     if(which == "new"){
         pageNumberSearch = 1;
@@ -591,6 +594,16 @@ function showPost(response){
         content += '</div>';
     }
     document.getElementById("post").innerHTML = content;
+}
+
+function clearTags(){
+    document.getElementById("chosen_tag").innerHTML = "";
+    document.getElementById("chosenTagInModalForSearch").innerHTML = "";
+    language = [];
+    children = [];
+    chosenTags = [];
+    allTags = {};
+    getLanguageTag();
 }
 
 function set(){

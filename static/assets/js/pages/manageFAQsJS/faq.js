@@ -529,31 +529,36 @@ function saveFAQByHand(){
     time = time.slice(0, 23);
     
 //    var data = {link: dataURL, question: {title: FAQTitle, content: FAQContent}, answers: FAQAnswers, time: time};
-    var data = {link: dataURL, question: {title: FAQTitle, content: FAQQuestionContent, edit: FAQQuestionEdit, vote: FAQScore}, answers: FAQAnswers, tags: tag, time: time};
-    console.log("傳出去的Data: ");
-    console.log(data);
+    if(dataURL!="" && FAQTitle!="" && FAQQuestionContent!=""){
+        var data = {link: dataURL, question: {title: FAQTitle, content: FAQQuestionContent, edit: FAQQuestionEdit, vote: FAQScore}, answers: FAQAnswers, tags: tag, time: time};
+        console.log("傳出去的Data: ");
+        console.log(data);
 
-    var myURL = head_url + "insert_faq_post";
-    $.ajax({
-        url: myURL,
-        type: "POST",
-        data: JSON.stringify(data),
-        async: false,
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        success: function(response){
-//            console.log("成功: 新增貼文（insert_faq_post）");
-            console.log(response);
-            faqPageNumberAll = 1;
-            faqOption = "time";
-            searchFaqPost();
-            searchAll("new");
-        },
-        error: function(response){
-//            console.log("失敗: 編輯貼文（insert_faq_post）");
-//            console.log(response);
-        }
-    });
+        var myURL = head_url + "insert_faq_post";
+        $.ajax({
+            url: myURL,
+            type: "POST",
+            data: JSON.stringify(data),
+            async: false,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function(response){
+    //            console.log("成功: 新增貼文（insert_faq_post）");
+                console.log(response);
+                faqPageNumberAll = 1;
+                faqOption = "time";
+                searchFaqPost();
+                searchAll("new");
+            },
+            error: function(response){
+    //            console.log("失敗: 編輯貼文（insert_faq_post）");
+    //            console.log(response);
+            }
+        });   
+    }
+    else{
+        window.alert("請填寫好資料");
+    }
     
 }
 
@@ -667,16 +672,12 @@ function editPageNum(sum){
             searchTag("old");
             break;
     }
-    console.log("temp: "+temp);
     if(temp == begin){
         disabledButton("backwardPage");
     }
     else{
         abledButton("backwardPage");
     }
-    
-    console.log("temp: "+temp);
-    console.log("end: "+end);
     if(temp == end){
         disabledButton("forwardPage");
     }
@@ -712,6 +713,7 @@ function showFaq(faqList){
         time = time.toISOString();
         time = time.slice(0, 10);
         var score = faqList[i].score;
+//        var vote = faqList[i].vote;
 
         content += '<div class="col-lg-4 col-xl-3 col-sm-12">';
         content += '<a href="#" onclick="setLocalStorage(';
@@ -878,6 +880,8 @@ function showSearchBar(){
     $("#searchBar").modal("show");
 }
 function searchText(which){
+    clearTags();
+    
     whichSearchType = "text";
     if(which == "new"){
         faqPageNumberString = 1;
@@ -1011,6 +1015,16 @@ function set(){
 //          searchText("new");
 //      }
 //    }, false);
+}
+
+function clearTags(){
+    document.getElementById("chosenTags").innerHTML = "";
+    document.getElementById("chosenTagInModalForSearch").innerHTML = "";
+    language = [];
+    children = [];
+    chosenTags = [];
+    allTags = {};
+    getLanguageTag();
 }
 
 window.addEventListener("load", function(){

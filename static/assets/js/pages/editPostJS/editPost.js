@@ -137,6 +137,8 @@ function start(){
 
 ////////////// 儲存貼文 START //////////////
 function save(){
+    console.log("儲存前faq: ");
+    console.log(data);
     postId = localStorage.getItem("singlePostId");
     userId = localStorage.getItem("sessionID");
     title = $("#title").val();
@@ -163,10 +165,11 @@ function save(){
             data = {asker_id: userId, _id: postId, title: title, question: question, edit: edit, time: time};
             break;
     }
-//    console.log("傳出去的");
-//    console.log(data);
+    console.log("傳出去的");
+    console.log(data);
     
     myURL = head_url + afterURL;
+    console.log("myURL: "+myURL);
     $.ajax({
         url: myURL,
         type: "POST",
@@ -176,8 +179,8 @@ function save(){
         contentType: 'application/json; charset=utf-8',
         success: function(response){
 //            console.log("成功: 編輯貼文");
-//            console.log(response);
-            setPage('mySinglePostFrame');
+            console.log(response);
+//            setPage('mySinglePostFrame');
         },
         error: function(response){
 //            console.log("失敗: 編輯");

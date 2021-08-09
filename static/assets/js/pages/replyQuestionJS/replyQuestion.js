@@ -60,10 +60,10 @@ function showReplyContent(why){//why可以是see, save
 
 // 新增程式碼區塊
 function addCodeArea(){
-    console.log("addCodeArea");
+//    console.log("addCodeArea");
     var language = $("select[name='codeLanguage']").val();
     var content = $("#replyContent").val();
-    console.log("原本的content: "+content);
+//    console.log("原本的content: "+content);
     content += '```[';
     content += language;
     content += ']\n```';
@@ -108,7 +108,7 @@ function addFaqAnswer(){
     else{
         var data = {faq_id: faqId, vote: vote, edit: edit, content: content};
 //        console.log("data: ");
-        console.log(data);
+//        console.log(data);
         //--- 取得表單資料 END ---//
 
         //--- 呼叫API START ---//
@@ -188,9 +188,12 @@ function addInnerPostAnswer(){
     });
     
     //----- 回覆貼文 -----//
-    var data = {post_id: postId, replier_id: replierId, replier_name: replierName, response: response, time: time, incognito: anonymous};
+    var response = showReplyContent("save");
+    var edit = $("#replyContent").val();
+    
+    var data = {post_id: postId, replier_id: replierId, replier_name: replierName, response: response, edit: edit, time: time, incognito: anonymous};
 //    console.log("回覆innerPost");
-    console.log(data);
+//    console.log(data);
     myURL = head_url + "insert_inner_post_response";
     $.ajax({
         url: myURL,
@@ -200,12 +203,12 @@ function addInnerPostAnswer(){
         dataType: "json",
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-            console.log(response);
+//            console.log(response);
             setPage('mySinglePostFrame');
         },
         error: function(response){
-            console.log("失敗: 回覆貼文（insert_inner_post_response）");
-            console.log(response);
+//            console.log("失敗: 回覆貼文（insert_inner_post_response）");
+//            console.log(response);
             window.alert("回覆貼文 失敗！\n請再試一次");
         }
     });

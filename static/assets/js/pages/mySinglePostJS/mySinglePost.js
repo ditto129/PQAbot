@@ -32,7 +32,6 @@ function getAnswerOwner(postId, answerId){
     return temp;
 }
 
-// 刪除innerPost回覆、刪除faq回覆要等API
 function deletePostOrAnswer(){
     var data, deleteType = localStorage.getItem("delete");
     var postId = localStorage.getItem("singlePostId");
@@ -42,8 +41,8 @@ function deletePostOrAnswer(){
     //--- faq貼文 START ---//
     if(postType=="faq" && deleteType=="post"){
         data = {_id: postId};
-        console.log("刪除faq的貼文: ");
-        console.log(data);
+//        console.log("刪除faq的貼文: ");
+//        console.log(data);
         
         var myURL = head_url + "delete_faq_post";
         $.ajax({
@@ -80,7 +79,7 @@ function deletePostOrAnswer(){
             contentType: 'application/json; charset=utf-8',
             success: function(response){
 //                console.log("API名稱: delete_faq_answer");
-                console.log(response);
+//                console.log(response);
                 localStorage.removeItem("delete");
                 localStorage.removeItem("answerId");
                 location.reload();
@@ -135,7 +134,8 @@ function deletePostOrAnswer(){
 //                console.log(response);
                 localStorage.removeItem("delete");
                 localStorage.removeItem("answerId");
-                setPage("mySinglePostFrame");
+//                setPage("mySinglePostFrame");
+                location.reload();
             },
             error: function(response){
                 console.log(response);
@@ -317,10 +317,17 @@ function showQuestion(response){
             //----- 貼文ID or 發文者 END -----//
             
             //----- 分數 START -----//
-            var qusetionScore = 0;
+            var qusetionScore;
             if(postType=="faq"){
-                for(var i=0; i<response.question.score.length; i++){
-                    qusetionScore += response.score[i].score;
+                qusetionScore = response.question.vote;
+                if(qusetionScore!=""){
+                    content += '網站原始分數';
+                }
+                else{
+                    qusetionScore = 0;
+                    for(var i=0; i<response.question.score.length; i++){
+                        qusetionScore += response.score[i].score;
+                    }
                 }
             }
             else if(postType=="innerPost"){
@@ -640,7 +647,7 @@ function start(){
             //----- 顯示問題 START -----//
             content += '<div class="title">問題</div>';
             // --- 編輯按鈕 ---//
-            if((postType=="innerPost" && response.asker_id==userId) || postType=="faq"){
+            if((postType=="innerPost" && response.asker_id==userId) || (postType=="faq" && role=="manager")){
                 // 編輯
                 content += '<button type="button" class="scoreBtn" onclick="setPage(';
                 content += "'editPostFrame'";
@@ -662,7 +669,7 @@ function start(){
             content = '<div class="title" style="display: inline-block">回答</div>';
             
             // --- 回覆按鈕 ---//
-            if((postType=="innerPost" && role=="generalUser") || (postType=="faq" && role=="manager")){
+            if((postType=="innerPost" && (role=="facebook_user" || role=="google_user")) || (postType=="faq" && role=="manager")){
                 content += '<button type="button" class="scoreBtn" onclick="setPage(';
                 content += "'replyQuestionFrame'";
                 content += ')"><i class="fa fa-plus" aria-hidden="true"></i></button>';
