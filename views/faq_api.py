@@ -2,13 +2,14 @@
 from datetime import datetime
 from flask import Blueprint,request, jsonify
 '''匯入faq相關'''
-from flask import Flask,flash,redirect,current_app
+from flask import Flask,flash,redirect
 from werkzeug.utils import secure_filename
 import os
 import json
-
+import re
 # --- our models ---- #
 from models import faq_data
+from . import TextAnalyze
 
 faq_api = Blueprint('faq_api', __name__)
 
@@ -97,9 +98,14 @@ def insert_faq_post():
                         ],
                         "keywords" : [],     
                         "tags" : data['tags'],
-                        "time" : datetime.fromisoformat(data['time']),
+                        "time" : datetime.now().replace(microsecond=0).isoformat(),
                         "view_count" : 0
         }
+        # 呼叫文字分析模組進行分析
+        textAnalyzer = TextAnalyze()
+        # 去除code
+        target_content = re.sub(r'<pre>.*?</pre>', ' ', faq_dict['question']['content'])
+        faq_dict['keyword'] = textAnalyzer.contentPreProcess(target_content)
         faq_data.insert_faq(faq_dict,'inner_faq')
     except Exception as e :
         faq_dict = {"error" : e.__class__.__name__ + " : " +e.args[0]}
@@ -197,7 +203,12 @@ def delete_faq_answer():
 def update_faq_post():
     data = request.get_json()
     try: 
-        data['time'] = datetime.fromisoformat(data['time'])
+        # 呼叫文字分析模組進行分析
+        textAnalyzer = TextAnalyze()
+        # 去除code
+        target_content = re.sub(r'<pre>.*?</pre>', ' ', data['question']['content'])
+        data.update({'keywords' : textAnalyzer.contentPreProcess(target_content)})
+        data.update({'time': datetime.now().replace(microsecond=0).isoformat()})
         faq_data.update_faq(data)
     except Exception as e :
         data = {"error" : e.__class__.__name__ + " : " +e.args[0]}
@@ -256,6 +267,7 @@ def import_faq_post():
         return jsonify({'message':e})
 
 def process_import_data(data_list):
+    textAnalyzer = TextAnalyze()
     faq_list = [
             {
                 "_id" : "",          
@@ -279,11 +291,11 @@ def process_import_data(data_list):
                         "score" : [],
                     } for a in faq['answers']
                 ],
-                "keywords" : [],     
+                "keywords" : textAnalyzer.contentPreProcess(re.sub(r'<pre>.*?</pre>', ' ', faq['question']['content'])),     
                 "tags" : [],
                 "time" : datetime.now().replace(microsecond=0).isoformat(),
                 "view_count" : 0
             } for faq in data_list
     ]
-    return faq_list
     faq_data.insert_faq(faq_list,'inner_faq')
+    return faq_list
