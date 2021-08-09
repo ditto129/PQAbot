@@ -80,6 +80,26 @@ def facebook_sign_in():
     session['role'] = user_dict['role']
     return jsonify(user_dict)
 
+@login_api.route('/password_sign_in', methods=['POST'])
+def password_sign_in():
+    data = request.get_json()
+    user_dict = user.query_user(data['_id'])
+    # 取得使用者資料，若使用者不存在就建立一份
+    if user_dict != None:
+        if user_dict['password'] == data['password']:  
+            # --- flask login --- #
+            user_now = UserModel(user_dict['_id'])  
+            login_user(user_now) 
+            session['user_id'] = user_dict['_id']
+            session['role'] = user_dict['role']
+            user_role = {'user_id': user_dict['_id'],'role':user_dict['role']}
+        else:
+            user_role = {'user_id': 'invalid.','role':''}
+    
+    else:
+        user_role = {'user_id': 'invalid.','role':''}
+    return jsonify(user_role)
+
 @login_api.route('/logout', methods=['GET'])
 def logout():
     try:
