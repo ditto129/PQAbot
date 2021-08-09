@@ -110,7 +110,7 @@ class analyze_and_search(Action):
     
             # 慈 START
             objectAllPost = json.loads(response.text)
-            if len(objectAllPost["inner_search_result"]) > 0:
+            if objectAllPost["inner_search_result"] != None:
                 postNumber = 1
                 reply = "謝謝您的等待，以下為搜尋結果：<br>"
                 for i in range(0, len(objectAllPost["inner_search_result"])):
@@ -126,6 +126,8 @@ class analyze_and_search(Action):
                     reply += objectSinglePost["title"]
                     reply += '</a><br>'
                     postNumber += 1
+            else:
+                reply = ""
                 
         #        print("reply的結果: "+reply);
             # 慈 END

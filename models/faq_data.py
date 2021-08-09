@@ -89,8 +89,6 @@ def insert_faq(data_dict,data_type):
         # sort _id,將最大的+1當作新的_id
         biggest_id = int(all_faq.skip(1).sort('_id',-1).limit(1)[0]['_id'])
         data_dict['_id'] = str(biggest_id + 1).zfill(6)
-    # 文字分析模組
-    data_dict['keywords'] = []
     # 管理員新增faq處理answer_id和資料庫tag
     if data_type == 'inner_faq':
         answer_id = 0
@@ -115,8 +113,6 @@ def import_faq(data_list,data_type):
         current_id = str(biggest_id + 1).zfill(6)
     for data_dict in data_list:  
         data_dict['_id'] = str(int(current_id) + 1).zfill(6)
-        # 文字分析模組
-        data_dict['keywords'] = []
         # 處理內部內部貼文 answer_id,tag
         if data_type == 'inner_faq':
             answer_id = 0
@@ -227,24 +223,24 @@ def update_score(score_dict):
 # 更新FAQ內容
 def update_faq(data_dict):
     target_faq = _db.FAQ_DATA_COLLECTION.find_one({'_id':data_dict['_id']})
-    if data_dict['question']['content'] != target_faq['question']['content']:
-        target_faq['question']['content'] = data_dict['question']['content']
-        # ------------------ 接文字分析模組 ----------------------- #
-        target_faq['keywords'] = [] 
-    target_faq['link'] = data_dict['link']
-    target_faq['question']['title'] = data_dict['question']['title']
-    target_faq['question']['edit'] = data_dict['question']['edit']
-    target_faq['question']['vote'] = data_dict['question']['vote']
-    target_faq['time'] = data_dict['time']
     # 更新tags，扣除舊tag計數
-    target_faq['tags'] = data_dict['tags']
     for tag in target_faq['tags']:
          _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$inc':{'usage_counter':-1}})
     for tag in data_dict['tags']:
         _db.TAG_COLLECTION.update_one({'_id':tag['tag_id']},{'$set':{'recent_use':data_dict['time']},
                                                              '$inc':{'usage_counter':1}})
     #更新資料庫FAQ
-    _db.FAQ_DATA_COLLECTION.update_one({'_id':target_faq['_id']},{'$set':target_faq})
+    _db.FAQ_DATA_COLLECTION.update_one({'_id':target_faq['_id']},{'$set':
+                                                                  {
+                                                                      'question.content' : data_dict['question']['content'],
+                                                                      'link' : data_dict['link'],
+                                                                      'question.title' : data_dict['question']['title'],
+                                                                      'question.edit' : data_dict['question']['edit'],
+                                                                      'question.vote' : data_dict['question']['vote'],
+                                                                      'keywords' : data_dict['keywords'],
+                                                                      'time' : datetime.now().replace(microsecond=0).isoformat(),
+                                                                      'tags' : data_dict['tags']
+                                                                      }})
 
 # 刪除FAQ
 def remove_faq(faq_id):

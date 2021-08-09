@@ -10,7 +10,6 @@ import re
 # --- our models ---- #
 from models import faq_data
 from . import TextAnalyze
-
 faq_api = Blueprint('faq_api', __name__)
 
 # 調整更新週期
