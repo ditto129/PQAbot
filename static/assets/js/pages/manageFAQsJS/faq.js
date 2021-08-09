@@ -529,31 +529,39 @@ function saveFAQByHand(){
     time = time.slice(0, 23);
     
 //    var data = {link: dataURL, question: {title: FAQTitle, content: FAQContent}, answers: FAQAnswers, time: time};
-    var data = {link: dataURL, question: {title: FAQTitle, content: FAQQuestionContent, edit: FAQQuestionEdit, vote: FAQScore}, answers: FAQAnswers, tags: tag, time: time};
-    console.log("傳出去的Data: ");
-    console.log(data);
-
-    var myURL = head_url + "insert_faq_post";
-    $.ajax({
-        url: myURL,
-        type: "POST",
-        data: JSON.stringify(data),
-        async: false,
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        success: function(response){
-//            console.log("成功: 新增貼文（insert_faq_post）");
-            console.log(response);
-            faqPageNumberAll = 1;
-            faqOption = "time";
-            searchFaqPost();
-            searchAll("new");
-        },
-        error: function(response){
-//            console.log("失敗: 編輯貼文（insert_faq_post）");
-//            console.log(response);
+    if(dataURL!="" && FAQTitle!="" && FAQQuestionContent!=""){
+        if(FAQScore==""){
+            FAQScore="0";
         }
-    });
+        var data = {link: dataURL, question: {title: FAQTitle, content: FAQQuestionContent, edit: FAQQuestionEdit, vote: FAQScore}, answers: FAQAnswers, tags: tag, time: time};
+        console.log("傳出去的Data: ");
+        console.log(data);
+
+        var myURL = head_url + "insert_faq_post";
+        $.ajax({
+            url: myURL,
+            type: "POST",
+            data: JSON.stringify(data),
+            async: false,
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function(response){
+    //            console.log("成功: 新增貼文（insert_faq_post）");
+                console.log(response);
+                faqPageNumberAll = 1;
+                faqOption = "time";
+                searchFaqPost();
+                searchAll("new");
+            },
+            error: function(response){
+    //            console.log("失敗: 編輯貼文（insert_faq_post）");
+    //            console.log(response);
+            }
+        });   
+    }
+    else{
+        window.alert("請填寫好資料");
+    }
     
 }
 
@@ -571,28 +579,49 @@ function importFAQsData(){
 // 拿到檔案並傳送給後端
 function saveFaqAuto(){
     
-    var myURL = head_url + "import_faq_post";
+//    var myURL = head_url + "import_faq_post";
+//    //方法1
 //    var fileInput = $('#importFile').get(0).files[0];
 //	console.info(fileInput);
     
-    var form_data = new FormData("faq", $('#importForm')[0]);
-    $.ajax({
-        url: myURL,
-        type: 'POST',
-        data: form_data,
-        contentType: false,
-        cache: false,
-        processData: false,
-        success: function(response) {
-            if(response.message=="error"){
-                window.alert("匯入失敗～");
-                console.log("匯入失敗");
-            }
-            else{
-                console.log("匯入成功");
-            }
-        },
-    });
+    // 方法2
+//    var formData = new FormData();
+//    formData.append('faq', document.getElementById("importForm").files[0]);
+//    formData.get('file'); // 取得目前的檔案
+    
+//    $.ajax({
+//        url: myURL,
+//        type: 'POST',
+//        data: formData,
+//        contentType: false,
+//        processData: false,
+//        success: function(response) {
+//            if(response.message=="error"){
+//                window.alert("匯入失敗～");
+//                console.log("匯入失敗");
+//            }
+//            else{
+//                console.log("匯入成功");
+//            }
+//        },
+//    });
+    let form = new FormData();
+    if(document.getElementById("importFile").files[0] != null){
+        form.append("faq", document.getElementById("importFile").files[0]);
+        form.get("file");
+        
+        var myURL = head_url + "import_faq_post";
+
+        fetch(myURL, {
+            method: 'POST',
+            body: form,
+            async: false, 
+        }).then(res => {
+            return res.json();   // 使用 json() 可以得到 json 物件
+        }).then(result => {
+            console.log(result); // 得到 {name: "oxxo", age: 18, text: "你的名字是 oxxo，年紀 18 歲～"}
+        });
+    }
 }
 // 匯入檔案（完整FAQ） END
 
@@ -646,16 +675,12 @@ function editPageNum(sum){
             searchTag("old");
             break;
     }
-    console.log("temp: "+temp);
     if(temp == begin){
         disabledButton("backwardPage");
     }
     else{
         abledButton("backwardPage");
     }
-    
-    console.log("temp: "+temp);
-    console.log("end: "+end);
     if(temp == end){
         disabledButton("forwardPage");
     }
@@ -691,6 +716,7 @@ function showFaq(faqList){
         time = time.toISOString();
         time = time.slice(0, 10);
         var score = faqList[i].score;
+//        var vote = faqList[i].vote;
 
         content += '<div class="col-lg-4 col-xl-3 col-sm-12">';
         content += '<a href="#" onclick="setLocalStorage(';
@@ -789,6 +815,9 @@ function showPostSort(){
 function changePostSort(){
     //排序條件 | 依分數排序
     var sortType = $('input:radio[name="sortType"]:checked').val();
+    if(sortType==undefined){
+        sortType = "score";
+    }
     switch(sortType){
         case "sortScore":
             faqOption = "score";
@@ -857,6 +886,8 @@ function showSearchBar(){
     $("#searchBar").modal("show");
 }
 function searchText(which){
+    clearTags();
+    
     whichSearchType = "text";
     if(which == "new"){
         faqPageNumberString = 1;
@@ -990,6 +1021,16 @@ function set(){
 //          searchText("new");
 //      }
 //    }, false);
+}
+
+function clearTags(){
+    document.getElementById("chosenTags").innerHTML = "";
+    document.getElementById("chosenTagInModalForSearch").innerHTML = "";
+    language = [];
+    children = [];
+    chosenTags = [];
+    allTags = {};
+    getLanguageTag();
 }
 
 window.addEventListener("load", function(){

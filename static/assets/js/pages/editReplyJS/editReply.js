@@ -120,8 +120,9 @@ function showInnerPostAnswer(){
             var replyId = localStorage.getItem("replyId");
             for(var i=0; i<response.answer.length; i++){
                 if(response.answer[i]._id == replyId){
-                    
-                    document.getElementById("response").innerHTML = response.answer[i].response;
+                    document.getElementById("replyContent").innerHTML = response.answer[i].edit;
+                    document.getElementById("previewContent").innerHTML = response.answer[i].response;
+                    hljs.highlightAll();
                     break;
                 }
             }
@@ -133,6 +134,7 @@ function showInnerPostAnswer(){
 }
 
 function start(){
+    console.log("有載入editReply");
     postType = localStorage.getItem("postType");
     switch(postType){
         case "faq":
@@ -181,6 +183,7 @@ function editFaqAnswer(){
             success: function(response){
                 localStorage.removeItem("replyId");
     //            console.log("成功: 編輯回覆（update_inner_post_response）");
+                console.log(response);
                 setPage('mySinglePostFrame');
             },
             error: function(response){
@@ -207,8 +210,10 @@ function editInnerPostAnswer(){
         // 時間
         var time = new Date().toJSON();
         time = time.slice(0, 23);
+        var response = showReplyContent("save");
+        var edit = $("#replyContent").val();
 
-        var data = {_id: replyId, post_id: postId, replier_id: replierId, replier_name: replierName, response: response, time: time};
+        var data = {_id: replyId, post_id: postId, replier_id: replierId, replier_name: replierName, response: response, edit: edit, time: time};
     //    console.log("傳出去的data資料");
     //    console.log(data);
         myURL = head_url + "update_inner_post_response";
