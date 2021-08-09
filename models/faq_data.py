@@ -23,13 +23,13 @@ def query_list(page_size,page_number,option):
                                                                {'$count': 'faq_count'}])][0]['faq_count']
     if option == '': # 預設是用時間排
         faq_list = [ doc for doc in _db.FAQ_DATA_COLLECTION.aggregate([{'$skip': 1},
-                                                                       {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords': 1,'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1}}, 
+                                                                       {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords': 1,'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1, 'question.vote': 1}},
                                                                        {'$sort': {'time': -1}}, 
                                                                        {'$skip': page_size * (page_number - 1)}, 
                                                                        {'$limit': page_size}])]
     else : 
         faq_list = [ doc for doc in _db.FAQ_DATA_COLLECTION.aggregate([{'$skip': 1},
-                                                                       {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords': 1,'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1}}, 
+                                                                       {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords': 1,'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1, 'question.vote': 1}},
                                                                        {'$sort': {option: -1}}, 
                                                                        {'$skip': page_size * (page_number - 1)}, 
                                                                        {'$limit': page_size}])]
@@ -41,14 +41,14 @@ def query_list_by_tag(tag_list,page_size,page_number,option):
                                                                    {'$match': {'hastag': True}}])])
     if option == '': # 預設是用時間排
         faq_list = [ doc for doc in _db.FAQ_DATA_COLLECTION.aggregate([{'$skip': 1}, 
-                                                                       {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords':1, 'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1, 'hastag': {'$setIsSubset': [tag_list, '$tags']}}}, 
+                                                                       {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords':1, 'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1, 'hastag': {'$setIsSubset': [tag_list, '$tags']}, 'question.vote': 1}},
                                                                        {'$match': {'hastag': True}},
                                                                        {'$sort': {'time': -1}}, 
                                                                        {'$skip': page_size * (page_number - 1)}, 
                                                                        {'$limit': page_size}])]
     else : 
         faq_list = [ doc for doc in _db.FAQ_DATA_COLLECTION.aggregate([{'$skip': 1}, 
-                                                                       {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords':1, 'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1, 'hastag': {'$setIsSubset': [tag_list, '$tags']}}}, 
+                                                                       {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords':1, 'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1, 'hastag': {'$setIsSubset': [tag_list, '$tags']}, 'question.vote': 1}},
                                                                        {'$match': {'hastag': True}},
                                                                        {'$sort': {option : -1}}, 
                                                                        {'$skip': page_size * (page_number - 1)}, 
@@ -68,14 +68,14 @@ def query_list_by_string(search_string,page_size,page_number,option):
     if option == '': 
         faq_list = [ doc for doc in _db.FAQ_DATA_COLLECTION.aggregate([{'$skip': 1}, 
                                                                        {'$match': {'$or': regex_list}},
-                                                                       {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords':1, 'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1}}, 
+                                                                       {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords':1, 'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1, 'question.vote': 1}},
                                                                        {'$sort': {'time': -1}}, 
                                                                        {'$skip': page_size * (page_number - 1)}, 
                                                                        {'$limit': page_size}])]
     else :
         faq_list = [ doc for doc in _db.FAQ_DATA_COLLECTION.aggregate([{'$skip': 1}, 
                                                                        {'$match': {'$or': regex_list}},
-                                                                       {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords':1, 'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1}}, 
+                                                                       {'$project': {'_id': 1, 'question.title': 1, 'time': 1, 'keywords':1, 'tags': 1, 'score': {'$sum': '$score.score'}, 'view_count': 1, 'question.vote': 1}}, 
                                                                        {'$sort': {option: -1}}, 
                                                                        {'$skip': page_size * (page_number - 1)}, 
                                                                        {'$limit': page_size}])]
