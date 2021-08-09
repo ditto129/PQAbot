@@ -530,6 +530,9 @@ function saveFAQByHand(){
     
 //    var data = {link: dataURL, question: {title: FAQTitle, content: FAQContent}, answers: FAQAnswers, time: time};
     if(dataURL!="" && FAQTitle!="" && FAQQuestionContent!=""){
+        if(FAQScore==""){
+            FAQScore="0";
+        }
         var data = {link: dataURL, question: {title: FAQTitle, content: FAQQuestionContent, edit: FAQQuestionEdit, vote: FAQScore}, answers: FAQAnswers, tags: tag, time: time};
         console.log("傳出去的Data: ");
         console.log(data);
@@ -812,6 +815,9 @@ function showPostSort(){
 function changePostSort(){
     //排序條件 | 依分數排序
     var sortType = $('input:radio[name="sortType"]:checked').val();
+    if(sortType==undefined){
+        sortType = "score";
+    }
     switch(sortType){
         case "sortScore":
             faqOption = "score";
