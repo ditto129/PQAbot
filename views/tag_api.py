@@ -61,7 +61,7 @@ def query_user_tag():
     tag_info=[]
     for i in user_skill:
         tag_data=tag.query_tag(i['tag_id'])
-        tag_info.append({'tag_name':i['skill_name'], 'score':i['score'], 'parent':tag_data['parent']})
+        tag_info.append({'tag_name':i['skill_name'], 'score':i['score']+i['interested_score'], 'parent':tag_data['parent']})
     return jsonify({'tag_info':tag_info})
     
 #回傳該 tag 的 name
