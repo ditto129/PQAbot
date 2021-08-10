@@ -109,19 +109,22 @@ def update_response_list(replier_id):
 """緗"""
 #新增貼文回覆通知
 def update_notification_add(user_id, replier_name, post_id):
-    count = [i['count'] for i in _db.USER_COLLECTION.aggregate([
-    {
-        '$match': {
-            '_id': user_id
-        }
-    }, {
-        '$project': {
-            'count': {
-                '$size': '$notification'
+    if _db.USER_COLLECTION.find_one({'_id':user_id}) == None:
+        count =0
+    else:
+        count = [i['count'] for i in _db.USER_COLLECTION.aggregate([
+        {
+            '$match': {
+                '_id': user_id
+            }
+        }, {
+            '$project': {
+                'count': {
+                    '$size': '$notification'
+                }
             }
         }
-    }
-])][0]
+    ])][0]
     
     print("count: "+str(count))
     
