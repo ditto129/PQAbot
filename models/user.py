@@ -8,8 +8,7 @@
 
 from . import _db
 from .RsaTool import RsaTool
-from datetime import datetime
-from pytz import timezone
+from datetime import datetime, timedelta
 
 # 新增 user
 def insert_user(user_dict):
@@ -110,7 +109,6 @@ def update_response_list(replier_id):
 """緗"""
 #新增貼文回覆通知
 def update_notification_add(user_id, replier_name, post_id):
-    now_utc = datetime.now(timezone('UTC')) # Current time in UTC
     if _db.USER_COLLECTION.find_one({'_id':user_id}) == None:
         count =0
     else:
@@ -132,7 +130,7 @@ def update_notification_add(user_id, replier_name, post_id):
     
     _db.USER_COLLECTION.update_one({'_id':user_id}, {'$push':{'notification':{
                         'id':count+1,
-                        'time':now_utc.astimezone(timezone('Asia/Taipei')), # Convert to Asia/Taipei time zone
+                        'time': datetime.now(),
                         'detail':{
                             'post_id': post_id,
                             'replier_name': replier_name
@@ -159,7 +157,7 @@ def update_notification_new(user_id, id):
     
 #依頁數查看通知
 def query_notification_by_page(user_id, page):
-    return [{'id':i['notification']['id'], 'time':i['notification']['time'], 'detail':i['notification']['detail'], 'new':i['notification']['new'], 'check':i['notification']['check'], 'type':i['notification']['type']} for i in _db.USER_COLLECTION.aggregate([
+    return [{'id':i['notification']['id'], 'time':i['notification']['time']+timedelta(hours=8), 'detail':i['notification']['detail'], 'new':i['notification']['new'], 'check':i['notification']['check'], 'type':i['notification']['type']} for i in _db.USER_COLLECTION.aggregate([
     {
         '$match': {
             '_id': user_id
