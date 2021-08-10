@@ -8,7 +8,8 @@
 
 from . import _db
 from .RsaTool import RsaTool
-from datetime import datetime,timezone,timedelta
+from datetime import datetime
+from pytz import timezone
 
 # 新增 user
 def insert_user(user_dict):
@@ -109,6 +110,7 @@ def update_response_list(replier_id):
 """緗"""
 #新增貼文回覆通知
 def update_notification_add(user_id, replier_name, post_id):
+    now_utc = datetime.now(timezone('UTC')) # Current time in UTC
     if _db.USER_COLLECTION.find_one({'_id':user_id}) == None:
         count =0
     else:
@@ -130,7 +132,7 @@ def update_notification_add(user_id, replier_name, post_id):
     
     _db.USER_COLLECTION.update_one({'_id':user_id}, {'$push':{'notification':{
                         'id':count+1,
-                        'time':datetime.now().replace(microsecond=0).astimezone(timezone(timedelta(hours=8))),
+                        'time':now_utc.astimezone(timezone('Asia/Taipei')), # Convert to Asia/Taipei time zone
                         'detail':{
                             'post_id': post_id,
                             'replier_name': replier_name
