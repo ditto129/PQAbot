@@ -432,7 +432,7 @@ def query_hot_post():
     }, {
         '$match': {
             'answer.time': {
-                '$lte': five_days_ago_datetime
+                '$gte': five_days_ago_datetime
             }
         }
     }, {
