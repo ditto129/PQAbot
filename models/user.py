@@ -186,4 +186,80 @@ def update_notification_check(user_id, id):
 #刪除通知
 def update_notification_delete(post_id):
     _db.USER_COLLECTION.update_many({}, {'$pull':{'notification':{'detail.post_id':post_id}}})
+    
+#共同討論初步篩選
+def query_skill_discussion_initial_filter(tag_array):
+    return [{'_id':i['_id'], 'skill':i['skill']} for i in _db.USER_COLLECTION.aggregate([
+    {
+        '$unwind': {
+            'path': '$skill',
+            'preserveNullAndEmptyArrays': False
+        }
+    }, {
+        '$match': {
+            'skill.tag_id': {
+                '$in': tag_array
+            }
+        }
+    }, {
+        '$group': {
+            '_id': '$_id',
+            'match_count': {
+                '$sum': 1
+            },
+            'skill': {
+                '$push': '$skill'
+            }
+        }
+    }, {
+        '$match': {
+            'match_count': {
+                '$gte': len(tag_array)/2
+            }
+        }
+    }
+])]
+
+#共同討論只看總積分
+def query_skill_discussion_scores_only(exclude_id_array, tag_array, lacking_num):
+    return [i['_id'] for i in _db.USER_COLLECTION.aggregate([
+    {
+        '$match': {
+            '_id': {
+                '$nin': exclude_id_array
+            }
+        }
+    }, {
+        '$unwind': {
+            'path': '$skill',
+            'preserveNullAndEmptyArrays': False
+        }
+    }, {
+        '$match': {
+            'skill.tag_id': {
+                '$in': tag_array
+            }
+        }
+    }, {
+        '$group': {
+            '_id': '$_id',
+            'skill': {
+                '$push': '$skill'
+            },
+            'sort_scores': {
+                '$sum': {
+                    '$add': [
+                        '$skill.score', '$skill.interested_score'
+                    ]
+                }
+            }
+        }
+    }, {
+        '$sort': {
+            'sort_scores': -1
+        }
+    }, {
+        '$limit': lacking_num
+    }
+])]
 """ """

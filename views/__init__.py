@@ -20,6 +20,7 @@ from .post_api import post_api
 # from .post_web import post_web
 from .faq_api import faq_api
 from .notification_api import notification_api
+from .discussion_api import discussion_api
 
 blueprint_prefix = [(exchange_api, "/api"), (exchange_web, "/site"),
                     (rasa_api, "/api"), (base_flow_web, "/site"),
@@ -28,7 +29,8 @@ blueprint_prefix = [(exchange_api, "/api"), (exchange_web, "/site"),
                     (user_api,"/api"),
                     (post_api,"/api"),
                     (faq_api,"/api"),
-                    (notification_api, "/api")]
+                    (notification_api, "/api"),
+                    (discussion_api, "/api")]
 
 def register_blueprint(app):
     for blueprint, prefix in blueprint_prefix:
