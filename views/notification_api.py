@@ -18,9 +18,21 @@ notification_api=Blueprint('notification_api', __name__)
 @notification_api.route('add_post_notification')
 def add_post_notification():
     user_id=request.values.get('user_id')
-    replier_name=request.values.get('replier_name')
+    replier_id=request.values.get('replier_id')
     post_id=request.values.get('post_id')
-    user.update_notification_add(user_id, replier_name, post_id)
+    user.update_notification_add_post(user_id, replier_id, post_id)
+    return jsonify({"message":"success"})
+    
+#共同討論邀請通知
+@notification_api.route('add_discussion_invitation_notification', methods=['post'])
+def add_discussion_invitation_notification():
+    data=request.get_json()
+    asker_id=data['asker_id']
+    tags=data['tags']   #相關tag array
+    recommand_users=data['recommand_users']     #推薦人選array
+    
+    for i in recommand_users:
+        user.update_notification_add_discussion(asker_id, tags, i)
     return jsonify({"message":"success"})
     
 #檢查是否有新通知
@@ -62,3 +74,12 @@ def delete_notification():
     post_id=request.values.get('post_id')
     user.update_notification_delete(post_id)
     return jsonify({"message":"success"})
+
+
+#共同討論邀請失效
+@notification_api.route('disable_discussion_invatation', methods=['get'])
+def disable_discussion_invatation():
+    user_id=request.values.get('user_id')
+    id==request.values.get('id')    #index
+    return jsonify({"message":"success"})
+    

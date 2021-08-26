@@ -108,7 +108,7 @@ def update_response_list(replier_id):
 
 """緗"""
 #新增貼文回覆通知
-def update_notification_add(user_id, replier_name, post_id):
+def update_notification_add_post(user_id, replier_id, post_id):
     if _db.USER_COLLECTION.find_one({'_id':user_id}) == None:
         count =0
     else:
@@ -133,7 +133,7 @@ def update_notification_add(user_id, replier_name, post_id):
                         'time': datetime.now(),
                         'detail':{
                             'post_id': post_id,
-                            'replier_name': replier_name
+                            'replier_id': replier_id
                        },
                        'new': True,
                        'check': False,
@@ -141,7 +141,41 @@ def update_notification_add(user_id, replier_name, post_id):
                     },
                 },
             })
-                    
+                
+#新增共同討論通知
+def update_notification_add_discussion(asker_id, tags, user_id):
+    if _db.USER_COLLECTION.find_one({'_id':user_id}) == None:
+        count = 0
+    else:
+        count = [i['count'] for i in _db.USER_COLLECTION.aggregate([
+        {
+            '$match': {
+                '_id': user_id
+            }
+        }, {
+            '$project': {
+                'count': {
+                    '$size': '$notification'
+                }
+            }
+        }
+    ])][0]
+    
+    _db.USER_COLLECTION.update_one({'_id':user_id}, {'$push':{'notification':{
+                        'id':count+1,
+                        'time': datetime.now(),
+                        'detail':{
+                            'asker_id': asker_id,
+                            'tag': tags,
+                            'valid': True
+                       },
+                       'new': True,
+                       'check': False,
+                       'type': "discussion"
+                    },
+                },
+            })
+
 #檢查是否有新通知
 def query_notification(user_id):
     return _db.USER_COLLECTION.find_one({'_id':user_id})
@@ -262,4 +296,9 @@ def query_skill_discussion_scores_only(exclude_id_array, tag_array, lacking_num)
         '$limit': lacking_num
     }
 ])]
+
+#共同討論邀請失效
+def upudate_notification_disable_discussion_invatation(user_id, index):
+    _db.USER_COLLECTION.update_one({'_id':user_id, 'notification.id': id},
+    { '$set': { 'notification.$.detail.valid' : False } })
 """ """
