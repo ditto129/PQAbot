@@ -143,7 +143,7 @@ def update_notification_add_post(user_id, replier_id, post_id):
             })
                 
 #新增共同討論通知
-def update_notification_add_discussion(asker_id, tags, user_id):
+def update_notification_add_discussion(asker_id, tags, user_id, room_id):
     if _db.USER_COLLECTION.find_one({'_id':user_id}) == None:
         count = 0
     else:
@@ -167,7 +167,8 @@ def update_notification_add_discussion(asker_id, tags, user_id):
                         'detail':{
                             'asker_id': asker_id,
                             'tag': tags,
-                            'valid': True
+                            'valid': True,
+                            'room_id': room_id
                        },
                        'new': True,
                        'check': False,

@@ -30,9 +30,10 @@ def add_discussion_invitation_notification():
     asker_id=data['asker_id']
     tags=data['tags']   #相關tag array
     recommand_users=data['recommand_users']     #推薦人選array
+    room_id=data['room_id']
     
     for i in recommand_users:
-        user.update_notification_add_discussion(asker_id, tags, i)
+        user.update_notification_add_discussion(asker_id, tags, i, room_id)
     return jsonify({"message":"success"})
     
 #檢查是否有新通知
