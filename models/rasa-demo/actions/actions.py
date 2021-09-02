@@ -16,14 +16,49 @@ import random
 import requests
 import json
 #加入文字分析模組&外部搜尋模組
-from . import TextAnalyze
-from .OuterSearch import outerSearch
+#from . import TextAnalyze
+#from .OuterSearch import outerSearch
 ##摘要
-from . import StackData
+#from . import StackData
 
-#head_url='http://localhost:55001/api/'
-head_url='https://soselab.asuscomm.com:55002/api/'
+head_url='http://localhost:55001/api/'
+#head_url='https://soselab.asuscomm.com:55002/api/'
 
+
+class popover_return_incognito(Action):
+    def name(self) -> Text:
+        return "popover_return_incognito"
+    def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
+#        affirm = ["好", "是", "匿名", "我要匿名"]
+        deny = ["不", "否", "no", "別"]
+        incognito = tracker.get_slot("discuss_together_whether_incognito").split(',',1)[1]
+        reply = "popover,是"
+        for i in deny:
+            if i in incognito:
+                reply = "popover,否"
+        dispatcher.utter_message(text=reply)
+        return []
+        
+        
+class received_discuss_tags(Action):
+    def name(self) -> Text:
+        return "received_discuss_tags"
+    def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
+        print("received_discuss_tags")
+        selected_tags_id = tracker.get_slot("discuss_tags").split('：',1)[1]
+        selected_tags_array = selected_tags_id.split(',')
+        selected_tags_name=""
+        for i in selected_tags_array:
+            r = requests.get(url = head_url+'query_tag_name', params = {'tag_id':i})
+            data = r.json()
+            tag_name = data['tag_name']
+            selected_tags_name += (tag_name+', ')
+        selected_tags_name=selected_tags_name[0:-2]
+        reply = "接收到了 "+selected_tags_name+" 標籤。請說明你想討論的問題。"
+        dispatcher.utter_message(text=reply)
+        return []
+        
+        
 #將整句話(問題描述、錯誤訊息)填入slot
 class fill_slot(Action):
     def name(self) -> Text:
@@ -31,8 +66,8 @@ class fill_slot(Action):
 
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
         function = tracker.get_slot("function")
-        os = tracker.get_slot("os")[0:-4]
-        pl = tracker.get_slot("pl")[0:-4]
+        os = tracker.get_slot("os")
+        pl = tracker.get_slot("pl")
         
         if os!=None and pl!=None:
             if "錯誤訊息" in function:
@@ -41,10 +76,14 @@ class fill_slot(Action):
                 reply = "請描述您遇到的問題"
             else:
                 reply = "你的function抓不到"
-        elif os == None:
-            reply = "請問您使用的是什麼作業系統？<br>若之後要修改，請輸入「我要更改作業系統」"
         else:
-            reply = "請問您使用的是什麼程式語言？<br>若之後要修改，請輸入「我要更改程式語言」"
+            if "共同討論" in function:
+                reply = "是否匿名?"
+            else:
+                if pl == None:
+                    reply = "請問您使用的是什麼程式語言？<br>若之後要修改，請輸入「我要更改程式語言」"
+                elif os == None:
+                    reply = "請問您使用的是什麼作業系統？<br>若之後要修改，請輸入「我要更改作業系統」"
         
         dispatcher.utter_message(text=reply)
         return []
@@ -56,8 +95,9 @@ class analyze_and_search(Action):
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
         print('in analyze_and_search')
         function = tracker.get_slot("function")
-        os = tracker.get_slot("os")[0:-4]
-        pl = tracker.get_slot("pl")[0:-4]
+        print("pl(programming language):"+tracker.get_slot("pl"))
+        os = tracker.get_slot("os")[0:-10]
+        pl = tracker.get_slot("pl")[0:-10]
         print("pl(programming language):"+pl)
         if "錯誤訊息" in function:
             #拿到所需訊息及最後一句使用者輸入
@@ -82,7 +122,7 @@ class analyze_and_search(Action):
             reply = "謝謝您的等待，以下為搜尋結果的資料摘要："
             for i in range(0, len(resultpage)):
                 reply += ("<br>" + str(i+1) + ".<a href=\"" + resultpage[i] + "\">"+ result_title[i] + "</a>")
-            reply += "<br>點選摘要連結可顯示內容。<br><br>感謝回饋，歡迎下次光臨！"
+            reply += "<br>點選摘要連結可顯示內容。<br><br>希望有幫到你，歡迎下次光臨！"
 
             #reply += "<a href=\"#\" onclick=\"summary('all')\">點我查看所有答案排名</a>"
             dispatcher.utter_message(text=reply)
@@ -126,10 +166,10 @@ class analyze_and_search(Action):
                     reply += objectSinglePost["title"]
                     reply += '</a><br>'
                     postNumber += 1
-            else:
-                reply = ""
                 
         #        print("reply的結果: "+reply);
+            else:
+                reply = ""
             # 慈 END
             
             #外部搜尋結果（URL）
@@ -139,16 +179,22 @@ class analyze_and_search(Action):
 
             #外部搜尋
             #stackoverflow物件
-            #stack_items = StackData.parseStackData(resultpage)
-#假資料～～～～～
+            stack_items = StackData.parseStackData(resultpage)
+            ######假資料～～～～～
             
-            with open("DATA_test.json", "r", encoding="utf-8") as f:
-                stack_items = json.load(f)
+            #with open("DATA_test.json", "r", encoding="utf-8") as f:
+            #    stack_items = json.load(f)
+                
             raw_data = [" ".join([item['question']['abstract'], " ".join([ans['abstract'] for ans in item['answers']])]) for item in stack_items ]
             #取得block排名
             result = TextAnalyze.blockRanking(stack_items, qkey)
-#print(result)
-            temp_data_id_list = requests.post(head_url + 'insert_cache', json={'data' : stack_items[0:5], 'type' : "temp_data"})
+            #print(result)
+            for i in stack_items:
+                i['question']['abstract'] = str(textAnalyzer.textSummarization(i['question']['abstract']))
+                for ans in i['answers']:
+                    ans['abstract'] = str(textAnalyzer.textSummarization(ans['abstract']))
+                    
+            temp_data_id_list = requests.post(head_url + 'insert_cache', json={'data' : stack_items, 'type' : "temp_data"})
             block_rank_id = requests.post(head_url + 'insert_cache', json={'data': result, 'type' : "blocks_rank"})
 
             print(temp_data_id_list.text)

@@ -6,16 +6,19 @@ intents:
   - change_os
   - say_pl
   - change_pl
-  - say_question_or_error_message
+#  - say_question_or_error_message
   - say_keywords
   - affirm
   - deny
   - say_satisfied
-  - guided_QA
-  - error_message
-  - discuss_together
+  - say_guided_QA_question
+  - say_error_message_question
+  - say_discuss_together_question
   - say_not_satisfied
   - say_function
+  - say_discuss_tags
+  - say_discuss_together_whether_incognito
+  
   ### 用來測試若intent裡有相同的句子 START
   - test_search
   - test_satisfied
@@ -23,10 +26,15 @@ intents:
   
 entities:
   - keywords
-  - question_or_error_message
+#  - question_or_error_message
   - function
   - os
   - pl
+  - discuss_together_question
+  - guided_QA_question
+  - error_message_question
+  - discuss_tags
+  - discuss_together_whether_incognito
   
 slots:
   function:
@@ -35,18 +43,40 @@ slots:
     type: text
   pl:
     type: text
-  question_or_error_message:
-    type: text
+#  question_or_error_message:
+#    type: text
   keywords:
     type: text
-
+  discuss_together_question:
+    type: text
+  guided_QA_question:
+    type: text
+  error_message_question:
+    type: text
+  discuss_tags:
+    type: text
+  discuss_together_whether_incognito:
+    type: text
+    
+    
 actions:
   - fill_slot
   - analyze_and_search
   - select_keyword
   - outer_search
+  - received_discuss_tags
+  - popover_return_incognito
 
 responses:
+  utter_wait_for_discuss:
+  - text: "請稍等，立即為您詢問其他使用者。"
+  
+#  utter_received_discuss_tags:
+#  - text: "接收到了 {discuss_tags} 標籤。請說明你想討論的問題。"
+  
+  utter_popover:
+  - text: "popover"
+  
   utter_detect_stroy:
   - text: "有進入stroy"
   utter_affirm_satisfied:
@@ -62,7 +92,7 @@ responses:
   - text: "請問你想選擇哪個功能呢？"
   
   utter_welcome:
-  - text: "我們能提供的功能有<br>1. 錯誤訊息解答（直接複製錯誤訊息即可）<br>2. 引導式問答（用文字描述您遇到的問題）<br>若未能解決問題也可以使用共同討論功能<br><br>請問你想選擇哪個功能呢？"
+  - text: "我們能提供的功能有<br>1. 「錯誤訊息解答」（直接貼上錯誤訊息即可）<br>2. 「引導式問答」（用文字描述您遇到的問題）<br>若未能解決問題也可以使用「共同討論」功能<br><br>請問你想選擇哪個功能呢？"
   
   utter_ask_os:
   - text: "請問您使用的是什麼作業系統？<br>若之後要修改，請輸入「我要更改作業系統」？"
@@ -95,7 +125,7 @@ responses:
   - text: "是否滿意本次體驗？"
   
   utter_finish:
-  - text: "感謝回饋，歡迎下次光臨！"
+  - text: "希望有幫到你，歡迎下次光臨！"
   
   
   utter_goodbye:

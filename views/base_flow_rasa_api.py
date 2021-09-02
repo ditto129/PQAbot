@@ -28,15 +28,32 @@ def base_flow_rasa():
         if 'text' in results['events'][-2].keys():
             #print(results['events'][-2]['text'])
             lastest_bot_reply=results['events'][-2]['text']
-            if lastest_bot_reply == "請描述您遇到的問題" or lastest_bot_reply == "請貼上您的錯誤訊息":
-                message = 'question_or_error_message, ' + message
-                print("問題描述:"+message)
+            
+            if lastest_bot_reply == "請描述您遇到的問題":
+                message = 'guided_QA_question,' + message
+            elif lastest_bot_reply == "請貼上您的錯誤訊息":
+                message = 'error_message_question,' + message
+            elif lastest_bot_reply == "是否匿名":
+                message = 'discuss_together_whether_incognito,' + message
             elif "程式語言" in lastest_bot_reply:
-                message = message + '-rasaPL'
+                message = message + ' rasa_slot'
                 print("程式語言:"+message)
             elif "作業系統" in lastest_bot_reply:
-                message = message + '-rasaOS'
+                message = message + ' rasa_slot'
                 print("作業系統:"+message)
+            elif "請說明你想討論的問題" in lastest_bot_reply:
+                message = 'discuss_together_question,' + message
+                
+                
+#            if lastest_bot_reply == "請描述您遇到的問題" or lastest_bot_reply == "請貼上您的錯誤訊息" or lastest_bot_reply :
+#                message = 'question_or_error_message, ' + message
+#                print("問題描述:"+message)
+#            elif "程式語言" in lastest_bot_reply:
+#                message = message + '-rasaPL'
+#                print("程式語言:"+message)
+#            elif "作業系統" in lastest_bot_reply:
+#                message = message + '-rasaOS'
+#                print("作業系統:"+message)
         
     payload = {'sender': sender_id, 'message': message}
     headers = {'content-type': 'application/json'}

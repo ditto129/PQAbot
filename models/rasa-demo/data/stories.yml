@@ -38,19 +38,44 @@ stories:
   - action: fill_slot
   - checkpoint: reply_fill_slot
   
+  
 # 使用者問題 slot_filling
-# 四、請使用者描述問題 or 錯誤訊息 -> 搜尋
-- story: fill_slot_message
+# 四、請使用者描述問題 or 錯誤訊息 or 共同討論問題 -> 根據不同功能做不同處理
+# 引導式
+- story: guided_QA
   steps:
   - checkpoint: reply_fill_slot
-  - intent: say_question_or_error_message
-#    entities:
-#    - question_or_error_message
-#  - action: utter_check_message
+  - intent: say_guided_QA_question
+    entities:
+    - guided_QA_question
   - action: analyze_and_search
-#  - intent: say_keywords
-#  - action: outer_search
   - checkpoint: check_continue_search
+# 錯誤訊息
+- story: error_message
+  steps:
+  - checkpoint: reply_fill_slot
+  - intent: say_error_message_question
+    entities:
+    - error_message_question
+  - action: analyze_and_search
+  - checkpoint: check_continue_search
+# 共同討論
+- story: discuss_together
+  steps:
+  - checkpoint: reply_fill_slot
+  - intent: say_discuss_together_whether_incognito
+    entities:
+    - discuss_together_whether_incognito
+  - action: popover_return_incognito
+  - intent: say_discuss_tags
+    entities:
+    - discuss_tags
+  - action: received_discuss_tags
+  - intent: say_discuss_together_question
+    entities:
+    - discuss_together_question
+  - action: utter_wait_for_discuss
+
 
 # 修改作業系統
 - story: change_slot_os
@@ -91,21 +116,21 @@ stories:
   - checkpoint: check_continue_search
 #  - action: utter_detect_stroy
   - intent: deny
-  - action: utter_ask_satisfied
-  - checkpoint: check_satisfied
-  
-# 六-1、滿意
-- story: satisfied_affirm
-  steps:
-  - checkpoint: check_satisfied
-  - intent: affirm
-  #- action: utter_affirm_satisfied
   - action: utter_finish
-  
-# 六-2、不滿意
-- story: satisfied_deny
-  steps:
-  - checkpoint: check_satisfied
-  - intent: deny
-  #- action: utter_affirm_notsatisfied
-  - action: utter_finish
+#  - checkpoint: check_satisfied
+#
+## 六-1、滿意
+#- story: satisfied_affirm
+#  steps:
+#  - checkpoint: check_satisfied
+#  - intent: affirm
+#  #- action: utter_affirm_satisfied
+#  - action: utter_finish
+#
+## 六-2、不滿意
+#- story: satisfied_deny
+#  steps:
+#  - checkpoint: check_satisfied
+#  - intent: deny
+#  #- action: utter_affirm_notsatisfied
+#  - action: utter_finish
