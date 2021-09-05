@@ -24,14 +24,52 @@ import json
 head_url='http://localhost:55001/api/'
 #head_url='https://soselab.asuscomm.com:55002/api/'
 
+class error_message_search(Action):
+    def name(self) -> Text:
+        return "error_message_search"
+    def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
+        function = tracker.get_slot("function")
+        print("pl(programming language):"+tracker.get_slot("pl"))
+        os = tracker.get_slot("os")[0:-10]
+        pl = tracker.get_slot("pl")[0:-10]
+        print("pl(programming language):"+pl)
+        error_message_search_time = int(tracker.get_slot("error_message_search_time"))
+        #拿到所需訊息及最後一句使用者輸入
+        question_or_error_message = tracker.get_slot("error_message_question")
+        question_or_error_message = question_or_error_message.split(',',1)[1]
+        qkey = question_or_error_message.split(' ')
+        qkey.append(os)
+        qkey.append(pl)
+            
+#        #外部搜尋結果（URL）
+#        resultpage = outerSearch(qkey, 10, error_message_search_time)
+#            
+#        stack_items = [StackData(url) for url in resultpage]
+#        result_title = []
+##        for i in resultpage:
+#        for items in stack_items:
+#        #showData回傳的資料即是傳送到前端的json格式
+#            display = items.showData()
+#            result_title.append(display['question']['title'])
+##            result_title.append(i)
+    
+        reply = "謝謝您的等待，以下為搜尋結果的資料摘要："
+#        for i in range(0, len(resultpage)):
+#            reply += ("<br>" + str(i+1) + ".<a href=\"" + resultpage[i] + "\">"+ result_title[i] + "</a>")
+        reply += "<br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"
 
+        #reply += "<a href=\"#\" onclick=\"summary('all')\">點我查看所有答案排名</a>"
+        dispatcher.utter_message(text=reply)
+        return [SlotSet("error_message_search_time", float(error_message_search_time+1))]
+        
+        
 class popover_return_incognito(Action):
     def name(self) -> Text:
         return "popover_return_incognito"
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
 #        affirm = ["好", "是", "匿名", "我要匿名"]
         deny = ["不", "否", "no", "別"]
-        incognito = tracker.get_slot("discuss_together_whether_incognito").split(',',1)[1]
+        incognito = tracker.get_slot("whether_incognito").split(',',1)[1]
         reply = "popover,是"
         for i in deny:
             if i in incognito:
@@ -46,6 +84,7 @@ class received_discuss_tags(Action):
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
         print("received_discuss_tags")
         selected_tags_id = tracker.get_slot("discuss_tags").split('：',1)[1]
+        selected_tags_id.replace(" ", "")
         selected_tags_array = selected_tags_id.split(',')
         selected_tags_name=""
         for i in selected_tags_array:

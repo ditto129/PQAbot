@@ -29,7 +29,7 @@ nlu:
    - 標籤：.*
 - regex: discuss_together_whether_incognito
   examples: |
-   - discuss_together_whether_incognito,.*
+   - whether_incognito,.*
   
 - lookup: os
   examples: |
@@ -50,8 +50,8 @@ nlu:
 
 - intent: say_discuss_together_whether_incognito
   examples: |
-   - [discuss_together_whether_incognito,是](discuss_together_whether_incognito)
-   - [discuss_together_whether_incognito,否](discuss_together_whether_incognito)
+   - [whether_incognito,是](whether_incognito)
+   - [whether_incognito,否](whether_incognito)
 
 - intent: say_discuss_tags
   examples: |

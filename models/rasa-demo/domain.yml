@@ -34,7 +34,7 @@ entities:
   - guided_QA_question
   - error_message_question
   - discuss_tags
-  - discuss_together_whether_incognito
+  - whether_incognito
   
 slots:
   function:
@@ -55,8 +55,11 @@ slots:
     type: text
   discuss_tags:
     type: text
-  discuss_together_whether_incognito:
+  whether_incognito:
     type: text
+  error_message_search_time:
+    type: float
+    initial_value: 0
     
     
 actions:
@@ -66,6 +69,7 @@ actions:
   - outer_search
   - received_discuss_tags
   - popover_return_incognito
+  - error_message_search
 
 responses:
   utter_wait_for_discuss:
