@@ -57,15 +57,30 @@ stories:
   - intent: say_error_message_question
     entities:
     - error_message_question
+  - action: error_message_search
+  - checkpoint: check_continue_search
+  
+- story: error_message_continue
+  steps:
+  - checkpoint: check_continue_search
+  - intent: affirm
   - action: analyze_and_search
   - checkpoint: check_continue_search
+  
+- story: error_message_end
+  steps:
+  - checkpoint: check_continue_search
+  - intent: deny
+  - action: utter_finish
+  - action: utter_welcome
+  
 # 共同討論
 - story: discuss_together
   steps:
   - checkpoint: reply_fill_slot
   - intent: say_discuss_together_whether_incognito
     entities:
-    - discuss_together_whether_incognito
+    - whether_incognito
   - action: popover_return_incognito
   - intent: say_discuss_tags
     entities:
@@ -75,7 +90,7 @@ stories:
     entities:
     - discuss_together_question
   - action: utter_wait_for_discuss
-
+  - action: utter_welcome
 
 # 修改作業系統
 - story: change_slot_os
@@ -117,6 +132,7 @@ stories:
 #  - action: utter_detect_stroy
   - intent: deny
   - action: utter_finish
+  - action: utter_welcome
 #  - checkpoint: check_satisfied
 #
 ## 六-1、滿意

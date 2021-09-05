@@ -27,7 +27,7 @@ nlu:
 - regex: discuss_tags
   examples: |
    - 標籤：.*
-- regex: discuss_together_whether_incognito
+- regex: whether_incognito
   examples: |
    - whether_incognito,.*
   
