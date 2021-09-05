@@ -150,3 +150,37 @@ stories:
 #  - intent: deny
 #  #- action: utter_affirm_notsatisfied
 #  - action: utter_finish
+
+# 七、結束共同討論後的流程
+- story: end_discuss
+  steps:
+  - intent: end_discuss
+    entities:
+    - replier_id
+  - action: utter_rate_replier
+  - checkpoint: check_discuss_satisfied
+  
+- story: discuss_satisfied_affirm
+  steps:
+  - checkpoint: check_discuss_satisfied
+  - intent: affirm
+  - action: ask_return_and_reward
+  - checkpoint: check_discuss_return
+  
+- story: discuss_satisfied_deny
+  steps:
+  - checkpoint: check_discuss_satisfied
+  - intent: deny
+  - action: utter_finish
+  
+- story: discuss_return_affirm
+  steps:
+  - checkpoint: check_discuss_return
+  - intent: affirm
+  - action: utter_return_discussion
+  
+- story: discuss_return_deny
+  steps:
+  - checkpoint: check_discuss_return
+  - intent: deny
+  - action: utter_finish

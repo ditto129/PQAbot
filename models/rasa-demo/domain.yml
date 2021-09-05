@@ -18,6 +18,7 @@ intents:
   - say_function
   - say_discuss_tags
   - say_discuss_together_whether_incognito
+  - end_discuss
   
   ### 用來測試若intent裡有相同的句子 START
   - test_search
@@ -35,6 +36,7 @@ entities:
   - error_message_question
   - discuss_tags
   - whether_incognito
+  - replier_id
   
 slots:
   function:
@@ -60,6 +62,8 @@ slots:
   error_message_search_time:
     type: float
     initial_value: 0
+  replier_id:
+    type: text
     
     
 actions:
@@ -70,8 +74,15 @@ actions:
   - received_discuss_tags
   - popover_return_incognito
   - error_message_search
+  - ask_return_and_reward
 
 responses:
+  utter_return_discussion:
+  - text: "return_discussion"
+  
+  utter_rate_replier:
+  - text: "請為「回答者」這次的回答評分（滿意/不滿意）。"
+  
   utter_wait_for_discuss:
   - text: "請稍等，立即為您詢問其他使用者。"
   

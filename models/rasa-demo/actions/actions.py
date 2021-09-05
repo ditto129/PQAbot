@@ -23,7 +23,28 @@ import json
 
 head_url='http://localhost:55001/api/'
 #head_url='https://soselab.asuscomm.com:55002/api/'
-
+        
+class ask_return_and_reward(Action):
+    def name(self) -> Text:
+        return "ask_return_and_reward"
+    def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
+        #為回答者加積分
+        selected_tags_id = tracker.get_slot("discuss_tags").split('：',1)[1]
+        selected_tags_id.replace(" ", "")
+        selected_tags_array = selected_tags_id.split(',')
+        replier_id = tracker.get_slot("replier_id").split(',',1)[1]
+        tags=[]
+        for i in selected_tags_array:
+            r = requests.get(url = head_url+'query_tag_name', params = {'tag_id':i})
+            data = r.json()
+            tag_name = data['tag_name']
+            tags.append({'tag_id':i, 'tag_name':tag_name})
+        requests.post(head_url+'update_user_score', json={'_id':replier_id, 'tag':tags, 'score':3})
+        
+        reply="請問你願意回報此問題嗎？（僅限提問者回覆）"
+        dispatcher.utter_message(text=reply)
+        return []
+        
 class error_message_search(Action):
     def name(self) -> Text:
         return "error_message_search"

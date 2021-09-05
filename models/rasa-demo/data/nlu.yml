@@ -1,7 +1,10 @@
 version: "2.0"
 
 nlu:
-
+- regex: replier_id
+  examples: |
+   - end_discuss,.*
+   
 - regex: keywords
   examples: |
    - keywords .*
@@ -47,7 +50,12 @@ nlu:
 #  examples: |
 #   - question_or_error_message.*
 
-
+- intent: end_discuss
+  examples: |
+   - [end_discuss,](replier_id)
+   #- 結束討論
+   #- 結束共同討論
+   
 - intent: say_discuss_together_whether_incognito
   examples: |
    - [whether_incognito,是](whether_incognito)
@@ -78,6 +86,8 @@ nlu:
 - intent: say_function
   examples: |
     - [引導式](function)
+    - [錯誤訊息](function)
+    - [共同討論](function)
 
 - intent: say_os
   examples: |
