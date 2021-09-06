@@ -52,26 +52,26 @@ nlu:
 
 - intent: ask_bot_trivial_question
   examples: |
-   - 你喜歡什麼顏色？
-   - 你喜歡什麼食物？
-   - 你的興趣是什麼？
-   - 你喜歡游泳嗎？
-   - 你喜歡烤肉嗎？
+   - 你喜歡什麼顏色
+   - 你喜歡什麼食物
+   - 你的興趣是什麼
+   - 你喜歡游泳嗎
+   - 你喜歡烤肉嗎
    
 - intent: do_something
   examples: |
-   - 可以唱歌嗎？
-   - 可以跳舞嗎？
-   - 可以講笑話嗎？
-   - 可以講故事嗎？
-   - 可以跟我聊天嗎？
+   - 可以唱歌嗎
+   - 可以跳舞嗎
+   - 可以講笑話嗎
+   - 可以講故事嗎
+   - 可以跟我聊天嗎
    
 - intent: who_are_you
   examples: |
-   - 你是誰？
-   - 是誰？
-   - 誰呀？
-   - 可以請你自我介紹嗎？
+   - 你是誰
+   - 是誰
+   - 誰呀
+   - 可以請你自我介紹嗎
    - 自我介紹
    
 - intent: greet
@@ -88,6 +88,12 @@ nlu:
    - good afternoon
    - 晚安
    - good night
+   - 誒
+   - 嘿
+   - 呦
+   - 今天天氣真好
+   - How are you
+   - 今天過得怎麼樣
    
 - intent: bye
   examples: |

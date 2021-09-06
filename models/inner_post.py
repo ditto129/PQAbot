@@ -337,6 +337,7 @@ def query_inner_search(keywords):
             i['matches_keyword'] = 0
             count_tag = 0
             i['matches_tag'] = 0
+            i['duplicate'] = 0
             for j in i['keyword']:
                 if j.lower() in lower_keywords:
                     count_key += 1
@@ -344,10 +345,15 @@ def query_inner_search(keywords):
             for j in i['tag']:
                 if j['tag_name'].lower() in lower_keywords:
                     count_tag += 1
+                    for k in i['keyword']:
+                        if j['tag_name'].lower() == k.lower():
+                            i['duplicate']+=1
+#            print(i['_id']+"duplcate:")
+#            print(i['duplicate'])
             i['matches_tag'] = count_tag
             #加總match數
             i['matches'] = i['matches_keyword'] + i['matches_tag']
-            
+        
 #        #計算tag match數
 #        for i in top_ten_post_dict_array:
 #            count_tag = 0
@@ -363,7 +369,7 @@ def query_inner_search(keywords):
             
         #規定至少匹配兩個
         for i in range(len(top_ten_post_dict_array)-1, -1, -1):
-            if top_ten_post_dict_array[i]['matches'] < 2:
+            if top_ten_post_dict_array[i]['matches'] - top_ten_post_dict_array[i]['duplicate'] < len(keyword)*(2/3):
                 top_ten_post_dict_array.pop(i)
         
         if len(top_ten_post_dict_array) > 0:

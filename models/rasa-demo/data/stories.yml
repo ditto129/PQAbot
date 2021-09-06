@@ -212,7 +212,7 @@ stories:
   - intent: do_something
   - action: utter_refuse
   
-- story: do something
+- story: trivial_question
   steps:
   - intent: ask_bot_trivial_question
   - action: utter_ask_me_programmimg_question
