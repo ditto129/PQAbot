@@ -138,6 +138,11 @@ nlu:
 - intent: start
   examples: |
    - start
+   - 我要問問題
+   - PSAbot
+   - hey, PSAbot
+   - 我想問問題
+   - 我有問題
 
 - intent: say_function
   examples: |
