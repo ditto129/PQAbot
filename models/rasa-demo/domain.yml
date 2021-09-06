@@ -1,6 +1,8 @@
 version: "2.0"
 
 intents:
+  - greet
+  - bye
   - start
   - say_os
   - change_os
@@ -19,7 +21,10 @@ intents:
   - say_discuss_tags
   - say_discuss_together_whether_incognito
   - end_discuss
-  
+  - thanks
+  - who_are_you
+  - do_something
+  - ask_bot_trivial_question
   ### 用來測試若intent裡有相同的句子 START
   - test_search
   - test_satisfied
@@ -77,6 +82,29 @@ actions:
   - ask_return_and_reward
 
 responses:
+  utter_ask_me_programmimg_question:
+  - text: "我的專業是程式問題，請問我程式問題。"
+  
+  utter_refuse:
+  - text: "不好吧。"
+  - text: "不想。"
+  - text: "不要。"
+  - text: "不行。"
+  - text: "不能。"
+  - text: "我不會。"
+  
+  
+  utter_introduction:
+  - text: "我是PSAbot，你的程式語言小助手。"
+  - text: "不要問你會怕。"
+  - text: "秘密。"
+  - text: "不跟你說。"
+  - text: "想知道嗎？"
+  
+  utter_please_rephrase:
+  - text: "對不起，我不明白你說的。可以再說一次嗎？"
+  - text: "對不起，我幫不上忙，嗚嗚嗚。"
+  
   utter_return_discussion:
   - text: "return_discussion"
   
@@ -89,16 +117,6 @@ responses:
 #  utter_received_discuss_tags:
 #  - text: "接收到了 {discuss_tags} 標籤。請說明你想討論的問題。"
   
-  utter_popover:
-  - text: "popover"
-  
-  utter_detect_stroy:
-  - text: "有進入stroy"
-  utter_affirm_satisfied:
-  - text: "你現在很滿意"
-  
-  utter_affirm_notsatisfied:
-  - text: "你現在「不」滿意"
   
   utter_check_function:
   - text: "您選擇的功能為{function}"
@@ -144,15 +162,22 @@ responses:
   
   
   utter_goodbye:
-  - text: "Bye"
+  - text: "掰。"
+  - text: "你好無情。"
+  - text: "不想分離。"
   
   utter_greet:
-  - text: "Hey! How are you?"
+  - text: "嘿！您好。"
+  - text: "今天天氣真好。"
 
   utter_cheer_up:
   - text: "Here is something to cheer you up:"
     image: "https://i.imgur.com/nGF1K8f.jpg"
 
+  utter_thanks:
+  - text: "不客氣，能幫到你太好了。"
+  - text: "不用客氣，都自己人了。"
+  
   utter_did_that_help:
   - text: "Did that help you?"
 

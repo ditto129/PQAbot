@@ -184,3 +184,35 @@ stories:
   - checkpoint: check_discuss_return
   - intent: deny
   - action: utter_finish
+
+
+# 一些簡單對話的處理
+- story: greet
+  steps:
+  - intent: greet
+  - action: utter_greet
+  
+- story: bye
+  steps:
+  - intent: bye
+  - action: utter_goodbye
+  
+- story: thanks
+  steps:
+  - intent: thanks
+  - action: utter_thanks
+  
+- story: who are you
+  steps:
+  - intent: who_are_you
+  - action: utter_introduction
+
+- story: do something
+  steps:
+  - intent: do_something
+  - action: utter_refuse
+  
+- story: do something
+  steps:
+  - intent: ask_bot_trivial_question
+  - action: utter_ask_me_programmimg_question

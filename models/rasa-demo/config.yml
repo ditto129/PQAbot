@@ -26,6 +26,9 @@ pipeline:
     use_regexes: True
     # use match word boundaries for lookup table
     use_word_boundaries: False
+    #例外處理 inexpected input
+  - name: FallbackClassifier
+    threshold: 0.7
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/

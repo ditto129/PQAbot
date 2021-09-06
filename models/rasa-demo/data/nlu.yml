@@ -50,6 +50,62 @@ nlu:
 #  examples: |
 #   - question_or_error_message.*
 
+- intent: ask_bot_trivial_question
+  examples: |
+   - 你喜歡什麼顏色？
+   - 你喜歡什麼食物？
+   - 你的興趣是什麼？
+   - 你喜歡游泳嗎？
+   - 你喜歡烤肉嗎？
+   
+- intent: do_something
+  examples: |
+   - 可以唱歌嗎？
+   - 可以跳舞嗎？
+   - 可以講笑話嗎？
+   - 可以講故事嗎？
+   - 可以跟我聊天嗎？
+   
+- intent: who_are_you
+  examples: |
+   - 你是誰？
+   - 是誰？
+   - 誰呀？
+   - 可以請你自我介紹嗎？
+   - 自我介紹
+   
+- intent: greet
+  examples: |
+   - 您好
+   - 你好
+   - 嗨
+   - hi
+   - 哈囉
+   - hello
+   - 早安
+   - good morning
+   - 午安
+   - good afternoon
+   - 晚安
+   - good night
+   
+- intent: bye
+  examples: |
+   - 掰掰
+   - bye
+   - see you
+   - 再見
+   - 下次見
+   - goodbye
+
+- intent: thanks
+  examples: |
+   - 謝謝
+   - thanks
+   - 感謝
+   - 感謝你的幫忙
+   - thanks for your help
+   
 - intent: end_discuss
   examples: |
    - [end_discuss,](replier_id)
