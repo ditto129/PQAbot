@@ -30,9 +30,9 @@ def base_flow_rasa():
             lastest_bot_reply=results['events'][-2]['text']
             
             if lastest_bot_reply == "請描述您遇到的問題":
-                message = 'guided_QA_question,' + message
+                message = 'guided_QA,' + message
             elif lastest_bot_reply == "請貼上您的錯誤訊息":
-                message = 'error_message_question,' + message
+                message = 'error_message,' + message
             elif lastest_bot_reply == "是否匿名":
                 message = 'whether_incognito,' + message
             elif "程式語言" in lastest_bot_reply:
@@ -42,7 +42,7 @@ def base_flow_rasa():
                 message = message + ' rasa_slot'
                 print("作業系統:"+message)
             elif "請說明你想討論的問題" in lastest_bot_reply:
-                message = 'discuss_together_question,' + message
+                message = 'together,' + message
                 
                 
 #            if lastest_bot_reply == "請描述您遇到的問題" or lastest_bot_reply == "請貼上您的錯誤訊息" or lastest_bot_reply :

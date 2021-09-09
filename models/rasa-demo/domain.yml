@@ -112,7 +112,7 @@ responses:
   - text: "請為「回答者」這次的回答評分（滿意/不滿意）。"
   
   utter_wait_for_discuss:
-  - text: "請稍等，立即為您詢問其他使用者。"
+  - text: "請稍等，立即為你詢問其他使用者。"
   
 #  utter_received_discuss_tags:
 #  - text: "接收到了 {discuss_tags} 標籤。請說明你想討論的問題。"
@@ -125,13 +125,13 @@ responses:
   - text: "請問你想選擇哪個功能呢？"
   
   utter_welcome:
-  - text: "我們能提供的功能有<br>1. 「錯誤訊息解答」（直接貼上錯誤訊息即可）<br>2. 「引導式問答」（用文字描述您遇到的問題）<br>若未能解決問題也可以使用「共同討論」功能<br><br>請問你想選擇哪個功能呢？"
+  - text: "我能提供的功能有<br>1. 「錯誤訊息解答」（直接貼上錯誤訊息即可）<br>2. 「引導式問答」（用文字描述你遇到的問題）<br>若未能解決問題也可以使用「共同討論」功能<br><br>請問你想選擇哪個功能呢？"
   
   utter_ask_os:
-  - text: "請問您使用的是什麼作業系統？<br>若之後要修改，請輸入「我要更改作業系統」？"
+  - text: "請問你使用的是什麼作業系統？<br>若之後要修改，請輸入「我要更改作業系統」？"
 
   utter_ask_pl:
-  - text: "請問您使用的是什麼程式語言？<br>若之後要修改，請輸入「我要更改程式語言」？"
+  - text: "請問你使用的是什麼程式語言？<br>若之後要修改，請輸入「我要更改程式語言」？"
 #
 #  utter_ask_message:
 #  - text: "好的，請貼上您的錯誤訊息"
@@ -149,16 +149,16 @@ responses:
   - text: "這裡是pl-----功能：{function}, 作業系統：{os}, 程式語言：{pl}\n錯誤訊息：{question_or_error_message}"
   
   utter_CORS_problem_answer:
-  - text: "謝謝您的等待，以下為搜尋結果的資料摘要：<br>1. <a href=\"https://stackoverflow.com/questions/48714769/python-flask-cors-importerror-no-module-named-flask-cors-raspberry-pi\">Flask-CORS not working for POST, but working for GET</a><br>2. <a href=\"https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask\">Solve Cross Origin Resource Sharing with Flask</a><br>3. <a href=\"https://stackoverflow.com/questions/39550920/flask-cors-not-working-for-post-but-working-for-get\">Flask CORS stopped allowing access to resources</a><br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"
+  - text: "謝謝你的等待，以下為搜尋結果的資料摘要：<br>1. <a href=\"https://stackoverflow.com/questions/48714769/python-flask-cors-importerror-no-module-named-flask-cors-raspberry-pi\">Flask-CORS not working for POST, but working for GET</a><br>2. <a href=\"https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask\">Solve Cross Origin Resource Sharing with Flask</a><br>3. <a href=\"https://stackoverflow.com/questions/39550920/flask-cors-not-working-for-post-but-working-for-get\">Flask CORS stopped allowing access to resources</a><br>點選摘要連結可顯示內容。<br><br>是否要繼續搜尋？"
   
   utter_ask_question:
-  - text: "好的，請描述您遇到的問題"
+  - text: "好的，請描述你遇到的問題"
   
   utter_ask_satisfied:
   - text: "是否滿意本次體驗？"
   
   utter_finish:
-  - text: "希望有幫到你，歡迎下次光臨！"
+  - text: "希望有幫到你，歡迎下次光臨！透過左邊目錄查看更多功能。"
   
   
   utter_goodbye:
@@ -167,7 +167,7 @@ responses:
   - text: "不想分離。"
   
   utter_greet:
-  - text: "嘿！您好。"
+  - text: "嘿！你好。"
   - text: "今天天氣真好。"
 
   utter_cheer_up:
