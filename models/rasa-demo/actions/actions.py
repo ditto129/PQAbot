@@ -203,84 +203,84 @@ class analyze_and_search(Action):
             print(question_or_error_message)
             
             #宣告文字分析器
-            textAnalyzer = TextAnalyze.TextAnalyze()
+#            textAnalyzer = TextAnalyze.TextAnalyze()
             #擷取使用者問題的關鍵字
-    #        qkey = ['flask']
-            qkey = textAnalyzer.contentPreProcess(question_or_error_message)[0]
+            qkey = ['flask']
+#            qkey = textAnalyzer.contentPreProcess(question_or_error_message)[0]
             #加上作業系統與程式語言作為關鍵字
             qkey.append(os)
             qkey.append(pl)
             print("qkey:")
             print(qkey)
-            resultpage = outerSearch(qkey, 10, 0)
+#            resultpage = outerSearch(qkey, 10, 0)
             #內部搜尋
-            response = requests.post(head_url+'query_inner_search', json={'keywords':qkey})
+#            response = requests.post(head_url+'query_inner_search', json={'keywords':qkey})
     #        print("內部搜尋的結果: ", response.text)
     
             # 慈 START
-            objectAllPost = json.loads(response.text)
-            if objectAllPost["inner_search_result"] != None:
-                postNumber = 1
-                reply = "謝謝您的等待，以下為搜尋結果：<br>"
-                for i in range(0, len(objectAllPost["inner_search_result"])):
-                    postId = objectAllPost["inner_search_result"][i]
-                    singlePostResponse = requests.post(head_url+'query_inner_post', json={'_id':postId})
-                    # 轉成object
-                    objectSinglePost = json.loads(singlePostResponse.text)
-        #            print("單篇文章結果: ", objectSinglePost)
-                    reply += str(postNumber)
-                    reply += '. <a href="#" onclick="clickChatroomInnerSearch(\''
-                    reply += objectSinglePost["_id"]
-                    reply += '\')">'
-                    reply += objectSinglePost["title"]
-                    reply += '</a><br>'
-                    postNumber += 1
-                
-        #        print("reply的結果: "+reply);
-            else:
-                reply = ""
+#            objectAllPost = json.loads(response.text)
+#            if objectAllPost["inner_search_result"] != None:
+#                postNumber = 1
+#                reply = "謝謝您的等待，以下為搜尋結果：<br>"
+#                for i in range(0, len(objectAllPost["inner_search_result"])):
+#                    postId = objectAllPost["inner_search_result"][i]
+#                    singlePostResponse = requests.post(head_url+'query_inner_post', json={'_id':postId})
+#                    # 轉成object
+#                    objectSinglePost = json.loads(singlePostResponse.text)
+#        #            print("單篇文章結果: ", objectSinglePost)
+#                    reply += str(postNumber)
+#                    reply += '. <a href="#" onclick="clickChatroomInnerSearch(\''
+#                    reply += objectSinglePost["_id"]
+#                    reply += '\')">'
+#                    reply += objectSinglePost["title"]
+#                    reply += '</a><br>'
+#                    postNumber += 1
+#
+#        #        print("reply的結果: "+reply);
+#            else:
+#                reply = ""
             # 慈 END
             
             #外部搜尋結果（URL）
-            resultpage = outerSearch(qkey, 10, 0)
-            for url in resultpage:
-                print(url)
+#            resultpage = outerSearch(qkey, 10, 0)
+#            for url in resultpage:
+#                print(url)
 
             #外部搜尋
             #stackoverflow物件
-            stack_items = StackData.parseStackData(resultpage)
+#            stack_items = StackData.parseStackData(resultpage)
             ######假資料～～～～～
             
             #with open("DATA_test.json", "r", encoding="utf-8") as f:
             #    stack_items = json.load(f)
                 
-            raw_data = [" ".join([item['question']['abstract'], " ".join([ans['abstract'] for ans in item['answers']])]) for item in stack_items ]
+#            raw_data = [" ".join([item['question']['abstract'], " ".join([ans['abstract'] for ans in item['answers']])]) for item in stack_items ]
             #取得block排名
-            result = TextAnalyze.blockRanking(stack_items, qkey)
+#            result = TextAnalyze.blockRanking(stack_items, qkey)
             #print(result)
-            for i in stack_items:
-                i['question']['abstract'] = str(textAnalyzer.textSummarization(i['question']['abstract']))
-                for ans in i['answers']:
-                    ans['abstract'] = str(textAnalyzer.textSummarization(ans['abstract']))
-                    
-            temp_data_id_list = requests.post(head_url + 'insert_cache', json={'data' : stack_items, 'type' : "temp_data"})
-            block_rank_id = requests.post(head_url + 'insert_cache', json={'data': result, 'type' : "blocks_rank"})
-
-            print(temp_data_id_list.text)
-            print(block_rank_id.text)
-            t_data_list = json.loads(temp_data_id_list.text)
-            blocks = json.loads(block_rank_id.text)
+#            for i in stack_items:
+#                i['question']['abstract'] = str(textAnalyzer.textSummarization(i['question']['abstract']))
+#                for ans in i['answers']:
+#                    ans['abstract'] = str(textAnalyzer.textSummarization(ans['abstract']))
+#
+#            temp_data_id_list = requests.post(head_url + 'insert_cache', json={'data' : stack_items, 'type' : "temp_data"})
+#            block_rank_id = requests.post(head_url + 'insert_cache', json={'data': result, 'type' : "blocks_rank"})
+#
+#            print(temp_data_id_list.text)
+#            print(block_rank_id.text)
+#            t_data_list = json.loads(temp_data_id_list.text)
+#            blocks = json.loads(block_rank_id.text)
 
             #每篇title
-            result_title = [item['question']['title'] for item in stack_items]
+#            result_title = [item['question']['title'] for item in stack_items]
 
-            reply += "謝謝您的等待，以下為搜尋結果的資料摘要："
-            for i in range(0, len(t_data_list)):
-                reply += ("<br>" + str(i+1) + ".<a href=\"#\" onclick=\"summary('" + t_data_list[i] + "')\">" + result_title[i] + "</a>")
-            reply += "<br>點選摘要連結可顯示內容。<br>"
-            reply += "<a href=\"#\" onclick=\"rank('" + blocks[0] + "')\">點我查看所有答案排名</a>"
-            reply += "<br><br>是否要繼續搜尋？"
-            dispatcher.utter_message(text=reply)
+#            reply += "謝謝您的等待，以下為搜尋結果的資料摘要："
+#            for i in range(0, len(t_data_list)):
+#                reply += ("<br>" + str(i+1) + ".<a href=\"#\" onclick=\"summary('" + t_data_list[i] + "')\">" + result_title[i] + "</a>")
+#            reply += "<br>點選摘要連結可顯示內容。<br>"
+#            reply += "<a href=\"#\" onclick=\"rank('" + blocks[0] + "')\">點我查看所有答案排名</a>"
+#            reply += "<br><br>是否要繼續搜尋？"
+#            dispatcher.utter_message(text=reply)
             
     #        dispatcher.utter_message(text="是否繼續搜尋？")
             
@@ -289,9 +289,10 @@ class analyze_and_search(Action):
 #dispatcher.utter_message(text=reply)
             # 慈 END
 
-            more_keywords = textAnalyzer.keywordExtraction(raw_data)
-            qkey = qkey + more_keywords
+#            more_keywords = textAnalyzer.keywordExtraction(raw_data)
+#            qkey = qkey + more_keywords
             #！！！將關鍵字及更多關鍵字存入slot
+            dispatcher.utter_message(text="是否繼續搜尋？")
             return [SlotSet("keywords", ','.join(qkey))]
             
             

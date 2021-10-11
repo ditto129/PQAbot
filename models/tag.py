@@ -46,3 +46,10 @@ def query_childs(tag_id):
 def query_tag_name_id_child(tag_id):
     tag = _db.TAG_COLLECTION.find_one({'_id':tag_id})
     return {'tag_name':tag['tag'], 'tag_id':tag['_id'], 'child':tag['child']}
+    
+#取得各層級tag陣列
+def query_all_level_tag_array():
+    first_level=[i['_id'] for i in _db.TAG_COLLECTION.find({'level':0})]
+    second_level=[i['_id'] for i in _db.TAG_COLLECTION.find({'level':1})]
+    third_level=[i['_id'] for i in _db.TAG_COLLECTION.find({'level':2})]
+    return {'first_level':first_level, 'second_level':second_level, 'third_level':third_level}
