@@ -10,7 +10,7 @@ import requests
 import json
 import flask
 from flask import request, Blueprint, jsonify
-from models import user
+from models import user, tag
 
 discussion_api=Blueprint('discussion_api', __name__)
 
@@ -20,7 +20,11 @@ head_url='http://localhost:55001/api/'
 #共同討論推薦user
 @discussion_api.route('discussion_recommand_user', methods=['POST'])
 def discussion_recommand_user():
-    first_level = requests.get(head_url + 'query_all_languages')
+    #first_level = requests.get(head_url + 'query_all_languages')
+    all_level_tag=tag.query_all_level_tag_array()
+    first_level=all_level_tag['first_level']
+    second_level=all_level_tag['second_level']
+    third_level=all_level_tag['third_level']
     
     data = request.get_json()
     tags = data['tags']
@@ -30,10 +34,12 @@ def discussion_recommand_user():
     for i in users:
         sort_scores = 0
         for j in i['skill']:
-            if j in first_level:
+            if j['tag_id'] in first_level:
                 sort_scores += (j['interested_score']+j['score']) * 1
-            else:
+            elif j['tag_id'] in second_level:
                 sort_scores += (j['interested_score']+j['score']) * 3
+            elif j['tag_id'] in third_level:
+                sort_scores += (j['interested_score']+j['score']) * 5
         i.update({'sort_scores':sort_scores})
     #排序
     sorted_users = sorted(users, key=lambda k: k['sort_scores'], reverse=True)
