@@ -64,6 +64,7 @@ def create_app():
 #def refresh_schedule():
 #    models.reschedule.refresh_schedule()
 
+#檢查是否新增新標籤
 def check_associated_tag():
     if date.today().day != 1:
         return
