@@ -41,6 +41,11 @@ def query_all_languages():
 def query_childs(tag_id):
     tags = _db.TAG_COLLECTION.find_one({'_id':tag_id})['child']
     return tags
+    
+#回傳 associated
+def query_associated(tag_id):
+    associated = _db.TAG_COLLECTION.find_one({'_id':tag_id})['associated']
+    return associated
 
 #回傳 tag name, id
 def query_tag_name_id_child(tag_id):

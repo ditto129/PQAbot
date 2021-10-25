@@ -90,13 +90,28 @@ def query_all_languages():
 def query_all_offspring_tag():
     tag_id=request.values.get('tag_id')
     offspring=[]
+    associated=[]
     second_level = tag.query_childs(tag_id)
     third_level=[]
-    print(second_level)
+    #print(second_level)
     for i in range(len(second_level)):
-        third_level.extend(tag.query_childs(second_level[i]['tag_id']))
+        second_level_child=tag.query_childs(second_level[i]['tag_id'])
+        third_level.extend(second_level_child)
+        #加入第二層關聯標籤
+        second_level_associated=tag.query_associated(second_level[i]['tag_id'])
+        if second_level_associated:
+            associated.append(second_level_associated)
+        #associated.append(tag.query_associated(second_level[i]['tag_id']))
+        for j in second_level_child:
+            #加入第三層關聯標籤
+            third_level_associated=tag.query_associated(j['tag_id'])
+            if third_level_associated:
+                associated.append(third_level_associated)
     offspring.extend(second_level)
     offspring.extend(third_level)
+    offspring.extend(associated)
+    
+    print(offspring)
     return jsonify({'tags':offspring})
     
 #更新使用次數與時間
