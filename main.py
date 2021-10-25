@@ -28,6 +28,11 @@ from os import urandom
 from models.PSAbotLoginManager import PSAbotLoginManager,UserModel
 # --- encryption --- #
 from models.RsaTool import RsaTool,rsa_setup
+""" associated tags """
+from datetime import date
+import schedule
+import time
+from models import inner_post, tag
 
 def create_app():
     app = Flask(__name__)
@@ -59,6 +64,14 @@ def create_app():
 #def refresh_schedule():
 #    models.reschedule.refresh_schedule()
 
+def check_associated_tag():
+    if date.today().day != 1:
+        return
+    new=inner_post.check_associated_tag() #tuple list
+    for i in new:
+        associated_tag_id=tag.add_new_associated_tag(i)
+        tag.add_child_associated(i, associated_tag_id)
+    
 if __name__ == "__main__":
     # scheduler=APScheduler()
     app = create_app()
@@ -66,7 +79,12 @@ if __name__ == "__main__":
     # scheduler.init_app(app)
     # scheduler.start()
     app.run(host='0.0.0.0', port=55001)
-    
+    """ 每個月一號的0:00檢查是否新增 associated tag """
+    schedule.every().day.at("02:00").do(check_associated_tag)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
 #"192.168.111.128",port=55001
 
 

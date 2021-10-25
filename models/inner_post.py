@@ -13,6 +13,9 @@ import re
 # ======================= #
 from sklearn import preprocessing
 from datetime import datetime, timedelta
+from collections import defaultdict
+from . import tag
+
 # 取得所有貼文列表
 def query_post_list(page_size,page_number,option):
     post_count = [i for i in _db.INNER_POST_COLLECTION.aggregate([{'$count': 'post_count'}])][0]['post_count']
@@ -456,4 +459,34 @@ def query_hot_post():
 ])]
     #print(hot_post)
     return hot_post
+
+#檢查是否新增 associated tag
+def check_associated_tag():
+    new_associated_tag=[]
+    a=defaultdict(dict)
+    all_tags=[(i['tag'].lower(), i['_id']) for i in _db.TAG_COLLECTION.find()]
+    all_tags_name=[i[0] for i in all_tags]
+    all_tags_id=[i[1] for i in all_tags]
+    all_first_level=tag.query_first_level_tag_name()
+    print('all_first_level:', all_first_level)
+    for i in _db.INNER_POST_COLLECTION.find():
+        for j in i['keyword']:
+            if j not in all_tags_name:
+                for k in i['tag']:
+                    if k['tag_name'] not in all_first_level:
+                        if k['tag_name'] in a and j in a[k['tag_name']]:
+                            a[k['tag_name']][j]=a[k['tag_name']][j]+1
+                        else:
+                            a[k['tag_name']][j]=1
+    print(a)
+#    print('all_tags_name', all_tags_name)
+#    print('all_tags_id', all_tags_id)
+    for key in a:   #parent tag name
+        for key2 in a[key]: #keyword name
+            if a[key][key2] > 20:
+                #find to get parent id
+                index=all_tags_name.index(key.lower())
+                new_associated_tag.append((key, key2, all_tags_id[index]))
+    print(new_associated_tag)
+    return new_associated_tag   #tuple list, parent name, keyword, parent id
 '''香的'''
