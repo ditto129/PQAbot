@@ -7,7 +7,7 @@ nlu:
    
 - regex: keywords
   examples: |
-   - keywords .*
+   - keywords_for_guided_QA.*
    
 - regex: function
   examples: |
@@ -20,10 +20,10 @@ nlu:
 
 - regex: guided_QA_question
   examples: |
-   - guided_QA,.*
+   - guided_QA_question,.*
 - regex: error_message_question
   examples: |
-   - error_message,.*
+   - error_message_question,.*
 - regex: discuss_together_question
   examples: |
    - together,.*
@@ -32,19 +32,25 @@ nlu:
    - 標籤：.*
 - regex: whether_incognito
   examples: |
-   - whether_incognito,.*
+   - rasa_incognito,.*
   
-- lookup: os
+- regex: os
   examples: |
-   - mac OS rasa_slot
-   - windows rasa_slot
-   - linux rasa_slot
+   - .* rasa_os_slot
+- regex: pl
+  examples: |
+   - .* rasa_pl_slot
+#- lookup: os
+#  examples: |
+#   - mac OS rasa_slot
+#   - windows rasa_slot
+#   - linux rasa_slot
    
-- lookup: pl
-  examples: |
-   - python rasa_slot
-   - java rasa_slot
-   - c語言 rasa_slot
+#- lookup: pl
+#  examples: |
+#   - python rasa_slot
+#   - java rasa_slot
+#   - c語言 rasa_slot
    
 #- regex: question_or_error_message
 #  examples: |
@@ -120,8 +126,8 @@ nlu:
    
 - intent: say_discuss_together_whether_incognito
   examples: |
-   - [whether_incognito,是](whether_incognito)
-   - [whether_incognito,否](whether_incognito)
+   - [rasa_incognito,是](whether_incognito)
+   - [rasa_incognito,否](whether_incognito)
 
 - intent: say_discuss_tags
   examples: |
@@ -158,9 +164,9 @@ nlu:
 
 - intent: say_os
   examples: |
-    - I'm use [mac OS](os)
-    - 我是用[mac os](os)
-    - [mac os](os)
+    - I'm use [rasa_os_slot](os)
+    - 我是用[rasa_os_slot](os)
+    - [rasa_os_slot](os)
     
 - intent: change_os
   examples: |
@@ -168,9 +174,9 @@ nlu:
 
 - intent: say_pl
   examples: |
-    - I'm use [python](pl)
-    - 我是用[python](pl)
-    - [python rasa_slot](pl)
+    - I'm use [rasa_pl_slot](pl)
+    - 我是用[rasa_pl_slot](pl)
+    - [rasa_pl_slot](pl)
     
 - intent: change_pl
   examples: |
@@ -182,7 +188,7 @@ nlu:
     
 - intent: say_keywords
   examples: |
-    - [my keywords is: ...](keywords)
+    - [keywords_for_guided_QA](keywords)
     
 - intent: affirm
   examples: |

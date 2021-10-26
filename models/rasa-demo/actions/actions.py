@@ -60,8 +60,8 @@ class error_message_search(Action):
     def run(self, dispatcher, tracker, domain) -> List[Dict[Text, Any]]:
         function = tracker.get_slot("function")
         print("pl(programming language):"+tracker.get_slot("pl"))
-        os = tracker.get_slot("os")[0:-10]
-        pl = tracker.get_slot("pl")[0:-10]
+        os = tracker.get_slot("os")[0:-13]
+        pl = tracker.get_slot("pl")[0:-13]
         print("pl(programming language):"+pl)
         error_message_search_time = int(tracker.get_slot("error_message_search_time"))
         #拿到所需訊息及最後一句使用者輸入
@@ -138,6 +138,8 @@ class fill_slot(Action):
         os = tracker.get_slot("os")
         pl = tracker.get_slot("pl")
         
+        print("os: ", os)
+        print("pl: ", pl)
         if os!=None and pl!=None:
             if "錯誤訊息" in function:
                 reply = "請貼上您的錯誤訊息"
@@ -165,8 +167,8 @@ class analyze_and_search(Action):
         print('in analyze_and_search')
         function = tracker.get_slot("function")
         print("pl(programming language):"+tracker.get_slot("pl"))
-        os = tracker.get_slot("os")[0:-10]
-        pl = tracker.get_slot("pl")[0:-10]
+        os = tracker.get_slot("os")[0:-13]
+        pl = tracker.get_slot("pl")[0:-13]
         print("pl(programming language):"+pl)
         if "錯誤訊息" in function:
             #拿到所需訊息及最後一句使用者輸入
@@ -345,38 +347,39 @@ class outer_search(Action):
         print(keywords)
         
         qkey = keywords.split(',')
-        #外部搜尋結果（URL）
-        resultpage = outerSearch(qkey, 10, 0)
-        for url in resultpage:
-            print(url)
-        #外部搜尋
-        #stackoverflow物件
-        stack_items = StackData.parseStackData(resultpage)
+#        #外部搜尋結果（URL）
+#        resultpage = outerSearch(qkey, 10, 0)
+#        for url in resultpage:
+#            print(url)
+#        #外部搜尋
+#        #stackoverflow物件
+#        stack_items = StackData.parseStackData(resultpage)
+#
+#        #假資料～～～～～
+#        #with open("DATA_test.json", "r", encoding="utf-8") as f:
+#        #    stack_items = json.load(f)
+#
+#        raw_data = [ " ".join([item['question']['abstract'], " ".join([ans['abstract'] for ans in item['answers']])]) for item in stack_items ]
+#        #取得block排名
+#        result = TextAnalyze.blockRanking(stack_items, qkey)
+#        #print(result)
+#        temp_data_id_list = requests.post(head_url + 'insert_cache', json={'data' : stack_items[0:5], 'type' : "temp_data"})
+#        block_rank_id = requests.post(head_url + 'insert_cache', json={'data': result, 'type' : "blocks_rank"})
+#        print(temp_data_id_list.text)
+#        print(block_rank_id.text)
+#        t_data_list = json.loads(temp_data_id_list.text)
+#        blocks = json.loads(block_rank_id.text)
+#
+#        #每篇title
+#        result_title = [item['question']['title'] for item in stack_items]
         
-        #假資料～～～～～
-        #with open("DATA_test.json", "r", encoding="utf-8") as f:
-        #    stack_items = json.load(f)
-        
-        raw_data = [ " ".join([item['question']['abstract'], " ".join([ans['abstract'] for ans in item['answers']])]) for item in stack_items ]
-        #取得block排名
-        result = TextAnalyze.blockRanking(stack_items, qkey)
-        #print(result)
-        temp_data_id_list = requests.post(head_url + 'insert_cache', json={'data' : stack_items[0:5], 'type' : "temp_data"})
-        block_rank_id = requests.post(head_url + 'insert_cache', json={'data': result, 'type' : "blocks_rank"})
-        print(temp_data_id_list.text)
-        print(block_rank_id.text)
-        t_data_list = json.loads(temp_data_id_list.text)
-        blocks = json.loads(block_rank_id.text)
-        
-        #每篇title
-        result_title = [item['question']['title'] for item in stack_items]
-        
-        reply += "謝謝您的等待，以下為搜尋結果的資料摘要："
-        for i in range(0, len(t_data_list)):
-            reply += ("<br>" + str(i+1) + ".<a href=\"#\" onclick=\"summary('" + t_data_list[i] + "')\">" + result_title[i] + "</a>")
-        reply += "<br>點選摘要連結可顯示內容。<br>"
-        reply += "<a href=\"#\" onclick=\"rank('" + blocks[0] + "')\">點我查看所有答案排名</a>"
-        reply += "<br><br>是否要繼續搜尋？"
+        reply = "謝謝您的等待，以下為搜尋結果的資料摘要："
+#        reply += "謝謝您的等待，以下為搜尋結果的資料摘要："
+#        for i in range(0, len(t_data_list)):
+#            reply += ("<br>" + str(i+1) + ".<a href=\"#\" onclick=\"summary('" + t_data_list[i] + "')\">" + result_title[i] + "</a>")
+#        reply += "<br>點選摘要連結可顯示內容。<br>"
+#        reply += "<a href=\"#\" onclick=\"rank('" + blocks[0] + "')\">點我查看所有答案排名</a>"
+#        reply += "<br><br>是否要繼續搜尋？"
         dispatcher.utter_message(text=reply)
        
         return []
